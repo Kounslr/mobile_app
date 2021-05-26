@@ -34,9 +34,6 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _header(BuildContext context) {
-    StudentVueClient('1056083', 'Bingie@jordan0831!', 'portal.lcps.org')
-        .loadGradebook()
-        .then((value) => dev.log(value.toString()));
     return Row(
       children: [
         Column(
