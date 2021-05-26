@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "91108883702",
+    "project_id": "kounslr-3c7f3",
+    "storage_bucket": "kounslr-3c7f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91108883702:android:e4953e64fd5542fb2740d7",
+        "android_client_info": {
+          "package_name": "com.kounslr.mobileApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91108883702-160ks6mman2q95t99mii8jvhr3l2s6jv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPdDdk8ggyma8cM_KA-Oysd2AwD0Kgpxw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91108883702-160ks6mman2q95t99mii8jvhr3l2s6jv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "91108883702-ug83g83thr14k8skkbn25tovbn9mni2s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kounslr.mobileApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
