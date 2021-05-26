@@ -9,7 +9,7 @@ Kounslr is a platform for students and teachers alike which helps high school st
 
 - canton_design_system: [Link](https://github.com/31Carlton7/canton_design_system) to repository (Custom package from [@31Carlton7](https://github.com/31Carlton7))
 - flutter_riverpod: ^0.14.0+3
-- dio: ^3.0.10
+- dio: ^4.0.0
 - intl: ^0.17.0
 - qr_flutter: ^4.0.0
 - firebase_core: ^1.2.0
