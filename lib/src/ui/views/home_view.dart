@@ -46,7 +46,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
             ),
             Text(
-              'NAME',
+              'TEST',
               style: Theme.of(context).textTheme.headline1.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
