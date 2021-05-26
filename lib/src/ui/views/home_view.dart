@@ -2,7 +2,6 @@ import 'dart:math' as math;
 import 'dart:developer' as dev;
 
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:kounslr/src/repository/studentvue_client.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/styled_components/current_date_card.dart';
 import 'package:kounslr/src/ui/styled_components/next_class_card.dart';
