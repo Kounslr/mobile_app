@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-import 'dart:developer' as dev;
+// import 'dart:developer' as dev;
 
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
