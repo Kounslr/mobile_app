@@ -3,7 +3,7 @@
 This folder contains everything related to Kounslr's mobile app, all built entirely with Flutter.
 
 ## About
-This app is supported on both ios and android. We will most likely have one app that can swap between teacher privileges and student privileges and features for both users however this can be subject to change in the near future.
+Kounslr is a platform for students and teachers alike which helps high school students navigate through their highschool years and into college. Kounslr is supported through a Firebase backend and utilizes the StudentVue API as well. On top of that, we are designing a custom API. 
 
 ## Dependencies
 
