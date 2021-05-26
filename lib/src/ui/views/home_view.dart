@@ -28,7 +28,7 @@ class _HomeViewState extends State<HomeView> {
         SizedBox(height: 10),
         NextClassCard(),
         SizedBox(height: 10),
-        _upcomingAssignmentsListView(context),
+        _upcomingAssignmentsListView(context)
       ],
     );
   }
