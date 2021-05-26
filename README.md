@@ -1,4 +1,4 @@
-# mobile_app
+# Kounslr Mobile App
 
 A new Flutter project.
 
