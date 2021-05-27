@@ -12,6 +12,8 @@ class _HallPassViewState extends State<HallPassView> {
   }
 
   Widget _content(BuildContext context) {
-    return Column(children: []);
+    return Column(children: [
+      new Text("test"),
+    ]);
   }
 }
