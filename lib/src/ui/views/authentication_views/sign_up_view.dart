@@ -1,6 +1,8 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/ui/providers/authentication_service_provider.dart';
+import 'package:kounslr/src/ui/views/authentication_views/sign_in_view.dart';
+import 'package:kounslr/src/ui/views/current_view.dart';
 
 class SignUpView extends ConsumerWidget {
   @override
@@ -38,16 +40,41 @@ class SignUpView extends ConsumerWidget {
           controller: _passwordController,
         ),
         SizedBox(height: 20),
-        CantonPrimaryButton(
-          buttonText: 'Sign Up',
-          containerColor: Theme.of(context).primaryColor,
-          textColor: CantonColors.white,
-          onPressed: () {
-            context.read(authenticationServiceProvider).signUp(
-                  email: _emailController.text.trim(),
-                  password: _passwordController.text.trim(),
-                );
-          },
+        Row(
+          children: [
+            CantonPrimaryButton(
+              buttonText: 'Sign In',
+              containerWidth: MediaQuery.of(context).size.width / 2 - 34,
+              containerColor: Theme.of(context).colorScheme.secondary,
+              textColor: Theme.of(context).colorScheme.secondaryVariant,
+              onPressed: () {
+                CantonMethods.viewTransition(context, SignInView());
+              },
+            ),
+            Spacer(),
+            CantonPrimaryButton(
+              buttonText: 'Sign Up',
+              containerWidth: MediaQuery.of(context).size.width / 2 - 34,
+              containerColor: Theme.of(context).primaryColor,
+              textColor: CantonColors.white,
+              onPressed: () {
+                context
+                    .read(authenticationServiceProvider)
+                    .signUp(
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim(),
+                    )
+                    .then((value) {
+                  if (value == 'Sign up successful') {
+                    CantonMethods.viewTransition(
+                      context,
+                      CurrentView(),
+                    );
+                  }
+                });
+              },
+            ),
+          ],
         ),
       ],
     );
