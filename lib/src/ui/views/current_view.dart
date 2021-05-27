@@ -2,6 +2,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:kounslr/src/config/bottom_navigation_bar.dart';
 import 'package:kounslr/src/ui/views/hall_pass_view.dart';
 import 'package:kounslr/src/ui/views/home_view.dart';
+import 'package:kounslr/src/ui/views/profile_view.dart';
 
 class CurrentView extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class _CurrentViewState extends State<CurrentView> {
   final List<Widget> _views = [
     HomeView(),
     HallPassView(),
+    ProfileView(),
   ];
 
   void onTabTapped(int index) {
