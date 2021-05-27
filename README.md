@@ -1,16 +1,29 @@
 # Kounslr Mobile App
 
-A new Flutter project.
+This folder contains everything related to Kounslr's mobile app, all built entirely with Flutter.
 
-## Getting Started
+## About
+Kounslr is a platform for students and teachers alike which helps high school students navigate through their highschool years and into college. Kounslr is supported through a Firebase backend and utilizes the StudentVue API as well. On top of that, we are designing a custom API. 
 
-This project is a starting point for a Flutter application.
+## Dependencies
 
-A few resources to get you started if this is your first Flutter project:
+- canton_design_system: [Link](https://github.com/31Carlton7/canton_design_system) to repository (Custom package from [@31Carlton7](https://github.com/31Carlton7))
+- flutter_riverpod: ^0.14.0+3
+- dio: ^4.0.0
+- intl: ^0.17.0
+- qr_flutter: ^4.0.0
+- firebase_core: ^1.2.0
+- firebase_auth: ^1.2.0
+- cloud_firestore: ^2.2.0
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Socials
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+If you have any questions, you can reach us here:
+
+#### Carlton
+- Instagram: 31carlton7
+- Email: carltonaikins7@gmail.com
+
+#### Arihan
+- Instagram: aridixit
+- Email: arihandixit@gmail.com
