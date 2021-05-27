@@ -11,6 +11,9 @@ class ProfileView extends ConsumerWidget {
   Widget _content(BuildContext context) {
     return Center(
       child: CantonPrimaryButton(
+        buttonText: 'Sign out',
+        textColor: CantonColors.white,
+        containerColor: Theme.of(context).primaryColor,
         onPressed: () {
           context.read(authenticationServiceProvider).signOut();
         },
