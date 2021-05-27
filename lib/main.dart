@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/config/constants.dart';
-import 'package:kounslr/src/ui/views/current_view.dart';
+import 'package:kounslr/src/services/authentication/authentication_wrapper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,13 +20,17 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CantonApp(
-      title: kAppTitle,
-      primaryLightColor: CantonColors.orange,
-      primaryDarkColor: CantonDarkColors.orange,
-      primaryLightVariantColor: CantonColors.orange[400],
-      primaryDarkVariantColor: CantonDarkColors.orange[400],
-      home: CurrentView(),
+    return Consumer(
+      builder: (context, watch, child) {
+        return CantonApp(
+          title: kAppTitle,
+          primaryLightColor: CantonColors.orange,
+          primaryDarkColor: CantonDarkColors.orange,
+          primaryLightVariantColor: CantonColors.orange[400],
+          primaryDarkVariantColor: CantonDarkColors.orange[400],
+          home: AuthenticationWrapper(),
+        );
+      },
     );
   }
 }
