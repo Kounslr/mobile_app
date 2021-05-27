@@ -42,6 +42,19 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ),
           label: '',
         ),
+        BottomNavigationBarItem(
+          icon: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: IconlyIcon(
+              IconlyBold.Profile,
+              size: 24,
+              color: widget.currentIndex == 2
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+          label: '',
+        ),
       ],
     );
   }
