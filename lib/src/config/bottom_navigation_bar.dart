@@ -17,22 +17,28 @@ class _BottomNavBarState extends State<BottomNavBar> {
       onTap: widget.onTabTapped,
       items: [
         BottomNavigationBarItem(
-          icon: IconlyIcon(
-            IconlyBold.Home,
-            size: 24,
-            color: widget.currentIndex == 0
-                ? Theme.of(context).primaryColor
-                : Theme.of(context).colorScheme.secondary,
+          icon: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconlyIcon(
+              IconlyBold.Home,
+              size: 24,
+              color: widget.currentIndex == 0
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).colorScheme.secondary,
+            ),
           ),
           label: '',
         ),
         BottomNavigationBarItem(
-          icon: IconlyIcon(
-            IconlyBold.Ticket,
-            size: 24,
-            color: widget.currentIndex == 1
-                ? Theme.of(context).primaryColor
-                : Theme.of(context).colorScheme.secondary,
+          icon: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: IconlyIcon(
+              IconlyBold.Ticket,
+              size: 24,
+              color: widget.currentIndex == 1
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).colorScheme.secondary,
+            ),
           ),
           label: '',
         ),
