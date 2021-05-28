@@ -24,10 +24,10 @@ class StudentIDCardView extends StatelessWidget {
   Widget _header(BuildContext context) {
     return Row(
       children: [
-        CantonBackButton(),
+        CantonBackButton(isClear: true),
         Spacer(),
         Text(
-          'Student ID',
+          'ID Card',
           style: Theme.of(context).textTheme.headline5.copyWith(
                 color: Theme.of(context).primaryColor,
               ),
@@ -43,8 +43,6 @@ class StudentIDCardView extends StatelessWidget {
 
   Widget _body(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         StudentIDCard(),
         SizedBox(height: 20),
