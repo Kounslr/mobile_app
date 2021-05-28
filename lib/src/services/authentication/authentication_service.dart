@@ -1,3 +1,4 @@
+import 'package:canton_design_system/canton_design_system.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthenticationService {
@@ -6,8 +7,9 @@ class AuthenticationService {
 
   Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<void> signOut() async {
+  Future<void> signOut(BuildContext context) async {
     await _firebaseAuth.signOut();
+    Navigator.pop(context);
   }
 
   Future<String> signIn({String email, String password}) async {
