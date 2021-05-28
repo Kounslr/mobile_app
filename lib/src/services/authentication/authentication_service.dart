@@ -16,10 +16,8 @@ class AuthenticationService {
         email: email,
         password: password,
       );
-      print('Success');
       return 'Sign in successful';
     } on FirebaseAuthException catch (e) {
-      print('Fail');
       return e.message;
     }
   }
@@ -30,10 +28,9 @@ class AuthenticationService {
         email: email,
         password: password,
       );
-      print('Success');
       return 'Sign up successful';
     } on FirebaseAuthException catch (e) {
-      print('Fail');
+      print(e);
       return e.message;
     }
   }

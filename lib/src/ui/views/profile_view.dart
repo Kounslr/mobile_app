@@ -7,7 +7,7 @@ import 'package:kounslr/src/ui/styled_components/profile_card.dart';
 class ProfileView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    return _content(context);
+    return _content(context, watch);
   }
 
   Widget _content(BuildContext context) {
