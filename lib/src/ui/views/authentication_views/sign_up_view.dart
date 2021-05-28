@@ -1,10 +1,11 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kounslr/src/ui/providers/authentication_service_provider.dart';
+import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:kounslr/src/ui/views/authentication_views/sign_in_view.dart';
-import 'package:kounslr/src/ui/views/current_view.dart';
 
 class SignUpView extends ConsumerWidget {
+  final Function toggleView;
+  const SignUpView({this.toggleView});
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final _emailController = TextEditingController();
@@ -48,7 +49,8 @@ class SignUpView extends ConsumerWidget {
               containerColor: Theme.of(context).colorScheme.secondary,
               textColor: Theme.of(context).colorScheme.secondaryVariant,
               onPressed: () {
-                CantonMethods.viewTransition(context, SignInView());
+                toggleView();
+                // CantonMethods.viewTransition(context, SignInView());
               },
             ),
             Spacer(),
@@ -58,20 +60,10 @@ class SignUpView extends ConsumerWidget {
               containerColor: Theme.of(context).primaryColor,
               textColor: CantonColors.white,
               onPressed: () {
-                context
-                    .read(authenticationServiceProvider)
-                    .signUp(
+                context.read(authenticationServiceProvider).signUp(
                       email: _emailController.text.trim(),
                       password: _passwordController.text.trim(),
-                    )
-                    .then((value) {
-                  if (value == 'Sign up successful') {
-                    CantonMethods.viewTransition(
-                      context,
-                      CurrentView(),
                     );
-                  }
-                });
               },
             ),
           ],
