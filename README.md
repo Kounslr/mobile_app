@@ -1,6 +1,6 @@
 # Kounslr Mobile App
 
-This folder contains everything related to Kounslr's mobile app, all built entirely with Flutter.
+This repository contains everything related to Kounslr's mobile app, all built entirely with Flutter.
 
 ## About
 Kounslr is a platform for students and teachers alike which helps high school students navigate through their highschool years and into college. Kounslr is supported through a Firebase backend and utilizes the StudentVue API as well. On top of that, we are designing a custom API. 
