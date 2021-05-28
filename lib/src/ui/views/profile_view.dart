@@ -59,7 +59,7 @@ Widget _body(BuildContext context) {
       containerColor: Theme.of(context).primaryColor,
       containerWidth: MediaQuery.of(context).size.width / 2 - 34,
       onPressed: () {
-        context.read(authenticationServiceProvider).signOut();
+        context.read(authenticationServiceProvider).signOut(context);
       },
     ),
   ]);
