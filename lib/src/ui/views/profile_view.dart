@@ -1,7 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kounslr/src/ui/providers/authentication_service_provider.dart';
+import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:kounslr/src/ui/styled_components/profile_card.dart';
 
 class ProfileView extends ConsumerWidget {
@@ -10,7 +10,7 @@ class ProfileView extends ConsumerWidget {
     return _content(context, watch);
   }
 
-  Widget _content(BuildContext context) {
+  Widget _content(BuildContext context, ScopedReader watch) {
     String email = FirebaseAuth.instance.currentUser.email;
     String username = email.substring(0,email.indexOf('@'));
 

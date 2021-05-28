@@ -1,6 +1,5 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:kounslr/src/ui/providers/authentication_service_provider.dart';
 import 'package:flutter_riverpod/src/provider.dart';
 
 class ProfileCard extends StatelessWidget {
