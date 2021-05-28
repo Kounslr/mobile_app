@@ -1,17 +1,56 @@
+import 'dart:developer' as dev;
+
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kounslr/src/ui/providers/authentication_stream_provider.dart';
+
+import 'package:kounslr/src/ui/providers/authentication_providers/authentication_stream_provider.dart';
+import 'package:kounslr/src/ui/views/authentication_views/sign_in_view.dart';
 import 'package:kounslr/src/ui/views/authentication_views/sign_up_view.dart';
 import 'package:kounslr/src/ui/views/current_view.dart';
 
-class AuthenticationWrapper extends ConsumerWidget {
+class AuthenticationWrapper extends StatefulWidget {
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final firebaseUser = watch(authenticationStreamProvider);
+  _AuthenticationWrapperState createState() => _AuthenticationWrapperState();
+}
 
-    if (firebaseUser.data.value != null) {
-      return CurrentView();
-    }
-    return SignUpView();
+class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
+  bool showSignIn = true;
+
+  void toggleView() {
+    setState(() {
+      showSignIn = !showSignIn;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, watch, child) {
+        final _authState = watch(authenticationStreamProvider);
+        return _authState.when(
+          error: (e, s) {
+            dev.log(e);
+            dev.log(s.toString());
+            return Center(
+              child: Text(
+                'Something went wrong',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            );
+          },
+          loading: () => Loading(),
+          data: (user) {
+            if (user == null) {
+              if (showSignIn) {
+                return SignInView(toggleView: toggleView);
+              } else {
+                return SignUpView(toggleView: toggleView);
+              }
+            }
+            return CurrentView();
+          },
+        );
+      },
+    );
   }
 }
