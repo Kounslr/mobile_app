@@ -15,23 +15,31 @@ class CurrentDateCard extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'X',
-                style: Theme.of(context).textTheme.headline4.copyWith(
-                      color: CantonColors.white,
-                    ),
+                DateFormat.EEEE().format(DateTime.now()),
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                  color: CantonColors.white,
+                ),
               ),
               Text(
-                'Day',
+                DateFormat.MMM().format(DateTime.now()) + ' ' + DateFormat.d().format(DateTime.now()),
                 style: Theme.of(context).textTheme.caption.copyWith(
                       color: CantonColors.white,
                     ),
               ),
+              /*Text(
+                DateFormat.MMM().format(DateTime.now()),
+                style: Theme.of(context).textTheme.caption.copyWith(
+                      color: CantonColors.white,
+                    ),
+              ),*/
             ],
           ),
         ),
         SizedBox(width: 15),
-        Text(_modifyDateFormat(DateTime.now()),
-            style: Theme.of(context).textTheme.headline6),
+        Text("B-Day",
+            style: Theme.of(context).textTheme.headline6,
+            textScaleFactor: 2,
+        ),
       ],
     );
   }
