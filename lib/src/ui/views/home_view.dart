@@ -1,12 +1,9 @@
-import 'dart:math' as math;
-// import 'dart:developer' as dev;
-
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/styled_components/current_date_card.dart';
 import 'package:kounslr/src/ui/styled_components/next_class_card.dart';
-import 'package:kounslr/src/ui/views/student_id_card_view.dart';
+import 'package:kounslr/src/ui/views/profile_view.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -88,7 +85,7 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _header(BuildContext context) {
     String email = FirebaseAuth.instance.currentUser.email;
-    String username = email.substring(0,email.indexOf('@'));
+    String username = email.substring(0, email.indexOf('@'));
 
     return Row(
       children: [
@@ -111,18 +108,13 @@ class _HomeViewState extends State<HomeView> {
         ),
         Spacer(),
         CantonHeaderButton(
-          icon: Transform(
-            // Flips icon 180 degrees so it looks more like an info button
-            transform: Matrix4.rotationZ(math.pi),
-            alignment: FractionalOffset.center,
-            child: IconlyIcon(
-              IconlyBold.InfoCircle,
-              color: Theme.of(context).colorScheme.secondaryVariant,
-            ),
+          icon: IconlyIcon(
+            IconlyBold.Profile,
+            color: Theme.of(context).colorScheme.secondaryVariant,
           ),
           onPressed: () => CantonMethods.viewTransition(
             context,
-            StudentIDCardView(),
+            ProfileView(),
           ),
         ),
       ],
