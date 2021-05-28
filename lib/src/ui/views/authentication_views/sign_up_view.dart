@@ -1,7 +1,6 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
-import 'package:kounslr/src/ui/views/authentication_views/sign_in_view.dart';
 
 class SignUpView extends ConsumerWidget {
   final Function toggleView;
@@ -48,10 +47,7 @@ class SignUpView extends ConsumerWidget {
               containerWidth: MediaQuery.of(context).size.width / 2 - 34,
               containerColor: Theme.of(context).colorScheme.secondary,
               textColor: Theme.of(context).colorScheme.secondaryVariant,
-              onPressed: () {
-                toggleView();
-                // CantonMethods.viewTransition(context, SignInView());
-              },
+              onPressed: () => toggleView(),
             ),
             Spacer(),
             CantonPrimaryButton(
