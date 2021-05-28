@@ -16,9 +16,9 @@ class CurrentDateCard extends StatelessWidget {
             children: [
               Text(
                 'X',
-                style: Theme.of(context).textTheme.headline4.copyWith(
-                      color: CantonColors.white,
-                    ),
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                  color: CantonColors.white,
+                ),
               ),
               Text(
                 'Day',
@@ -31,7 +31,8 @@ class CurrentDateCard extends StatelessWidget {
         ),
         SizedBox(width: 15),
         Text(_modifyDateFormat(DateTime.now()),
-            style: Theme.of(context).textTheme.headline6),
+            style: Theme.of(context).textTheme.headline6,
+        ),
       ],
     );
   }
