@@ -12,8 +12,13 @@ class _HallPassViewState extends State<HallPassView> {
   }
 
   Widget _content(BuildContext context) {
-    return Column(children: [
-      new Text("test"),
-    ]);
+    return Center(
+      child: Text(
+        'Hall Pass View coming soon 🚀',
+        style: Theme.of(context).textTheme.headline4.copyWith(
+              color: Theme.of(context).primaryColor,
+            ),
+      ),
+    );
   }
 }
