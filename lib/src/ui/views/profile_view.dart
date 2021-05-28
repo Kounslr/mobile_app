@@ -48,21 +48,23 @@ class ProfileView extends ConsumerWidget {
 }
 
 Widget _body(BuildContext context) {
-  return Column(children: [
-    _profileCard(context),
-    SizedBox(height: 10),
-    _studentIDCard(context),
-    SizedBox(height: 10),
-    CantonPrimaryButton(
-      buttonText: 'Sign out',
-      textColor: CantonColors.white,
-      containerColor: Theme.of(context).primaryColor,
-      containerWidth: MediaQuery.of(context).size.width / 2 - 34,
-      onPressed: () {
-        context.read(authenticationServiceProvider).signOut(context);
-      },
-    ),
-  ]);
+  return Column(
+    children: [
+      _profileCard(context),
+      SizedBox(height: 10),
+      _studentIDCard(context),
+      SizedBox(height: 10),
+      CantonPrimaryButton(
+        buttonText: 'Sign out',
+        textColor: CantonColors.white,
+        containerColor: Theme.of(context).primaryColor,
+        containerWidth: MediaQuery.of(context).size.width / 2 - 34,
+        onPressed: () {
+          context.read(authenticationServiceProvider).signOut(context);
+        },
+      ),
+    ],
+  );
 }
 
 Widget _studentIDCard(BuildContext context) {

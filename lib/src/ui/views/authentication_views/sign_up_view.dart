@@ -1,5 +1,9 @@
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kounslr/src/models/student.dart';
+import 'package:kounslr/src/services/repository/studentvue_client.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 
 class SignUpView extends ConsumerWidget {
@@ -9,16 +13,20 @@ class SignUpView extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     final _emailController = TextEditingController();
     final _passwordController = TextEditingController();
+    final _domainController = TextEditingController(text: 'portal.lcps.org');
 
     return CantonScaffold(
-      body: _content(context, _emailController, _passwordController),
+      body: _content(context, watch, _emailController, _passwordController,
+          _domainController),
     );
   }
 
   Widget _content(
     BuildContext context,
+    ScopedReader watch,
     TextEditingController _emailController,
     TextEditingController _passwordController,
+    TextEditingController _domainController,
   ) {
     return Column(
       children: [
@@ -39,6 +47,14 @@ class SignUpView extends ConsumerWidget {
           obscureText: true,
           controller: _passwordController,
         ),
+        SizedBox(height: 15),
+        CantonTextInput(
+          hintText: 'Domain',
+          isTextInputTwo: true,
+          isTextFormField: true,
+          obscureText: false,
+          controller: _domainController,
+        ),
         SizedBox(height: 20),
         Row(
           children: [
@@ -56,10 +72,32 @@ class SignUpView extends ConsumerWidget {
               containerColor: Theme.of(context).primaryColor,
               textColor: CantonColors.white,
               onPressed: () {
+                // final authServ = watch(authenticationServiceProvider);
                 context.read(authenticationServiceProvider).signUp(
                       email: _emailController.text.trim(),
                       password: _passwordController.text.trim(),
+                      id: _emailController.text.substring(
+                        0,
+                        _emailController.text.indexOf('@'),
+                      ),
                     );
+
+                // final student = StudentVueClient(
+                //   _emailController.text.substring(
+                //     0,
+                //     _emailController.text.indexOf('@'),
+                //   ),
+                //   _passwordController.text,
+                //   _domainController.text,
+                // );
+
+                // Student kounslrStudent = Student(
+                //   id: student.username,
+                // );
+
+                // authServ.
+
+                // initialUpdateUserData(kounslrStudent.id, kounslrStudent);
               },
             ),
           ],
@@ -67,6 +105,12 @@ class SignUpView extends ConsumerWidget {
       ],
     );
   }
+
+  // Future initialUpdateUserData(String id, Student student) async {
+  //   final User user = await FirebaseAuth.instance.currentUser;
+  //   // final CollectionReference collection = FirebaseFirestore.instance
+  //   return ;
+  // }
 
   Widget _header(BuildContext context) {
     return Row(
