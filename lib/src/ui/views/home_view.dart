@@ -2,6 +2,7 @@ import 'dart:math' as math;
 // import 'dart:developer' as dev;
 
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/styled_components/current_date_card.dart';
 import 'package:kounslr/src/ui/styled_components/next_class_card.dart';
@@ -86,6 +87,9 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _header(BuildContext context) {
+    String email = FirebaseAuth.instance.currentUser.email;
+    String username = email.substring(0,email.indexOf('@'));
+
     return Row(
       children: [
         Column(
@@ -98,7 +102,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
             ),
             Text(
-              'TEST',
+              username,
               style: Theme.of(context).textTheme.headline1.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
