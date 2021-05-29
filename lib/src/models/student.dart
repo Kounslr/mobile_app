@@ -1,13 +1,9 @@
 import 'dart:convert';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:kounslr/src/models/class.dart';
 
 class Student {
-  // Theoretically the name and other info can go here
-  // var studentApi = StudentVueClient('1056083', 'Bingie@jordan0831!', 'portal.lcps.org').loadStudentData().then((value) => studentInfo = value);
-
   String id;
   String name;
   String gender;
@@ -23,7 +19,6 @@ class Student {
   String homeroomTeacher;
   String homeroomTeacherEmail;
   String counselorName;
-  String error;
   List<Class> classes;
 
   Student({
@@ -43,7 +38,6 @@ class Student {
     this.homeroomTeacherEmail,
     this.counselorName,
     this.classes,
-    this.error,
   });
 
   Student copyWith({
@@ -122,7 +116,28 @@ class Student {
       homeroomTeacher: map['homeroomTeacher'],
       homeroomTeacherEmail: map['homeroomTeacherEmail'],
       counselorName: map['counselorName'],
-      classes: List<Class>.from(map['classes']?.map((x) => Class.fromMap(x))),
+      // classes: List<Class>.from(map['classes']?.map((x) => Class.fromMap(x))),
+    );
+  }
+
+  factory Student.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return Student(
+      id: doc.data(),
+      name: doc['name'],
+      gender: doc['gender'],
+      grade: doc['grade'],
+      address: doc['address'],
+      nickname: doc['nickname'],
+      birthdate: doc['birthdate'],
+      email: doc['email'],
+      phone: doc['phone'],
+      photo: doc['photo'],
+      currentSchool: doc['currentSchool'],
+      homeroom: doc['homeroom'],
+      homeroomTeacher: doc['homeroomTeacher'],
+      homeroomTeacherEmail: doc['homeroomTeacherEmail'],
+      counselorName: doc['counselorName'],
+      classes: List<Class>.from(doc['classes']?.map((x) => Class.fromMap(x))),
     );
   }
 
