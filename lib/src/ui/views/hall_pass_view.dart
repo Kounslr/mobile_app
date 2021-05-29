@@ -1,5 +1,4 @@
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:kounslr/src/services/repository/studentvue_client.dart';
 
 class HallPassView extends StatefulWidget {
   @override
