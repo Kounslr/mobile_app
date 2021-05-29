@@ -168,9 +168,7 @@ class StudentVueClient {
         </soap:Body>
     </soap:Envelope>''';
 
-      var headers = <String, List<String>>{
-        'Content-Type': ['text/xml']
-      };
+      var headers = <String, String>{'Content-Type': 'text/xml'};
 
       var res = await _dio.post(reqURL,
           data: requestData,

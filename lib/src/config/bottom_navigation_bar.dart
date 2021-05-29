@@ -46,7 +46,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           icon: Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: IconlyIcon(
-              IconlyBold.Profile,
+              IconlyBold.Edit,
               size: 24,
               color: widget.currentIndex == 2
                   ? Theme.of(context).primaryColor
