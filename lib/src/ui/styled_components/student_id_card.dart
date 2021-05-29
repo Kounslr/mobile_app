@@ -1,7 +1,11 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr/src/models/student.dart';
 
 class StudentIDCard extends StatelessWidget {
+  final Student student;
+
+  const StudentIDCard(this.student);
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -20,10 +24,11 @@ class StudentIDCard extends StatelessWidget {
                     width: 80,
                     color: Theme.of(context).colorScheme.secondary,
                   ),
+                  // child: Image.network(student.photo, width: 80, height: 80)
                 ),
                 SizedBox(width: 15),
                 Text(
-                  'SCHOOL NAME',
+                  student.currentSchool,
                   style: Theme.of(context)
                       .textTheme
                       .headline4
@@ -36,9 +41,9 @@ class StudentIDCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _titleUserText(context, 'Name', 'NAME HERE'),
-                _titleUserText(context, 'Grade', 'GRADE HERE'),
-                _titleUserText(context, 'ID', 'ID HERE')
+                _titleUserText(context, 'Name', student.name),
+                _titleUserText(context, 'Grade', student.grade),
+                _titleUserText(context, 'ID', student.id)
               ],
             ),
           ],
@@ -57,13 +62,13 @@ class StudentIDCard extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.bodyText1.copyWith(
+          style: Theme.of(context).textTheme.headline6.copyWith(
                 color: Theme.of(context).colorScheme.primaryVariant,
               ),
         ),
         Text(
           description,
-          style: Theme.of(context).textTheme.headline6.copyWith(
+          style: Theme.of(context).textTheme.headline5.copyWith(
                 color: CantonColors.white,
               ),
         ),
