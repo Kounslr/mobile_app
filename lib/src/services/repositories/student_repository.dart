@@ -27,24 +27,6 @@ class StudentRepository extends ChangeNotifier {
     }
   }
 
-  // Stream<List<Student>> studentStream(String school, String uid) {
-  //   return _firestore
-  //       .collection('customers')
-  //         .doc()
-  //         .collection('schools')
-  //         .doc(school)
-  //         .collection('students')
-  //         .doc(uid)
-  //       .snapshots()
-  //       .map(( query) {
-  //     List<Student> retVal = [];
-  //     query.data().forEach((element, c) {
-  //       retVal.add(Student.fromMap(element));
-  //     });
-  //     return retVal;
-  //   });
-  // }
-
   Stream<QuerySnapshot> fetchStudentsAsStream() {
     return _api.streamDataCollection();
   }
