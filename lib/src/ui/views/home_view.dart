@@ -146,7 +146,7 @@ class _HomeViewState extends State<HomeView> {
           ),
           onPressed: () => CantonMethods.viewTransition(
             context,
-            ProfileView(),
+            ProfileView(student),
           ),
         ),
       ],
