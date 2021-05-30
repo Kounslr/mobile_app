@@ -1,4 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr/src/ui/views/hall_pass_view.dart';
+import 'package:kounslr/src/ui/views/journal_entry_view.dart';
+import 'package:kounslr/src/ui/views/profile_view.dart';
 
 class JournalView extends StatefulWidget {
   @override
@@ -36,7 +39,10 @@ class _JournalViewState extends State<JournalView> {
             color: CantonColors.white,
             size: 24,
           ),
-          onPressed: () {},
+          onPressed: () => CantonMethods.viewTransition(
+            context,
+            JournalEntryView(),
+          ),
         ),
       ],
     );
