@@ -51,7 +51,10 @@ class _JournalViewState extends State<JournalView> {
             color: CantonColors.white,
             size: 24,
           ),
-          onPressed: () {},
+          onPressed: () => CantonMethods.viewTransition(
+            context,
+            JournalEntryView(),
+          ),
         ),
       ],
     );
