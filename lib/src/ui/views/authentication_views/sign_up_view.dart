@@ -72,8 +72,8 @@ class SignUpView extends ConsumerWidget {
               containerWidth: MediaQuery.of(context).size.width / 2 - 34,
               containerColor: Theme.of(context).primaryColor,
               textColor: CantonColors.white,
-              onPressed: () {
-                context.read(authenticationServiceProvider).signUp(
+              onPressed: () async {
+                await context.read(authenticationServiceProvider).signUp(
                       email: _emailController.text.trim(),
                       password: _passwordController.text.trim(),
                       domain: _domainController.text.trim(),

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:xml/xml.dart';
 import 'package:kounslr/src/models/assignment.dart';
+import 'dart:developer' as dev;
 
 class StudentVueClient {
   final domain;
@@ -38,9 +39,7 @@ class StudentVueClient {
       </soap:Body>
     </soap:Envelope>''';
 
-      var headers = <String, List<String>>{
-        'Content-Type': ['text/xml']
-      };
+      var headers = <String, String>{'Content-Type': 'text/xml'};
 
       var res = await _dio.post(reqURL,
           data: requestData,
@@ -78,7 +77,9 @@ class StudentVueClient {
 
       _class.className = current
           .getAttribute('Title')
-          .substring(0, current.getAttribute('Title').indexOf('('));
+          .substring(0, current.getAttribute('Title').indexOf('('))
+          ?.replaceAll('/', ' ')
+          ?.replaceAll('.', ' ');
       _class.period = int.tryParse(current.getAttribute('Period') ?? '0') ?? -1;
       _class.roomNumber = current.getAttribute('Room') ?? 'N/A';
       _class.classTeacher = current.getAttribute('Staff') ?? 'N/A';
@@ -105,7 +106,8 @@ class StudentVueClient {
       for (int i = 0; i < current.children.length; i++) {
         Assignment ass = Assignment();
         ass.assignmentName =
-            current.children[i].getAttribute('Measure') ?? 'Assignment';
+            current.children[i].getAttribute('Measure')?.replaceAll('/', ' ') ??
+                'Assignment';
         ass.category =
             current.children[i].getAttribute('Type') ?? 'No Category';
         ass.date = current.children[i].getAttribute('DueDate') ?? '';
@@ -146,6 +148,11 @@ class StudentVueClient {
       classes.add(_class);
     }
     svData = classes;
+
+    // for (var element in svData) {
+    //   element.className.replaceAll(RegExp(r'/'), ' ');
+    //   element.className.replaceAll('/', ' ');
+    // }
 
     return svData;
   }
@@ -190,7 +197,6 @@ class StudentVueClient {
         .firstElementChild.firstElementChild.firstElementChild;
 
     return Student(
-      // lockerInfo: el.getElement('LockerInfoRecords')?.innerText,
       name: el.getElement('FormattedName')?.innerText,
       id: el.getElement('PermID')?.innerText,
       gender: el.getElement('Gender')?.innerText,
