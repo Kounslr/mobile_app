@@ -29,8 +29,6 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
         final _authState = watch(authenticationStreamProvider);
         return _authState.when(
           error: (e, s) {
-            dev.log(e);
-            dev.log(s.toString());
             return Center(
               child: Text(
                 'Something went wrong',
@@ -40,14 +38,15 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
           },
           loading: () => Loading(),
           data: (user) {
-            if (user == null) {
+            if (user == null || user.uid == null) {
               if (showSignIn) {
                 return SignInView(toggleView: toggleView);
               } else {
                 return SignUpView(toggleView: toggleView);
               }
+            } else {
+              return CurrentView();
             }
-            return CurrentView();
           },
         );
       },
