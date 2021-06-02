@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-import 'package:kounslr/src/models/class.dart';
 
 class Student {
   String id;
@@ -19,7 +17,6 @@ class Student {
   String homeroomTeacher;
   String homeroomTeacherEmail;
   String counselorName;
-  List<Class> classes;
 
   Student({
     this.id,
@@ -37,7 +34,6 @@ class Student {
     this.homeroomTeacher,
     this.homeroomTeacherEmail,
     this.counselorName,
-    this.classes,
   });
 
   Student copyWith({
@@ -56,7 +52,6 @@ class Student {
     String homeroomTeacher,
     String homeroomTeacherEmail,
     String counselorName,
-    List<Class> classes,
   }) {
     return Student(
       id: id ?? this.id,
@@ -74,7 +69,6 @@ class Student {
       homeroomTeacher: homeroomTeacher ?? this.homeroomTeacher,
       homeroomTeacherEmail: homeroomTeacherEmail ?? this.homeroomTeacherEmail,
       counselorName: counselorName ?? this.counselorName,
-      classes: classes ?? this.classes,
     );
   }
 
@@ -95,7 +89,6 @@ class Student {
       'homeroomTeacher': homeroomTeacher,
       'homeroomTeacherEmail': homeroomTeacherEmail,
       'counselorName': counselorName,
-      'classes': classes?.map((x) => x.toMap())?.toList(),
     };
   }
 
@@ -116,7 +109,6 @@ class Student {
       homeroomTeacher: map['homeroomTeacher'],
       homeroomTeacherEmail: map['homeroomTeacherEmail'],
       counselorName: map['counselorName'],
-      // classes: List<Class>.from(map['classes']?.map((x) => Class.fromMap(x))),
     );
   }
 
@@ -137,7 +129,6 @@ class Student {
       homeroomTeacher: doc['homeroomTeacher'],
       homeroomTeacherEmail: doc['homeroomTeacherEmail'],
       counselorName: doc['counselorName'],
-      classes: List<Class>.from(doc['classes']?.map((x) => Class.fromMap(x))),
     );
   }
 
@@ -148,7 +139,7 @@ class Student {
 
   @override
   String toString() {
-    return 'Student(id: $id, name: $name, gender: $gender, grade: $grade, address: $address, nickname: $nickname, birthdate: $birthdate, email: $email, phone: $phone, photo: $photo, currentSchool: $currentSchool, homeroom: $homeroom, homeroomTeacher: $homeroomTeacher, homeroomTeacherEmail: $homeroomTeacherEmail, counselorName: $counselorName, classes: $classes)';
+    return 'Student(id: $id, name: $name, gender: $gender, grade: $grade, address: $address, nickname: $nickname, birthdate: $birthdate, email: $email, phone: $phone, photo: $photo, currentSchool: $currentSchool, homeroom: $homeroom, homeroomTeacher: $homeroomTeacher, homeroomTeacherEmail: $homeroomTeacherEmail, counselorName: $counselorName)';
   }
 
   @override
@@ -170,8 +161,7 @@ class Student {
         other.homeroom == homeroom &&
         other.homeroomTeacher == homeroomTeacher &&
         other.homeroomTeacherEmail == homeroomTeacherEmail &&
-        other.counselorName == counselorName &&
-        listEquals(other.classes, classes);
+        other.counselorName == counselorName;
   }
 
   @override
@@ -190,7 +180,6 @@ class Student {
         homeroom.hashCode ^
         homeroomTeacher.hashCode ^
         homeroomTeacherEmail.hashCode ^
-        counselorName.hashCode ^
-        classes.hashCode;
+        counselorName.hashCode;
   }
 }

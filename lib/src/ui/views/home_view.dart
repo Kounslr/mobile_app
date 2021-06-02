@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kounslr/src/models/student.dart';
+import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:kounslr/src/ui/providers/student_provider.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/views/profile_view.dart';
@@ -23,14 +24,76 @@ class _HomeViewState extends State<HomeView> {
   Widget _content(BuildContext context, User user) {
     return Consumer(
       builder: (context, watch, child) {
-        return StreamBuilder<DocumentSnapshot>(
-          stream: context.read(studentProvider).getStudent(
-                'lcps',
-                'independence',
-                user.uid,
-              ),
+        return StreamBuilder(
+          stream: context
+              .read(studentProvider)
+              .getStudent('lcps', 'independence', user.uid),
           builder: (context, snapshot) {
-            if (snapshot.hasError) {
+            if (snapshot.connectionState == ConnectionState.active &&
+                snapshot.data.data() != null) {
+              return Column(
+                children: [
+                  _header(context, user, Student.fromMap(snapshot.data.data())),
+                  SizedBox(height: 10),
+                  _dateCard(context),
+                  _nextClassCard(context),
+
+                  // ListView controls
+                  Row(
+                    children: [
+                      Text(
+                        'Upcoming Assignments',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      Spacer(),
+                      TextButton(
+                        style: ButtonStyle(
+                          alignment: Alignment.centerRight,
+                          animationDuration: Duration.zero,
+                          elevation: MaterialStateProperty.all<double>(0),
+                          overlayColor: MaterialStateProperty.all<Color>(
+                            CantonColors.transparent,
+                          ),
+                          padding:
+                              MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            EdgeInsets.zero,
+                          ),
+                        ),
+                        child: Text(
+                          'View All',
+                          style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                        ),
+                        onPressed: () {},
+                      ),
+                      CantonActionButton(
+                        icon: IconlyIcon(
+                          IconlyBold.ArrowRight2,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+
+                  // List View of assignments
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: 5,
+                      shrinkWrap: true,
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 6);
+                      },
+                      itemBuilder: (context, index) {
+                        return AssignmentCard();
+                      },
+                    ),
+                  ),
+                ],
+              );
+            } else if (snapshot.hasError) {
               return Center(
                 child: Text(
                   'Something went wrong',
@@ -39,73 +102,9 @@ class _HomeViewState extends State<HomeView> {
                       ),
                 ),
               );
-            }
-
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            } else {
               return Loading();
             }
-
-            return Column(
-              children: [
-                _header(context, user, Student.fromMap(snapshot.data.data())),
-                SizedBox(height: 10),
-                _dateCard(context),
-                _nextClassCard(context),
-
-                // ListView controls
-                Row(
-                  children: [
-                    Text(
-                      'Upcoming Assignments',
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    Spacer(),
-                    TextButton(
-                      style: ButtonStyle(
-                        alignment: Alignment.centerRight,
-                        animationDuration: Duration.zero,
-                        elevation: MaterialStateProperty.all<double>(0),
-                        overlayColor: MaterialStateProperty.all<Color>(
-                          CantonColors.transparent,
-                        ),
-                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                          EdgeInsets.zero,
-                        ),
-                      ),
-                      child: Text(
-                        'View All',
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(
-                              fontWeight: FontWeight.w500,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                      ),
-                      onPressed: () {},
-                    ),
-                    CantonActionButton(
-                      icon: IconlyIcon(
-                        IconlyBold.ArrowRight2,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-
-                // List View of assignments
-                Expanded(
-                  child: ListView.separated(
-                    itemCount: 5,
-                    shrinkWrap: true,
-                    separatorBuilder: (context, index) {
-                      return SizedBox(height: 6);
-                    },
-                    itemBuilder: (context, index) {
-                      return AssignmentCard();
-                    },
-                  ),
-                ),
-              ],
-            );
           },
         );
       },
