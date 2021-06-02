@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:kounslr/src/models/assignment.dart';
@@ -12,8 +13,6 @@ class Class {
   String roomNumber;
   String pctGrade;
   String letterGrade;
-  double earnedPoints;
-  double possiblePoints;
   int period;
   List<Assignment> assignments;
 
@@ -25,8 +24,6 @@ class Class {
     this.roomNumber,
     this.pctGrade,
     this.letterGrade,
-    this.earnedPoints,
-    this.possiblePoints,
     this.period,
     this.assignments,
   });
@@ -39,8 +36,6 @@ class Class {
     String roomNumber,
     String pctGrade,
     String letterGrade,
-    double earnedPoints,
-    double possiblePoints,
     int period,
     List<Assignment> assignments,
   }) {
@@ -52,8 +47,6 @@ class Class {
       roomNumber: roomNumber ?? this.roomNumber,
       pctGrade: pctGrade ?? this.pctGrade,
       letterGrade: letterGrade ?? this.letterGrade,
-      earnedPoints: earnedPoints ?? this.earnedPoints,
-      possiblePoints: possiblePoints ?? this.possiblePoints,
       period: period ?? this.period,
       assignments: assignments ?? this.assignments,
     );
@@ -68,27 +61,33 @@ class Class {
       'roomNumber': roomNumber,
       'pctGrade': pctGrade,
       'letterGrade': letterGrade,
-      'earnedPoints': earnedPoints,
-      'possiblePoints': possiblePoints,
       'period': period,
-      'assignments': assignments?.map((x) => x.toMap())?.toList(),
     };
   }
 
   factory Class.fromMap(Map<String, dynamic> map) {
     return Class(
-      className: map['className'],
-      classTeacher: map['classTeacher'],
-      classTeacherEmail: map['classTeacherEmail'],
-      markingPeriod: map['markingPeriod'],
-      roomNumber: map['roomNumber'],
-      pctGrade: map['pctGrade'],
-      letterGrade: map['letterGrade'],
-      earnedPoints: map['earnedPoints'],
-      possiblePoints: map['possiblePoints'],
-      period: map['period'],
-      assignments: List<Assignment>.from(
-          map['assignments']?.map((x) => Assignment.fromMap(x))),
+      className: map['className'] as String,
+      classTeacher: map['classTeacher'] as String,
+      classTeacherEmail: map['classTeacherEmail'] as String,
+      markingPeriod: map['markingPeriod'] as String,
+      roomNumber: map['roomNumber'] as String,
+      pctGrade: map['pctGrade'] as String,
+      letterGrade: map['letterGrade'] as String,
+      period: map['period'] as int,
+    );
+  }
+
+  factory Class.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return Class(
+      className: doc['className'] as String,
+      classTeacher: doc['classTeacher'] as String,
+      classTeacherEmail: doc['classTeacherEmail'] as String,
+      markingPeriod: doc['markingPeriod'] as String,
+      roomNumber: doc['roomNumber'] as String,
+      pctGrade: doc['pctGrade'] as String,
+      letterGrade: doc['letterGrade'] as String,
+      period: doc['period'] as int,
     );
   }
 
@@ -98,7 +97,7 @@ class Class {
 
   @override
   String toString() {
-    return 'Class(className: $className, classTeacher: $classTeacher, classTeacherEmail: $classTeacherEmail, markingPeriod: $markingPeriod, roomNumber: $roomNumber, pctGrade: $pctGrade, letterGrade: $letterGrade, earnedPoints: $earnedPoints, possiblePoints: $possiblePoints, period: $period, assignments: $assignments)';
+    return 'Class(className: $className, classTeacher: $classTeacher, classTeacherEmail: $classTeacherEmail, markingPeriod: $markingPeriod, roomNumber: $roomNumber, pctGrade: $pctGrade, letterGrade: $letterGrade, period: $period, assignments: $assignments)';
   }
 
   @override
@@ -113,8 +112,6 @@ class Class {
         other.roomNumber == roomNumber &&
         other.pctGrade == pctGrade &&
         other.letterGrade == letterGrade &&
-        other.earnedPoints == earnedPoints &&
-        other.possiblePoints == possiblePoints &&
         other.period == period &&
         listEquals(other.assignments, assignments);
   }
@@ -128,8 +125,6 @@ class Class {
         roomNumber.hashCode ^
         pctGrade.hashCode ^
         letterGrade.hashCode ^
-        earnedPoints.hashCode ^
-        possiblePoints.hashCode ^
         period.hashCode ^
         assignments.hashCode;
   }

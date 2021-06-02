@@ -1,7 +1,6 @@
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:kounslr/src/ui/views/hall_pass_view.dart';
-import 'package:kounslr/src/ui/views/journal_entry_view.dart';
-import 'package:kounslr/src/ui/views/profile_view.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 
 class JournalView extends StatefulWidget {
   @override
@@ -15,10 +14,23 @@ class _JournalViewState extends State<JournalView> {
   }
 
   Widget _content(BuildContext context) {
-    return Column(
-      children: [
-        _header(context),
-      ],
+    return Consumer(
+      builder: (context, watch, child) {
+        return Column(
+          children: [
+            _header(context),
+            CantonPrimaryButton(
+              buttonText: 'Sign out',
+              textColor: CantonColors.white,
+              containerColor: Theme.of(context).primaryColor,
+              containerWidth: MediaQuery.of(context).size.width / 2 - 34,
+              onPressed: () {
+                context.read(authenticationServiceProvider).signOut(context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
