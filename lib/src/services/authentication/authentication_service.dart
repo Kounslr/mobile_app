@@ -48,7 +48,6 @@ class AuthenticationService {
 
   Future<void> signOut(BuildContext context) async {
     await _firebaseAuth.signOut();
-    Navigator.pop(context);
   }
 
   Future<String> signIn({String email, String password}) async {
