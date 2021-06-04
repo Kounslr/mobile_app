@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:xml/xml.dart';
 import 'package:kounslr/src/models/assignment.dart';
-import 'dart:developer' as dev;
 
 class StudentVueClient {
   final domain;
@@ -20,6 +19,10 @@ class StudentVueClient {
   }
 
   final Dio _dio = Dio(BaseOptions(validateStatus: (_) => true));
+
+  String _formattedStringName(String string) {
+    return string?.replaceAll('.', '')?.replaceAll('/', ' ') ?? 'Assignment';
+  }
 
   Future<List<Class>> loadGradebook({Function(double) callback}) async {
     String resData;
@@ -75,11 +78,10 @@ class StudentVueClient {
       if (current.getAttribute('Title') == null) continue;
       Class _class = Class();
 
-      _class.className = current
+      _class.className = _formattedStringName(current
           .getAttribute('Title')
-          .substring(0, current.getAttribute('Title').indexOf('('))
-          ?.replaceAll('/', ' ')
-          ?.replaceAll('.', ' ');
+          .substring(0, current.getAttribute('Title').indexOf('(')));
+
       _class.period = int.tryParse(current.getAttribute('Period') ?? '0') ?? -1;
       _class.roomNumber = current.getAttribute('Room') ?? 'N/A';
       _class.classTeacher = current.getAttribute('Staff') ?? 'N/A';
@@ -105,9 +107,9 @@ class StudentVueClient {
       _class.assignments = <Assignment>[];
       for (int i = 0; i < current.children.length; i++) {
         Assignment ass = Assignment();
+
         ass.assignmentName =
-            current.children[i].getAttribute('Measure')?.replaceAll('/', ' ') ??
-                'Assignment';
+            _formattedStringName(current.children[i].getAttribute('Measure'));
         ass.category =
             current.children[i].getAttribute('Type') ?? 'No Category';
         ass.date = current.children[i].getAttribute('DueDate') ?? '';
@@ -148,11 +150,6 @@ class StudentVueClient {
       classes.add(_class);
     }
     svData = classes;
-
-    // for (var element in svData) {
-    //   element.className.replaceAll(RegExp(r'/'), ' ');
-    //   element.className.replaceAll('/', ' ');
-    // }
 
     return svData;
   }
