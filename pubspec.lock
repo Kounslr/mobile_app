@@ -20,7 +20,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "88c1d861dd32ba68e9b4fde14c8325609dfe5de9"
+      resolved-ref: a03b68bc3cba0b0baee9161b88ce2a8ab3ab350c
       url: "git://github.com/31Carlton7/canton_design_system.git"
     source: git
     version: "0.0.1"
@@ -108,6 +108,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.3"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
   fake_async:
     dependency: transitive
     description:
@@ -185,6 +192,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  fl_chart:
+    dependency: "direct main"
+    description:
+      name: fl_chart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.36.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -212,7 +226,7 @@ packages:
     source: hosted
     version: "0.14.0+3"
   flutter_slidable:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_slidable
       url: "https://pub.dartlang.org"
