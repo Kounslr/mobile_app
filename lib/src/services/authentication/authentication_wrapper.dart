@@ -1,8 +1,5 @@
-import 'dart:developer' as dev;
-
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_stream_provider.dart';
 import 'package:kounslr/src/ui/views/authentication_views/sign_in_view.dart';
 import 'package:kounslr/src/ui/views/authentication_views/sign_up_view.dart';
