@@ -11,7 +11,7 @@ class AssignmentCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               decoration: ShapeDecoration(
                 color: Theme.of(context).colorScheme.secondary,
-                shape: SquircleBorder(radius: 30),
+                shape: SquircleBorder(radius: BorderRadius.circular(30)),
               ),
               child: IconlyIcon(
                 IconlyBold.EditSquare,
