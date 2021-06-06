@@ -24,10 +24,10 @@ class _HomeViewState extends State<HomeView> {
               .read(studentProvider)
               .getStudent('lcps', 'independence', user.uid),
           builder: (context, snapshot) {
-            if (!snapshot.hasError && snapshot.hasData) {
-              return _content(context, user, snapshot);
-            } else if (!snapshot.hasData) {
+            if (!snapshot.hasData || snapshot.data.data() == null) {
               return Loading();
+            } else if (!snapshot.hasError && snapshot.hasData) {
+              return _content(context, user, snapshot);
             } else {
               return Center(
                 child: Column(

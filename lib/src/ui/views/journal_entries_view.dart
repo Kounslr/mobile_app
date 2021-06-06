@@ -1,4 +1,5 @@
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr/src/ui/styled_components/journal_entry_card.dart';
 
 class JournalEntriesView extends StatefulWidget {
   const JournalEntriesView();
@@ -22,8 +23,15 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
           title: 'Journal Entries',
           backButton: true,
           isBackButtonClear: true,
-        )
+        ),
+        _journalEntriesListView(context),
       ],
     );
+  }
+
+  Widget _journalEntriesListView(BuildContext context) {
+    return ListView.builder(itemBuilder: (context, index) {
+      //return JournalEntryCard();
+    });
   }
 }

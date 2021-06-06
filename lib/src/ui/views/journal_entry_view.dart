@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/models/journal_entry_tag.dart';
-import 'package:kounslr/src/services/repositories/student_repository.dart';
 import 'package:kounslr/src/ui/providers/student_provider.dart';
 import 'package:kounslr/src/ui/styled_components/journal_entry_tags/journal_entry_tags.dart';
 
@@ -62,9 +61,14 @@ class _JournalEntryViewState extends State<JournalEntryView> {
         children: [
           CantonBackButton(
             isClear: true,
-            onPressed: () {
-              _completeJournalEntry(repo);
-              Navigator.of(context).pop();
+            onPressed: () => {
+              repo.completeJournalEntry(
+                entry: widget.entry,
+                title: _titleController.text,
+                summary: _summaryController.text,
+                tags: _tags,
+              ),
+              Navigator.of(context).pop(),
             },
           ),
           Text(
@@ -101,7 +105,12 @@ class _JournalEntryViewState extends State<JournalEntryView> {
                     fontWeight: FontWeight.w500, color: CantonColors.white),
               ),
               onPressed: () => {
-                _completeJournalEntry(repo),
+                repo.completeJournalEntry(
+                  entry: widget.entry,
+                  title: _titleController.text,
+                  summary: _summaryController.text,
+                  tags: _tags,
+                ),
                 Navigator.of(context).pop(),
               },
             ),
@@ -223,24 +232,5 @@ class _JournalEntryViewState extends State<JournalEntryView> {
         hintText: 'Summary',
       ),
     );
-  }
-
-  void _completeJournalEntry(StudentRepository repo) {
-    if (widget.entry.id == null) {
-      repo.addJournalEntry(JournalEntry(
-        creationDate: DateTime.now(),
-        lastEditDate: DateTime.now(),
-        title: _titleController.text,
-        summary: _summaryController.text,
-        tags: _tags,
-      ));
-    } else {
-      repo.updateJournalEntry(
-        entry: widget.entry,
-        title: _titleController.text,
-        summary: _summaryController.text,
-        tags: _tags,
-      );
-    }
   }
 }
