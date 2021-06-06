@@ -29,11 +29,16 @@ class StudentRepository extends ChangeNotifier {
         .collection('journal entries')
         .doc()
         .id;
+
     await user
         .doc(FirebaseAuth.instance.currentUser.uid)
         .collection('journal entries')
-        .doc()
+        .doc(id)
         .set(entry.copyWith(id: id).toMap());
+
+    // await user.doc(FirebaseAuth.instance.currentUser.uid)
+    //     .collection('journal entries')
+    //     .doc().
   }
 
   Future<void> updateJournalEntry({
@@ -53,5 +58,31 @@ class StudentRepository extends ChangeNotifier {
                 tags: tags,
                 lastEditDate: DateTime.now())
             .toMap());
+  }
+
+  Future<void> completeJournalEntry(
+      {JournalEntry entry,
+      String title,
+      String summary,
+      List<JournalEntryTag> tags}) async {
+    if (!([null, ''].contains(title) || [null, ''].contains(summary)) ||
+        [[], null].contains(tags)) {
+      if (entry.id == null) {
+        await addJournalEntry(JournalEntry(
+          creationDate: DateTime.now(),
+          lastEditDate: DateTime.now(),
+          title: title,
+          summary: summary,
+          tags: tags,
+        ));
+      } else {
+        await updateJournalEntry(
+          entry: entry,
+          title: title,
+          summary: summary,
+          tags: tags,
+        );
+      }
+    }
   }
 }
