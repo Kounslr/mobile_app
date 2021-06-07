@@ -1,71 +1,236 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:kounslr/src/models/journal_entry.dart';
+import 'package:kounslr/src/models/journal_entry_tag.dart';
+import 'package:kounslr/src/ui/providers/student_provider.dart';
+import 'package:kounslr/src/ui/styled_components/journal_entry_tags/journal_entry_tags.dart';
 
-class JournalEntryView extends ConsumerWidget {
-  final Function toggleView;
-  const JournalEntryView({this.toggleView});
+class JournalEntryView extends StatefulWidget {
+  final JournalEntry entry;
+  const JournalEntryView(this.entry);
+
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final _titleController = TextEditingController();
-    final _summaryController = TextEditingController();
+  _JournalEntryViewState createState() => _JournalEntryViewState();
+}
 
+class _JournalEntryViewState extends State<JournalEntryView> {
+  final _titleController = TextEditingController();
+  final _summaryController = TextEditingController();
+  final _titleFocus = FocusNode();
+  final _summaryFocus = FocusNode();
+  List<JournalEntryTag> _tags = [];
+
+  void _newEntryFunction() {
+    if (widget.entry.id != null) {
+      _titleController.text = widget.entry.title;
+      _summaryController.text = widget.entry.summary;
+      _tags = widget.entry.tags;
+    } else {
+      _titleFocus.requestFocus();
+    }
+  }
+
+  @override
+  void initState() {
+    _newEntryFunction();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return CantonScaffold(
-      body: _content(context, _titleController, _summaryController),
+      body: _content(context),
     );
   }
 
-  Widget _content(
-    BuildContext context,
-    TextEditingController _titleController,
-    TextEditingController _summaryController,
-  ) {
+  Widget _content(BuildContext context) {
     return Column(
       children: [
         _header(context),
-        SizedBox(height: 10),
-        CantonTextInput(
-          hintText: 'Title',
-          isTextInputTwo: true,
-          isTextFormField: true,
-          obscureText: false,
-          controller: _titleController,
-        ),
-        SizedBox(height: 15),
-        CantonTextInput(
-          textInputType: TextInputType.multiline,
-          custom: true,
-          hintText: 'Summary',
-          isTextInputTwo: true,
-          //isTextFormField: true,
-          controller: _summaryController,
-          maxLines: null,
-        ),
-        SizedBox(height: 20),
+        _body(context),
       ],
     );
   }
 
   Widget _header(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        CantonBackButton(isClear: true),
-        Text(
-          'New Entry',
-          style: Theme.of(context).textTheme.headline5.copyWith(
-                color: Theme.of(context).primaryColor,
+    return Consumer(builder: (context, watch, child) {
+      final repo = watch(studentProvider);
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CantonBackButton(
+            isClear: true,
+            onPressed: () => {
+              repo.completeJournalEntry(
+                entry: widget.entry,
+                title: _titleController.text,
+                summary: _summaryController.text,
+                tags: _tags,
               ),
-        ),
-        CantonHeaderButton(
-          icon: Icon(
-            FeatherIcons.checkCircle,
-            color: Theme.of(context).primaryColor,
+              Navigator.of(context).pop(),
+            },
           ),
-          onPressed: () {},
-          backgroundColor: CantonColors.transparent,
+          Text(
+            DateFormat.yMMMMd().format(
+              DateTime.now(),
+            ),
+            style: Theme.of(context).textTheme.headline5.copyWith(
+                  color: Theme.of(context).primaryColor,
+                ),
+          ),
+          Material(
+            color: Theme.of(context).primaryColor,
+            shape: SquircleBorder(
+              radius: BorderRadius.circular(30),
+            ),
+            child: TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  CantonColors.transparent,
+                ),
+                alignment: Alignment.center,
+                animationDuration: Duration.zero,
+                elevation: MaterialStateProperty.all<double>(0),
+                overlayColor: MaterialStateProperty.all<Color>(
+                  CantonColors.transparent,
+                ),
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                  EdgeInsets.zero,
+                ),
+              ),
+              child: Text(
+                'Save',
+                style: Theme.of(context).textTheme.headline6.copyWith(
+                    fontWeight: FontWeight.w500, color: CantonColors.white),
+              ),
+              onPressed: () => {
+                repo.completeJournalEntry(
+                  entry: widget.entry,
+                  title: _titleController.text,
+                  summary: _summaryController.text,
+                  tags: _tags,
+                ),
+                Navigator.of(context).pop(),
+              },
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  Widget _body(BuildContext context) {
+    return Expanded(
+      child: Column(
+        children: [
+          _titleTextField(context),
+          _tagTextField(context),
+          _summaryTextField(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _titleTextField(BuildContext context) {
+    return TextField(
+      focusNode: _titleFocus,
+      cursorColor: Theme.of(context).primaryColor,
+      controller: _titleController,
+      maxLines: null,
+      scrollController: new ScrollController(),
+      onChanged: (_) {},
+      style: Theme.of(context).textTheme.headline3,
+      decoration: InputDecoration(
+        hintText: 'Title',
+        fillColor: CantonColors.transparent,
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+        hintStyle: Theme.of(context)
+            .textTheme
+            .headline3
+            .copyWith(color: Theme.of(context).colorScheme.secondaryVariant),
+      ),
+    );
+  }
+
+  Widget _tagTextField(BuildContext context) {
+    return TextFieldTags(
+      initialTags: [],
+      textFieldStyler: TextFieldStyler(
+        cursorColor: Theme.of(context).primaryColor,
+        hintText: 'Tags',
+        textFieldFilledColor: Theme.of(context).colorScheme.onSecondary,
+        textFieldFilled: true,
+        textFieldEnabledBorder: SquircleInputBorder(
+          radius: BorderRadius.all(Radius.circular(35)),
+          side: BorderSide(
+            color: CantonColors.transparent,
+            width: 1.5,
+          ),
         ),
-      ],
+        textFieldBorder: SquircleInputBorder(
+          radius: BorderRadius.all(Radius.circular(35)),
+          side: BorderSide(
+            color: CantonColors.transparent,
+            width: 1.5,
+          ),
+        ),
+        textFieldFocusedBorder: SquircleInputBorder(
+          radius: BorderRadius.all(Radius.circular(35)),
+          side: BorderSide(
+            color: CantonColors.transparent,
+            width: 1.5,
+          ),
+        ),
+        textFieldDisabledBorder: SquircleInputBorder(
+          radius: BorderRadius.all(Radius.circular(35)),
+          side: BorderSide(
+            color: CantonColors.transparent,
+            width: 1.5,
+          ),
+        ),
+      ),
+      tagsStyler: TagsStyler(
+        tagCancelIcon: Icon(FeatherIcons.x, color: CantonColors.white),
+        tagDecoration: ShapeDecoration(
+            color: Theme.of(context).primaryColor,
+            shape: SquircleBorder(radius: BorderRadius.circular(20))),
+        tagTextStyle: Theme.of(context)
+            .textTheme
+            .bodyText1
+            .copyWith(color: CantonColors.white),
+      ),
+      onDelete: (_) {},
+      onTag: (name) {
+        _tags.add(JournalEntryTag(name: name));
+      },
+    );
+  }
+
+  Widget _summaryTextField(BuildContext context) {
+    return TextField(
+      focusNode: _summaryFocus,
+      cursorColor: Theme.of(context).primaryColor,
+      controller: _summaryController,
+      maxLines: null,
+      scrollController: new ScrollController(),
+      onChanged: (_) {},
+      style: Theme.of(context).textTheme.headline6,
+      decoration: InputDecoration(
+        fillColor: CantonColors.transparent,
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        errorBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        disabledBorder: InputBorder.none,
+        focusedErrorBorder: InputBorder.none,
+        hintText: 'Summary',
+      ),
     );
   }
 }

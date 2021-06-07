@@ -9,7 +9,7 @@ class StudentIDCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: SquircleBorder(radius: 65),
+      shape: SquircleBorder(radius: BorderRadius.circular(65)),
       color: Theme.of(context).primaryColor,
       child: Padding(
         padding: EdgeInsets.all(15),
@@ -18,7 +18,7 @@ class StudentIDCard extends StatelessWidget {
             Row(
               children: [
                 ClipSquircleBorder(
-                  radius: 40,
+                  radius: BorderRadius.circular(40),
                   child: Container(
                     height: 80,
                     width: 80,

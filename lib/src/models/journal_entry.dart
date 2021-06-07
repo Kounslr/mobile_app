@@ -5,12 +5,14 @@ import 'package:flutter/foundation.dart';
 import 'package:kounslr/src/models/journal_entry_tag.dart';
 
 class JournalEntry {
+  String id;
   String title;
   String summary;
   DateTime creationDate;
   DateTime lastEditDate;
   List<JournalEntryTag> tags;
   JournalEntry({
+    this.id,
     this.title,
     this.summary,
     this.creationDate,
@@ -19,6 +21,7 @@ class JournalEntry {
   });
 
   JournalEntry copyWith({
+    String id,
     String title,
     String summary,
     DateTime creationDate,
@@ -26,6 +29,7 @@ class JournalEntry {
     List<JournalEntryTag> tags,
   }) {
     return JournalEntry(
+      id: id ?? this.id,
       title: title ?? this.title,
       summary: summary ?? this.summary,
       creationDate: creationDate ?? this.creationDate,
@@ -36,6 +40,7 @@ class JournalEntry {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'title': title,
       'summary': summary,
       'creationDate': creationDate.millisecondsSinceEpoch,
@@ -46,6 +51,7 @@ class JournalEntry {
 
   factory JournalEntry.fromMap(Map<String, dynamic> map) {
     return JournalEntry(
+      id: map['id'],
       title: map['title'],
       summary: map['summary'],
       creationDate: DateTime.fromMillisecondsSinceEpoch(map['creationDate']),
@@ -62,7 +68,7 @@ class JournalEntry {
 
   @override
   String toString() {
-    return 'JournalEntry(title: $title, summary: $summary, creationDate: $creationDate, lastEditDate: $lastEditDate, tags: $tags)';
+    return 'JournalEntry(id: $id, title: $title, summary: $summary, creationDate: $creationDate, lastEditDate: $lastEditDate, tags: $tags)';
   }
 
   @override
@@ -70,6 +76,7 @@ class JournalEntry {
     if (identical(this, other)) return true;
 
     return other is JournalEntry &&
+        other.id == id &&
         other.title == title &&
         other.summary == summary &&
         other.creationDate == creationDate &&
@@ -79,7 +86,8 @@ class JournalEntry {
 
   @override
   int get hashCode {
-    return title.hashCode ^
+    return id.hashCode ^
+        title.hashCode ^
         summary.hashCode ^
         creationDate.hashCode ^
         lastEditDate.hashCode ^

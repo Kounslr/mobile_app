@@ -1,5 +1,4 @@
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -18,10 +17,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     User user = FirebaseAuth.instance.currentUser;
-    return _content(context, user);
-  }
-
-  Widget _content(BuildContext context, User user) {
     return Consumer(
       builder: (context, watch, child) {
         return StreamBuilder(
@@ -29,81 +24,38 @@ class _HomeViewState extends State<HomeView> {
               .read(studentProvider)
               .getStudent('lcps', 'independence', user.uid),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active &&
-                snapshot.data.data() != null) {
-              return Column(
-                children: [
-                  _header(context, user, Student.fromMap(snapshot.data.data())),
-                  SizedBox(height: 10),
-                  _dateCard(context),
-                  _nextClassCard(context),
-
-                  // ListView controls
-                  Row(
-                    children: [
-                      Text(
-                        'Upcoming Assignments',
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                      Spacer(),
-                      TextButton(
-                        style: ButtonStyle(
-                          alignment: Alignment.centerRight,
-                          animationDuration: Duration.zero,
-                          elevation: MaterialStateProperty.all<double>(0),
-                          overlayColor: MaterialStateProperty.all<Color>(
-                            CantonColors.transparent,
+            if (!snapshot.hasData || snapshot.data.data() == null) {
+              return Loading();
+            } else if (!snapshot.hasError && snapshot.hasData) {
+              return _content(context, user, snapshot);
+            } else {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Something went wrong',
+                      style: Theme.of(context).textTheme.headline5.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.secondaryVariant,
                           ),
-                          padding:
-                              MaterialStateProperty.all<EdgeInsetsGeometry>(
-                            EdgeInsets.zero,
-                          ),
-                        ),
-                        child: Text(
-                          'View All',
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                        ),
-                        onPressed: () {},
-                      ),
-                      CantonActionButton(
-                        icon: IconlyIcon(
-                          IconlyBold.ArrowRight2,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-
-                  // List View of assignments
-                  Expanded(
-                    child: ListView.separated(
-                      itemCount: 5,
-                      shrinkWrap: true,
-                      separatorBuilder: (context, index) {
-                        return SizedBox(height: 6);
-                      },
-                      itemBuilder: (context, index) {
-                        return AssignmentCard();
+                    ),
+                    SizedBox(height: 20),
+                    CantonPrimaryButton(
+                      buttonText: 'Sign out',
+                      textColor: CantonColors.white,
+                      containerColor: Theme.of(context).primaryColor,
+                      containerWidth:
+                          MediaQuery.of(context).size.width / 2 - 34,
+                      onPressed: () {
+                        context
+                            .read(authenticationServiceProvider)
+                            .signOut(context);
                       },
                     ),
-                  ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                  'Something went wrong',
-                  style: Theme.of(context).textTheme.headline5.copyWith(
-                        color: Theme.of(context).colorScheme.secondaryVariant,
-                      ),
+                  ],
                 ),
               );
-            } else {
-              return Loading();
             }
           },
         );
@@ -111,11 +63,80 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _header(
-    BuildContext context,
-    User user,
-    Student student,
-  ) {
+  Widget _content(BuildContext context, User user, AsyncSnapshot snapshot) {
+    Student student = Student.fromMap(snapshot?.data?.data());
+    return Consumer(
+      builder: (context, watch, child) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          return Column(
+            children: [
+              _header(context, user, student),
+              SizedBox(height: 10),
+              _dateCard(context),
+              _nextClassCard(context, student),
+
+              // ListView controls
+              Row(
+                children: [
+                  Text(
+                    'Upcoming Assignments',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  Spacer(),
+                  TextButton(
+                    style: ButtonStyle(
+                      alignment: Alignment.centerRight,
+                      animationDuration: Duration.zero,
+                      elevation: MaterialStateProperty.all<double>(0),
+                      overlayColor: MaterialStateProperty.all<Color>(
+                        CantonColors.transparent,
+                      ),
+                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        EdgeInsets.zero,
+                      ),
+                    ),
+                    child: Text(
+                      'View All',
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                    ),
+                    onPressed: () {},
+                  ),
+                  CantonActionButton(
+                    icon: IconlyIcon(
+                      IconlyBold.ArrowRight2,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+
+              // List View of assignments
+              Expanded(
+                child: ListView.separated(
+                  itemCount: 5,
+                  shrinkWrap: true,
+                  separatorBuilder: (context, index) {
+                    return SizedBox(height: 6);
+                  },
+                  itemBuilder: (context, index) {
+                    return AssignmentCard();
+                  },
+                ),
+              ),
+            ],
+          );
+        } else {
+          return Loading();
+        }
+      },
+    );
+  }
+
+  Widget _header(BuildContext context, User user, Student student) {
     return Row(
       children: [
         Column(
@@ -159,7 +180,7 @@ class _HomeViewState extends State<HomeView> {
           padding: EdgeInsets.symmetric(horizontal: 7.5 * 2.5, vertical: 7.5),
           decoration: ShapeDecoration(
             color: Theme.of(context).primaryColor,
-            shape: SquircleBorder(radius: 30),
+            shape: SquircleBorder(radius: BorderRadius.circular(30)),
           ),
           child: Column(
             children: [
@@ -189,7 +210,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _nextClassCard(BuildContext context) {
+  Widget _nextClassCard(BuildContext context, Student student) {
     return Column(
       children: [
         Row(
