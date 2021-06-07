@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/config/constants.dart';
-import 'package:kounslr/src/config/locator.dart';
 import 'package:kounslr/src/services/authentication/authentication_wrapper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-  await setupLocator();
 
   /// Lock screen orientation to vertical
   SystemChrome.setPreferredOrientations(

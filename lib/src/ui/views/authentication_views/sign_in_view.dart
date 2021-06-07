@@ -26,18 +26,20 @@ class SignInView extends ConsumerWidget {
         SizedBox(height: 50),
         CantonTextInput(
           hintText: 'Email',
-          isTextInputTwo: true,
           isTextFormField: true,
           obscureText: false,
           controller: _emailController,
+          border: BorderSide.none,
+          radius: BorderRadius.circular(45),
         ),
         SizedBox(height: 15),
         CantonTextInput(
           hintText: 'Password',
-          isTextInputTwo: true,
           isTextFormField: true,
           obscureText: true,
           controller: _passwordController,
+          border: BorderSide.none,
+          radius: BorderRadius.all(Radius.circular(45)),
         ),
         SizedBox(height: 20),
         Row(

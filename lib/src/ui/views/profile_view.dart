@@ -18,30 +18,14 @@ class ProfileView extends ConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _header(context),
+        ViewHeaderTwo(
+          title: 'Profile',
+          backButton: true,
+          isBackButtonClear: true,
+        ),
         _body(context, student),
 
         // Null widget so UI will format properly
-        CantonHeaderButton(
-          onPressed: () {},
-          backgroundColor: CantonColors.transparent,
-        ),
-      ],
-    );
-  }
-
-  Widget _header(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        CantonBackButton(isClear: true),
-        Text(
-          'Profile',
-          style: Theme.of(context)
-              .textTheme
-              .headline5
-              .copyWith(color: Theme.of(context).primaryColor),
-        ),
         CantonHeaderButton(
           onPressed: () {},
           backgroundColor: CantonColors.transparent,
@@ -65,6 +49,7 @@ Widget _body(BuildContext context, Student student) {
         containerWidth: MediaQuery.of(context).size.width / 2 - 34,
         onPressed: () {
           context.read(authenticationServiceProvider).signOut(context);
+          Navigator.pop(context);
         },
       ),
     ],
