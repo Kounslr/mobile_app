@@ -25,7 +25,6 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
         ViewHeaderTwo(
           title: 'Journal Entries',
           backButton: true,
-          backButtonFunction: () {},
           isBackButtonClear: true,
         ),
         _journalEntriesListView(context),
