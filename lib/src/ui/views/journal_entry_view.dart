@@ -2,9 +2,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
-import 'package:kounslr/src/models/journal_entry_tag.dart';
 import 'package:kounslr/src/ui/providers/student_provider.dart';
-import 'package:kounslr/src/ui/styled_components/journal_entry_tags/journal_entry_tags.dart';
 
 class JournalEntryView extends StatefulWidget {
   final JournalEntry entry;
@@ -19,7 +17,7 @@ class _JournalEntryViewState extends State<JournalEntryView> {
   final _summaryController = TextEditingController();
   final _titleFocus = FocusNode();
   final _summaryFocus = FocusNode();
-  List<JournalEntryTag> _tags = [];
+  List<Tag> _tags = [];
 
   void _newEntryFunction() {
     if (widget.entry.id != null) {
@@ -159,9 +157,9 @@ class _JournalEntryViewState extends State<JournalEntryView> {
   }
 
   Widget _tagTextField(BuildContext context) {
-    return TextFieldTags(
+    return CantonTagTextInput(
       initialTags: [],
-      textFieldStyler: TextFieldStyler(
+      textFieldStyler: TagTextInputStyler(
         cursorColor: Theme.of(context).primaryColor,
         hintText: 'Tags',
         textFieldFilledColor: Theme.of(context).colorScheme.onSecondary,
@@ -207,7 +205,7 @@ class _JournalEntryViewState extends State<JournalEntryView> {
       ),
       onDelete: (_) {},
       onTag: (name) {
-        _tags.add(JournalEntryTag(name: name));
+        _tags.add(Tag(name: name));
       },
     );
   }

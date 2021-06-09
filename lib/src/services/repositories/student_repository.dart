@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
 import 'package:kounslr/src/models/journal_entry.dart';
-import 'package:kounslr/src/models/journal_entry_tag.dart';
 
 class StudentRepository extends ChangeNotifier {
   final CollectionReference user = FirebaseFirestore.instance
@@ -14,8 +13,7 @@ class StudentRepository extends ChangeNotifier {
       .doc('independence')
       .collection('students');
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getStudent(
-      String district, String school, String uid) {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getStudent(String uid) {
     try {
       return user.doc(uid).snapshots();
     } catch (e) {
@@ -35,17 +33,21 @@ class StudentRepository extends ChangeNotifier {
         .collection('journal entries')
         .doc(id)
         .set(entry.copyWith(id: id).toMap());
+  }
 
-    // await user.doc(FirebaseAuth.instance.currentUser.uid)
-    //     .collection('journal entries')
-    //     .doc().
+  Future<void> deleteJournalEntry(JournalEntry entry) async {
+    await user
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .collection('journal entries')
+        .doc(entry.id)
+        .delete();
   }
 
   Future<void> updateJournalEntry({
     JournalEntry entry,
     String title,
     String summary,
-    List<JournalEntryTag> tags,
+    List<Tag> tags,
   }) async {
     await user
         .doc(FirebaseAuth.instance.currentUser.uid)
@@ -64,7 +66,7 @@ class StudentRepository extends ChangeNotifier {
       {JournalEntry entry,
       String title,
       String summary,
-      List<JournalEntryTag> tags}) async {
+      List<Tag> tags}) async {
     if (!([null, ''].contains(title) || [null, ''].contains(summary)) ||
         [[], null].contains(tags)) {
       if (entry.id == null) {

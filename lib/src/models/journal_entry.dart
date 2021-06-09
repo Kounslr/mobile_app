@@ -1,8 +1,7 @@
 import 'dart:convert';
 
+import 'package:canton_design_system/models/tag.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:kounslr/src/models/journal_entry_tag.dart';
 
 class JournalEntry {
   String id;
@@ -10,7 +9,7 @@ class JournalEntry {
   String summary;
   DateTime creationDate;
   DateTime lastEditDate;
-  List<JournalEntryTag> tags;
+  List<Tag> tags;
   JournalEntry({
     this.id,
     this.title,
@@ -26,7 +25,7 @@ class JournalEntry {
     String summary,
     DateTime creationDate,
     DateTime lastEditDate,
-    List<JournalEntryTag> tags,
+    List<Tag> tags,
   }) {
     return JournalEntry(
       id: id ?? this.id,
@@ -56,8 +55,7 @@ class JournalEntry {
       summary: map['summary'],
       creationDate: DateTime.fromMillisecondsSinceEpoch(map['creationDate']),
       lastEditDate: DateTime.fromMillisecondsSinceEpoch(map['lastEditDate']),
-      tags: List<JournalEntryTag>.from(
-          map['tags']?.map((x) => JournalEntryTag.fromMap(x))),
+      tags: List<Tag>.from(map['tags']?.map((x) => Tag.fromMap(x))),
     );
   }
 
