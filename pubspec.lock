@@ -20,8 +20,8 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: a03b68bc3cba0b0baee9161b88ce2a8ab3ab350c
-      url: "git://github.com/31Carlton7/canton_design_system.git"
+      resolved-ref: "18ae8cd1e98b9aad22e86bb30bb1091e65d0fa40"
+      url: "https://github.com/31Carlton7/canton_design_system.git"
     source: git
     version: "0.0.1"
   characters:
@@ -407,7 +407,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.0"
   stack_trace:
     dependency: transitive
     description:
