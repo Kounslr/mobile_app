@@ -2,6 +2,8 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
+import 'package:kounslr/src/ui/providers/student_provider.dart';
+import 'package:kounslr/src/ui/views/journal_entry_view.dart';
 
 class JournalEntryCard extends ConsumerWidget {
   final JournalEntry journalEntry;
@@ -10,6 +12,8 @@ class JournalEntryCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     return GestureDetector(
+      onTap: () =>
+          CantonMethods.viewTransition(context, JournalEntryView(journalEntry)),
       child: Slidable(
         key: UniqueKey(),
         actionPane: SlidableDrawerActionPane(),
@@ -17,10 +21,13 @@ class JournalEntryCard extends ConsumerWidget {
         dismissal: SlidableDismissal(
           child: SlidableDrawerDismissal(),
           dismissThresholds: <SlideActionType, double>{
-            SlideActionType.primary: 1.0
+            SlideActionType.primary: 1.0,
+            SlideActionType.secondary: 1.0,
           },
           onDismissed: (direction) {
-            if (direction == SlideActionType.secondary) {}
+            if (direction == SlideActionType.secondary) {
+              context.read(studentProvider).deleteJournalEntry(journalEntry);
+            }
           },
           // DeleteNoteAction(repo, note);
         ),
@@ -28,26 +35,57 @@ class JournalEntryCard extends ConsumerWidget {
           // PinNoteAction(repo, note),
         ],
         secondaryActions: <Widget>[
-          // DeleteNoteAction(repo, note),
+          _deleteEntryAction(context, journalEntry),
         ],
         child: Card(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
-                Text(
-                  journalEntry.title,
-                  style: Theme.of(context).textTheme.headline6,
+                Expanded(
+                  flex: 10,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        journalEntry.title,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      const SizedBox(height: 7),
+                      Text(
+                        journalEntry.summary,
+                        style: Theme.of(context).textTheme.bodyText1,
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 7),
-                Text(
-                  journalEntry.summary,
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
+                Spacer(),
+                Container(),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _deleteEntryAction(BuildContext context, JournalEntry entry) {
+    return Container(
+      margin: EdgeInsets.only(top: 5, bottom: 5, left: 5),
+      child: Material(
+        color: Theme.of(context).colorScheme.onError,
+        shape: SquircleBorder(
+          radius: BorderRadius.circular(35),
+        ),
+        child: SlideAction(
+          child: IconlyIcon(
+            IconlyBold.Delete,
+            size: 27,
+            color: Theme.of(context).colorScheme.error,
+          ),
+          onTap: () => {
+            context.read(studentProvider).deleteJournalEntry(entry),
+          },
         ),
       ),
     );
