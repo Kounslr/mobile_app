@@ -1,7 +1,6 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
-import 'package:kounslr/src/models/journal_entry_tag.dart';
 import 'package:kounslr/src/ui/views/journal_entries_view.dart';
 import 'package:kounslr/src/ui/views/journal_entry_view.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -42,9 +41,9 @@ class _JournalViewState extends State<JournalView> {
             _graphJournalStatistics(
               context,
               [
-                JournalEntryTag(name: 'basketball'),
-                JournalEntryTag(name: 'computerscience'),
-                JournalEntryTag(name: 'engineeringclub'),
+                Tag(name: 'basketball'),
+                Tag(name: 'computerscience'),
+                Tag(name: 'engineeringclub'),
               ],
             ),
             SizedBox(height: 20),
@@ -55,8 +54,7 @@ class _JournalViewState extends State<JournalView> {
     );
   }
 
-  Widget _graphJournalStatistics(
-      BuildContext context, List<JournalEntryTag> tags) {
+  Widget _graphJournalStatistics(BuildContext context, List<Tag> tags) {
     Color _bgColor = Theme.of(context).primaryColor;
     Color _barColor = CantonColors.white;
     Color _barTooltipColor = Theme.of(context).colorScheme.primaryVariant;
