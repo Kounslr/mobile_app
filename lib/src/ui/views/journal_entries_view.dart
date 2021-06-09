@@ -1,4 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/ui/styled_components/journal_entry_card.dart';
 
 class JournalEntriesView extends StatefulWidget {
@@ -22,6 +25,7 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
         ViewHeaderTwo(
           title: 'Journal Entries',
           backButton: true,
+          backButtonFunction: () {},
           isBackButtonClear: true,
         ),
         _journalEntriesListView(context),
@@ -30,8 +34,39 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   }
 
   Widget _journalEntriesListView(BuildContext context) {
-    return ListView.builder(itemBuilder: (context, index) {
-      //return JournalEntryCard();
-    });
+    User user = FirebaseAuth.instance.currentUser;
+
+    var stream = FirebaseFirestore.instance
+        .collection('customers')
+        .doc('lcps')
+        .collection('schools')
+        .doc('independence')
+        .collection('students')
+        .doc(user.uid)
+        .collection('journal entries')
+        .snapshots();
+
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: stream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          var entries = snapshot.data.docs;
+          return Expanded(
+            child: ListView.builder(
+              itemCount: entries.length,
+              itemBuilder: (context, index) {
+                return JournalEntryCard(
+                  JournalEntry.fromMap(
+                    entries[index].data(),
+                  ),
+                );
+              },
+            ),
+          );
+        } else {
+          return Center(child: Loading());
+        }
+      },
+    );
   }
 }
