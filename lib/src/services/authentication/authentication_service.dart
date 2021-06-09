@@ -20,7 +20,10 @@ class AuthenticationService {
   String uid = '';
 
   Future<void> _createStudentInDatabase(
-      Student student, List<Class> classes, String uid) async {
+    Student student,
+    List<Class> classes,
+    String uid,
+  ) async {
     await user.doc(uid).set(student.toMap());
 
     classes.forEach((element) async {
@@ -44,6 +47,34 @@ class AuthenticationService {
     });
   }
 
+  Future<void> _updateStudentInDatabase(
+    Student student,
+    List<Class> classes,
+    String uid,
+  ) async {
+    await user.doc(uid).update(student.toMap());
+
+    classes.forEach((element) async {
+      await user
+          .doc(uid)
+          .collection('classes')
+          .doc(element.className)
+          .update(element.toMap());
+    });
+
+    classes.forEach((e) async {
+      e.assignments.forEach((element) async {
+        await user
+            .doc(uid)
+            .collection('classes')
+            .doc(e.className)
+            .collection('assignments')
+            .doc(element.assignmentName)
+            .update(element.toMap());
+      });
+    });
+  }
+
   Stream<User> get authStateChanges => _firebaseAuth.authStateChanges();
 
   Future<void> signOut(BuildContext context) async {
@@ -52,10 +83,28 @@ class AuthenticationService {
 
   Future<String> signIn({String email, String password}) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      Student student = Student();
+      List<Class> classes = [];
+      String username = email.substring(0, email.indexOf('@'));
+      String domain = 'portal.lcps.org';
+
+      await _firebaseAuth
+          .signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          )
+          .then((value) => uid = value.user.uid);
+
+      await StudentVueClient(username, password, domain)
+          .loadStudentData()
+          .then((value) => {student = value});
+
+      await StudentVueClient(username, password, domain)
+          .loadGradebook()
+          .then((value) => {classes = value, dev.log(classes.toString())});
+
+      await _updateStudentInDatabase(student, classes, uid);
+
       return 'Sign in successful';
     } on FirebaseAuthException catch (e) {
       return e.message;
