@@ -20,9 +20,7 @@ class _HomeViewState extends State<HomeView> {
     return Consumer(
       builder: (context, watch, child) {
         return StreamBuilder(
-          stream: context
-              .read(studentProvider)
-              .getStudent('lcps', 'independence', user.uid),
+          stream: context.read(studentProvider).getStudent(user.uid),
           builder: (context, snapshot) {
             if (!snapshot.hasData || snapshot.data.data() == null) {
               return Loading();
