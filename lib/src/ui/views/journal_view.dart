@@ -76,12 +76,14 @@ class _JournalViewState extends State<JournalView> {
   }
 
   Widget _graphJournalStatistics(BuildContext context, Map<String, int> tags) {
+    /// Variables
     Color _bgColor = Theme.of(context).primaryColor;
     Color _barColor = CantonColors.white;
     Color _barTooltipColor = Theme.of(context).colorScheme.primaryVariant;
     Color _xAxisTitleColor = CantonColors.white;
     List<BarChartGroupData> _barGroups = [];
 
+    /// Bar group data
     for (int i = 0; i < tags.values.length; i++) {
       _barGroups.add(
         BarChartGroupData(
@@ -99,72 +101,78 @@ class _JournalViewState extends State<JournalView> {
       );
     }
 
+    /// Graph UI
     return AspectRatio(
-      aspectRatio: 1.7,
+      aspectRatio: 2,
       child: Card(
         elevation: 0,
         shape: SquircleBorder(radius: BorderRadius.circular(50)),
         color: _bgColor,
-        child: BarChart(
-          BarChartData(
-            alignment: BarChartAlignment.spaceAround,
-            maxY: 20,
-            axisTitleData: FlAxisTitleData(
-              show: true,
-              topTitle: AxisTitle(
-                titleText: 'Most used tags',
-                textStyle: Theme.of(context).textTheme.headline4.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 50.0),
+          child: BarChart(
+            BarChartData(
+              alignment: BarChartAlignment.spaceAround,
+              // axisTitleData: FlAxisTitleData(
+              //   show: true,
+              //   topTitle: AxisTitle(
+              //     showTitle: true,
+              //     titleText: 'Most used tags',
+              //     textAlign: TextAlign.left,
+              //     //margin: 10,
+              //     textStyle: Theme.of(context).textTheme.headline4.copyWith(
+              //           color: CantonColors.white,
+              //         ),
+              //   ),
+              // ),
+              barTouchData: BarTouchData(
+                enabled: false,
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Colors.transparent,
+                  tooltipPadding: const EdgeInsets.all(0),
+                  tooltipMargin: 8,
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    return BarTooltipItem(
+                      rod.y.round().toString(),
+                      Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(color: _barTooltipColor),
+                    );
+                  },
+                ),
               ),
-            ),
-            barTouchData: BarTouchData(
-              enabled: false,
-              touchTooltipData: BarTouchTooltipData(
-                tooltipBgColor: Colors.transparent,
-                tooltipPadding: const EdgeInsets.all(0),
-                tooltipMargin: 8,
-                getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                  return BarTooltipItem(
-                    rod.y.round().toString(),
-                    Theme.of(context)
-                        .textTheme
-                        .headline5
-                        .copyWith(color: _barTooltipColor),
-                  );
-                },
+              titlesData: FlTitlesData(
+                show: true,
+                bottomTitles: SideTitles(
+                  showTitles: true,
+                  getTextStyles: (value) {
+                    return Theme.of(context).textTheme.bodyText1.copyWith(
+                          height: 0.9,
+                          color: _xAxisTitleColor,
+                        );
+                  },
+                  margin: 20,
+                  getTitles: (double value) {
+                    switch (value.toInt()) {
+                      case 0:
+                        return tags.keys.toList(growable: false)[0];
+                      case 1:
+                        return tags.keys.toList(growable: false)[1];
+                      case 2:
+                        return tags.keys.toList(growable: false)[2];
+                      default:
+                        return '';
+                    }
+                  },
+                ),
+                leftTitles: SideTitles(showTitles: false),
               ),
-            ),
-            titlesData: FlTitlesData(
-              show: true,
-              bottomTitles: SideTitles(
-                showTitles: true,
-                getTextStyles: (value) {
-                  return Theme.of(context).textTheme.bodyText1.copyWith(
-                        height: 0.9,
-                        color: _xAxisTitleColor,
-                      );
-                },
-                margin: 20,
-                getTitles: (double value) {
-                  switch (value.toInt()) {
-                    case 0:
-                      return tags.keys.toList(growable: false)[0];
-                    case 1:
-                      return tags.keys.toList(growable: false)[1];
-                    case 2:
-                      return tags.keys.toList(growable: false)[2];
-                    default:
-                      return '';
-                  }
-                },
+              borderData: FlBorderData(
+                show: false,
               ),
-              leftTitles: SideTitles(showTitles: false),
+              barGroups: _barGroups,
             ),
-            borderData: FlBorderData(
-              show: false,
-            ),
-            barGroups: _barGroups,
           ),
         ),
       ),
