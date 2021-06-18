@@ -194,7 +194,7 @@ class _JournalViewState extends State<JournalView> {
     /// Counts the number of times the entry has been used
     for (var x in _tags) map[x.name] = ((map[x.name] ?? 0) + 1);
 
-    var sortedKeys = map.keys.toList(growable: false)
+    var sortedKeys = map.keys.toList()
       ..sort((k1, k2) => map[k2].compareTo(map[k1]));
 
     for (int i = 0; i < sortedKeys.length; i++) {
