@@ -35,7 +35,7 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   Widget _journalEntriesListView(BuildContext context) {
     User user = FirebaseAuth.instance.currentUser;
 
-    var stream = FirebaseFirestore.instance
+    var _stream = FirebaseFirestore.instance
         .collection('customers')
         .doc('lcps')
         .collection('schools')
@@ -46,7 +46,7 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
         .snapshots();
 
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: stream,
+      stream: _stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           var entries = snapshot.data.docs;

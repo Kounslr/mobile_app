@@ -157,8 +157,14 @@ class _JournalEntryViewState extends State<JournalEntryView> {
   }
 
   Widget _tagTextField(BuildContext context) {
+    var _initTags = <String>[];
+
+    for (final tag in _tags) {
+      _initTags.add(tag.name);
+    }
+
     return CantonTagTextInput(
-      initialTags: [],
+      initialTags: _initTags,
       textFieldStyler: TagTextInputStyler(
         cursorColor: Theme.of(context).primaryColor,
         hintText: 'Tags',
