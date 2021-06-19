@@ -21,6 +21,14 @@ class StudentRepository extends ChangeNotifier {
     }
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> getStudentClasses(String uid) {
+    try {
+      return user.doc(uid).collection('classes').snapshots();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> addJournalEntry(JournalEntry entry) async {
     String id = user
         .doc(FirebaseAuth.instance.currentUser.uid)

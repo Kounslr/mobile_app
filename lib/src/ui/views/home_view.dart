@@ -1,5 +1,6 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kounslr/src/models/student.dart';
@@ -7,6 +8,7 @@ import 'package:kounslr/src/ui/providers/authentication_providers/authentication
 import 'package:kounslr/src/ui/providers/student_provider.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/views/profile_view.dart';
+import 'package:kounslr/src/ui/views/schedule_view.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -27,37 +29,37 @@ class _HomeViewState extends State<HomeView> {
             } else if (!snapshot.hasError && snapshot.hasData) {
               return _content(context, user, snapshot);
             } else {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Something went wrong',
-                      style: Theme.of(context).textTheme.headline5.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.secondaryVariant,
-                          ),
-                    ),
-                    SizedBox(height: 20),
-                    CantonPrimaryButton(
-                      buttonText: 'Sign out',
-                      textColor: CantonColors.white,
-                      containerColor: Theme.of(context).primaryColor,
-                      containerWidth:
-                          MediaQuery.of(context).size.width / 2 - 34,
-                      onPressed: () {
-                        context
-                            .read(authenticationServiceProvider)
-                            .signOut(context);
-                      },
-                    ),
-                  ],
-                ),
-              );
+              return _somethingWentWrong(context);
             }
           },
         );
       },
+    );
+  }
+
+  Widget _somethingWentWrong(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Something went wrong',
+            style: Theme.of(context).textTheme.headline5.copyWith(
+                  color: Theme.of(context).colorScheme.secondaryVariant,
+                ),
+          ),
+          SizedBox(height: 20),
+          CantonPrimaryButton(
+            buttonText: 'Sign out',
+            textColor: CantonColors.white,
+            containerColor: Theme.of(context).primaryColor,
+            containerWidth: MediaQuery.of(context).size.width / 2 - 34,
+            onPressed: () {
+              context.read(authenticationServiceProvider).signOut(context);
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -66,12 +68,13 @@ class _HomeViewState extends State<HomeView> {
     return Consumer(
       builder: (context, watch, child) {
         if (snapshot.connectionState == ConnectionState.active) {
-          return Column(
+          return ListView(
+            shrinkWrap: false,
             children: [
               _header(context, user, student),
               SizedBox(height: 10),
               _dateCard(context),
-              _nextClassCard(context, student),
+              _nextClassCard(context),
 
               // ListView controls
               Row(
@@ -113,18 +116,10 @@ class _HomeViewState extends State<HomeView> {
               ),
 
               // List View of assignments
-              Expanded(
-                child: ListView.separated(
-                  itemCount: 5,
-                  shrinkWrap: true,
-                  separatorBuilder: (context, index) {
-                    return SizedBox(height: 6);
-                  },
-                  itemBuilder: (context, index) {
-                    return AssignmentCard();
-                  },
-                ),
-              ),
+              AssignmentCard(),
+              AssignmentCard(),
+              AssignmentCard(),
+              AssignmentCard(),
             ],
           );
         } else {
@@ -208,7 +203,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _nextClassCard(BuildContext context, Student student) {
+  Widget _nextClassCard(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -230,17 +225,22 @@ class _HomeViewState extends State<HomeView> {
               child: Text(
                 'View Full Schedule',
                 style: Theme.of(context).textTheme.bodyText1.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).primaryColor),
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).primaryColor,
+                    ),
               ),
-              onPressed: () {},
+              onPressed: () {
+                CantonMethods.viewTransition(context, ScheduleView());
+              },
             ),
             CantonActionButton(
               icon: IconlyIcon(
                 IconlyBold.ArrowRight2,
                 color: Theme.of(context).primaryColor,
               ),
-              onPressed: () {},
+              onPressed: () {
+                CantonMethods.viewTransition(context, ScheduleView());
+              },
             ),
           ],
         ),
