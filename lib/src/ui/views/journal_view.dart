@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
+import 'package:kounslr/src/ui/providers/student_provider.dart';
 import 'package:kounslr/src/ui/views/journal_entries_view.dart';
 import 'package:kounslr/src/ui/views/journal_entry_view.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -60,7 +61,9 @@ class _JournalViewState extends State<JournalView> {
                   SizedBox(height: 20),
                   _graphJournalStatistics(
                     context,
-                    _getTopThreeMostUsedTags(snapshot.data.docs),
+                    context
+                        .read(studentProvider)
+                        .getTopThreeMostUsedTags(snapshot.data.docs),
                   ),
                   SizedBox(height: 20),
                   _viewCard(context, 'View all entries', JournalEntriesView()),
@@ -177,51 +180,6 @@ class _JournalViewState extends State<JournalView> {
         ),
       ),
     );
-  }
-
-  Map<String, int> _getTopThreeMostUsedTags(
-    List<QueryDocumentSnapshot> entries,
-  ) {
-    /// Variables
-    List<JournalEntry> _entries = [];
-    List<Tag> _tags = [];
-    var map = <dynamic, dynamic>{};
-
-    /// Convert firebase data to [Journal Entry]
-    entries.forEach((element) {
-      _entries.add(JournalEntry.fromMap(element.data()));
-    });
-
-    /// Adds [Tag] (s) from [JournalEntry] to a list
-    _entries.forEach((element) {
-      element.tags.forEach((element) {
-        _tags.add(element);
-      });
-    });
-
-    /// Counts the number of times the entry has been used
-    for (var x in _tags) map[x.name] = ((map[x.name] ?? 0) + 1);
-
-    var sortedKeys = map.keys.toList()
-      ..sort((k1, k2) => map[k2].compareTo(map[k1]));
-
-    for (int i = 0; i < sortedKeys.length; i++) {
-      if (i >= 3) {
-        sortedKeys.removeAt(i);
-      }
-    }
-
-    var sortedMap = Map<String, int>.fromIterable(
-      sortedKeys,
-      key: (k) => k,
-      value: (k) => map[k],
-    );
-
-    map = sortedMap;
-
-    map.removeWhere((key, value) => false);
-
-    return map;
   }
 
   Widget _viewCard(BuildContext context, String text, Widget view) {
