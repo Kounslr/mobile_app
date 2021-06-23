@@ -53,14 +53,14 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
       stream: _stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
-          print(_listOfEntries(snapshot).length);
+          _listOfEntries(snapshot);
           return Expanded(
             child: ListView.builder(
               itemCount: _tagList.length,
               itemBuilder: (context, index) {
                 return _tagCard(
                   context,
-                  _listOfEntries(snapshot)[index].tags[0],
+                  _tagList[index],
                   _listOfEntries(snapshot)
                       .where(
                           (element) => element.tags.contains(_tagList[index]))
