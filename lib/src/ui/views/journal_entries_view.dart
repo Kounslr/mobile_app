@@ -22,13 +22,17 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   Widget _content(BuildContext context) {
     return Column(
       children: [
-        ViewHeaderTwo(
-          title: 'Journal Entries',
-          backButton: true,
-          isBackButtonClear: true,
-        ),
+        _header(),
         _journalEntriesListView(context),
       ],
+    );
+  }
+
+  Widget _header() {
+    return ViewHeaderTwo(
+      title: 'Journal Entries',
+      backButton: true,
+      isBackButtonClear: true,
     );
   }
 
@@ -49,15 +53,18 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
       stream: _stream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
-          var entries = snapshot.data.docs;
+          _listOfEntries(snapshot);
           return Expanded(
             child: ListView.builder(
-              itemCount: entries.length,
+              itemCount: _tagList.length,
               itemBuilder: (context, index) {
-                return JournalEntryCard(
-                  JournalEntry.fromMap(
-                    entries[index].data(),
-                  ),
+                return _tagCard(
+                  context,
+                  _tagList[index],
+                  _listOfEntries(snapshot)
+                      .where(
+                          (element) => element.tags.contains(_tagList[index]))
+                      .toList(),
                 );
               },
             ),
@@ -66,6 +73,46 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
           return Center(child: Loading());
         }
       },
+    );
+  }
+
+  List<JournalEntry> _listOfEntries(
+    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+  ) {
+    var entries = snapshot.data.docs;
+    List<JournalEntry> e = [];
+    List<Tag> _tags = [];
+    for (var item in entries) {
+      e.add(JournalEntry.fromMap(item.data()));
+    }
+    for (var entry in e) {
+      for (var tag in entry.tags) if (!_tags.contains(tag)) _tags.add(tag);
+    }
+
+    _tagList = _tags;
+
+    return e;
+  }
+
+  List<Tag> _tagList = [];
+
+  Widget _tagCard(BuildContext context, Tag tag, List<JournalEntry> entries) {
+    List<Widget> children = [];
+
+    for (var entry in entries) {
+      children.add(JournalEntryCard(entry));
+    }
+
+    return Card(
+      child: CantonExpansionTile(
+        childrenPadding: const EdgeInsets.all(8.0),
+        iconColor: Theme.of(context).primaryColor,
+        title: Text(
+          tag.name,
+          style: Theme.of(context).textTheme.headline6,
+        ),
+        children: children,
+      ),
     );
   }
 }
