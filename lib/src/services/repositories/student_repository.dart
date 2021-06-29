@@ -15,7 +15,7 @@ class StudentRepository extends ChangeNotifier {
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> getStudent(String uid) {
     try {
-      return user.doc(uid).snapshots();
+      return user.doc(uid).snapshots() as Stream<DocumentSnapshot<Map<String, dynamic>>>;
     } catch (e) {
       rethrow;
     }
@@ -31,13 +31,13 @@ class StudentRepository extends ChangeNotifier {
 
   Future<void> addJournalEntry(JournalEntry entry) async {
     String id = user
-        .doc(FirebaseAuth.instance.currentUser.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('journal entries')
         .doc()
         .id;
 
     await user
-        .doc(FirebaseAuth.instance.currentUser.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('journal entries')
         .doc(id)
         .set(entry.copyWith(id: id).toMap());
@@ -45,20 +45,20 @@ class StudentRepository extends ChangeNotifier {
 
   Future<void> deleteJournalEntry(JournalEntry entry) async {
     await user
-        .doc(FirebaseAuth.instance.currentUser.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('journal entries')
         .doc(entry.id)
         .delete();
   }
 
   Future<void> updateJournalEntry({
-    JournalEntry entry,
-    String title,
-    String summary,
-    List<Tag> tags,
+    required JournalEntry entry,
+    String? title,
+    String? summary,
+    List<Tag>? tags,
   }) async {
     await user
-        .doc(FirebaseAuth.instance.currentUser.uid)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('journal entries')
         .doc(entry.id)
         .update(entry
@@ -71,13 +71,13 @@ class StudentRepository extends ChangeNotifier {
   }
 
   Future<void> completeJournalEntry(
-      {JournalEntry entry,
-      String title,
-      String summary,
-      List<Tag> tags}) async {
+      {JournalEntry? entry,
+      String? title,
+      String? summary,
+      List<Tag>? tags}) async {
     if (!([null, ''].contains(title) || [null, ''].contains(summary)) ||
         [[], null].contains(tags)) {
-      if (entry.id == null) {
+      if (entry!.id == null) {
         await addJournalEntry(JournalEntry(
           creationDate: DateTime.now(),
           lastEditDate: DateTime.now(),
@@ -96,7 +96,7 @@ class StudentRepository extends ChangeNotifier {
     }
   }
 
-  Map<String, int> getTopThreeMostUsedTags(
+  Map<String?, int?> getTopThreeMostUsedTags(
     List<QueryDocumentSnapshot> entries,
   ) {
     /// Variables
@@ -106,12 +106,12 @@ class StudentRepository extends ChangeNotifier {
 
     /// Convert firebase data to [Journal Entry]
     entries.forEach((element) {
-      _entries.add(JournalEntry.fromMap(element.data()));
+      _entries.add(JournalEntry.fromMap(element.data() as Map<String, dynamic>));
     });
 
     /// Adds [Tag] (s) from [JournalEntry] to a list
     _entries.forEach((element) {
-      element.tags.forEach((element) {
+      element.tags!.forEach((element) {
         _tags.add(element);
       });
     });
@@ -128,7 +128,7 @@ class StudentRepository extends ChangeNotifier {
       }
     }
 
-    var sortedMap = Map<String, int>.fromIterable(
+    var sortedMap = Map<String?, int?>.fromIterable(
       sortedKeys,
       key: (k) => k,
       value: (k) => map[k],
@@ -138,6 +138,6 @@ class StudentRepository extends ChangeNotifier {
 
     map.removeWhere((key, value) => false);
 
-    return map;
+    return map as Map<String?, int?>;
   }
 }
