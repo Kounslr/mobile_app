@@ -37,7 +37,7 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   }
 
   Widget _journalEntriesListView(BuildContext context) {
-    User user = FirebaseAuth.instance.currentUser;
+    User user = FirebaseAuth.instance.currentUser!;
 
     var _stream = FirebaseFirestore.instance
         .collection('customers')
@@ -55,19 +55,29 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
         if (snapshot.connectionState == ConnectionState.active) {
           _listOfEntries(snapshot);
           return Expanded(
-            child: ListView.builder(
-              itemCount: _tagList.length,
-              itemBuilder: (context, index) {
-                return _tagCard(
-                  context,
-                  _tagList[index],
-                  _listOfEntries(snapshot)
-                      .where(
-                          (element) => element.tags.contains(_tagList[index]))
-                      .toList(),
-                );
-              },
-            ),
+            child: _tagList.length != 0
+                ? ListView.builder(
+                    itemCount: _tagList.length,
+                    itemBuilder: (context, index) {
+                      return _tagCard(
+                        context,
+                        _tagList[index],
+                        _listOfEntries(snapshot)
+                            .where((element) =>
+                                element.tags!.contains(_tagList[index]))
+                            .toList(),
+                      );
+                    },
+                  )
+                : Center(
+                    child: Text(
+                      'No entries',
+                      style: Theme.of(context).textTheme.headline4?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.secondaryVariant,
+                          ),
+                    ),
+                  ),
           );
         } else {
           return Center(child: Loading());
@@ -79,14 +89,14 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   List<JournalEntry> _listOfEntries(
     AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
   ) {
-    var entries = snapshot.data.docs;
+    var entries = snapshot.data!.docs;
     List<JournalEntry> e = [];
     List<Tag> _tags = [];
     for (var item in entries) {
       e.add(JournalEntry.fromMap(item.data()));
     }
     for (var entry in e) {
-      for (var tag in entry.tags) if (!_tags.contains(tag)) _tags.add(tag);
+      for (var tag in entry.tags!) if (!_tags.contains(tag)) _tags.add(tag);
     }
 
     _tagList = _tags;
@@ -108,7 +118,7 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
         childrenPadding: const EdgeInsets.all(8.0),
         iconColor: Theme.of(context).primaryColor,
         title: Text(
-          tag.name,
+          tag.name!,
           style: Theme.of(context).textTheme.headline6,
         ),
         children: children,
