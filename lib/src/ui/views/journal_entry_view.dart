@@ -17,12 +17,12 @@ class _JournalEntryViewState extends State<JournalEntryView> {
   final _summaryController = TextEditingController();
   final _titleFocus = FocusNode();
   final _summaryFocus = FocusNode();
-  List<Tag> _tags = [];
+  List<Tag>? _tags = [];
 
   void _newEntryFunction() {
     if (widget.entry.id != null) {
-      _titleController.text = widget.entry.title;
-      _summaryController.text = widget.entry.summary;
+      _titleController.text = widget.entry.title!;
+      _summaryController.text = widget.entry.summary!;
       _tags = widget.entry.tags;
     } else {
       _titleFocus.requestFocus();
@@ -52,56 +52,14 @@ class _JournalEntryViewState extends State<JournalEntryView> {
   }
 
   Widget _header(BuildContext context) {
-    return Consumer(builder: (context, watch, child) {
-      final repo = watch(studentProvider);
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          CantonBackButton(
-            isClear: true,
-            onPressed: () => {
-              repo.completeJournalEntry(
-                entry: widget.entry,
-                title: _titleController.text,
-                summary: _summaryController.text,
-                tags: _tags,
-              ),
-              Navigator.of(context).pop(),
-            },
-          ),
-          Text(
-            DateFormat.yMMMMd().format(
-              DateTime.now(),
-            ),
-            style: Theme.of(context).textTheme.headline5.copyWith(
-                  color: Theme.of(context).primaryColor,
-                ),
-          ),
-          Material(
-            color: Theme.of(context).primaryColor,
-            shape: SquircleBorder(
-              radius: BorderRadius.circular(30),
-            ),
-            child: TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  CantonColors.transparent,
-                ),
-                alignment: Alignment.center,
-                animationDuration: Duration.zero,
-                elevation: MaterialStateProperty.all<double>(0),
-                overlayColor: MaterialStateProperty.all<Color>(
-                  CantonColors.transparent,
-                ),
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                  EdgeInsets.zero,
-                ),
-              ),
-              child: Text(
-                'Save',
-                style: Theme.of(context).textTheme.headline6.copyWith(
-                    fontWeight: FontWeight.w500, color: CantonColors.white),
-              ),
+    return Consumer(
+      builder: (context, watch, child) {
+        final repo = watch(studentProvider);
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CantonBackButton(
+              isClear: true,
               onPressed: () => {
                 repo.completeJournalEntry(
                   entry: widget.entry,
@@ -112,10 +70,54 @@ class _JournalEntryViewState extends State<JournalEntryView> {
                 Navigator.of(context).pop(),
               },
             ),
-          ),
-        ],
-      );
-    });
+            Text(
+              DateFormat.yMMMMd().format(
+                DateTime.now(),
+              ),
+              style: Theme.of(context).textTheme.headline5!.copyWith(
+                    color: Theme.of(context).primaryColor,
+                  ),
+            ),
+            Material(
+              color: Theme.of(context).primaryColor,
+              shape: SquircleBorder(
+                radius: BorderRadius.circular(30),
+              ),
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    CantonColors.transparent,
+                  ),
+                  alignment: Alignment.center,
+                  animationDuration: Duration.zero,
+                  elevation: MaterialStateProperty.all<double>(0),
+                  overlayColor: MaterialStateProperty.all<Color>(
+                    CantonColors.transparent,
+                  ),
+                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    EdgeInsets.zero,
+                  ),
+                ),
+                child: Text(
+                  'Save',
+                  style: Theme.of(context).textTheme.headline6!.copyWith(
+                      fontWeight: FontWeight.w500, color: CantonColors.white),
+                ),
+                onPressed: () => {
+                  repo.completeJournalEntry(
+                    entry: widget.entry,
+                    title: _titleController.text,
+                    summary: _summaryController.text,
+                    tags: _tags,
+                  ),
+                  Navigator.of(context).pop(),
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _body(BuildContext context) {
@@ -150,7 +152,7 @@ class _JournalEntryViewState extends State<JournalEntryView> {
         focusedErrorBorder: InputBorder.none,
         hintStyle: Theme.of(context)
             .textTheme
-            .headline3
+            .headline3!
             .copyWith(color: Theme.of(context).colorScheme.secondaryVariant),
       ),
     );
@@ -159,8 +161,8 @@ class _JournalEntryViewState extends State<JournalEntryView> {
   Widget _tagTextField(BuildContext context) {
     var initTags = <String>[];
 
-    for (final tag in _tags) {
-      initTags.add(tag.name);
+    for (final tag in _tags!) {
+      initTags.add(tag.name!);
     }
 
     return CantonTagTextInput(
@@ -206,12 +208,12 @@ class _JournalEntryViewState extends State<JournalEntryView> {
             shape: SquircleBorder(radius: BorderRadius.circular(20))),
         tagTextStyle: Theme.of(context)
             .textTheme
-            .bodyText1
+            .bodyText1!
             .copyWith(color: CantonColors.white),
       ),
       onDelete: (_) {},
       onTag: (name) {
-        _tags.add(Tag(name: name));
+        _tags!.add(Tag(name: name));
       },
     );
   }
