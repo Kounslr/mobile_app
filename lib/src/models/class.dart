@@ -4,50 +4,44 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:kounslr/src/models/assignment.dart';
+import 'package:kounslr/src/models/block.dart';
+import 'package:kounslr/src/models/staff_member.dart';
 
 class Class {
-  String className;
-  String classTeacher;
-  String classTeacherEmail;
-  String markingPeriod;
-  String roomNumber;
-  String pctGrade;
-  String letterGrade;
-  int period;
-  List<Assignment> assignments;
+  String? className;
+  String? roomNumber;
+  String? pctGrade;
+  String? letterGrade;
+  StaffMember? teacher;
+  Block? block;
+  List<Assignment>? assignments;
 
   Class({
     this.className,
-    this.classTeacher,
-    this.classTeacherEmail,
-    this.markingPeriod,
     this.roomNumber,
     this.pctGrade,
     this.letterGrade,
-    this.period,
+    this.teacher,
+    this.block,
     this.assignments,
   });
 
   Class copyWith({
-    String className,
-    String classTeacher,
-    String classTeacherEmail,
-    String markingPeriod,
-    String roomNumber,
-    String pctGrade,
-    String letterGrade,
-    int period,
-    List<Assignment> assignments,
+    String? className,
+    String? roomNumber,
+    String? pctGrade,
+    String? letterGrade,
+    StaffMember? teacher,
+    Block? block,
+    List<Assignment>? assignments,
   }) {
     return Class(
       className: className ?? this.className,
-      classTeacher: classTeacher ?? this.classTeacher,
-      classTeacherEmail: classTeacherEmail ?? this.classTeacherEmail,
-      markingPeriod: markingPeriod ?? this.markingPeriod,
       roomNumber: roomNumber ?? this.roomNumber,
       pctGrade: pctGrade ?? this.pctGrade,
       letterGrade: letterGrade ?? this.letterGrade,
-      period: period ?? this.period,
+      teacher: teacher ?? this.teacher,
+      block: block ?? this.block,
       assignments: assignments ?? this.assignments,
     );
   }
@@ -55,39 +49,33 @@ class Class {
   Map<String, dynamic> toMap() {
     return {
       'className': className,
-      'classTeacher': classTeacher,
-      'classTeacherEmail': classTeacherEmail,
-      'markingPeriod': markingPeriod,
       'roomNumber': roomNumber,
       'pctGrade': pctGrade,
       'letterGrade': letterGrade,
-      'period': period,
+      'teacher': teacher?.toMap(),
+      'block': block?.toMap(),
     };
   }
 
   factory Class.fromMap(Map<String, dynamic> map) {
     return Class(
-      className: map['className'] as String,
-      classTeacher: map['classTeacher'] as String,
-      classTeacherEmail: map['classTeacherEmail'] as String,
-      markingPeriod: map['markingPeriod'] as String,
-      roomNumber: map['roomNumber'] as String,
-      pctGrade: map['pctGrade'] as String,
-      letterGrade: map['letterGrade'] as String,
-      period: map['period'] as int,
+      className: map['className'],
+      roomNumber: map['roomNumber'],
+      pctGrade: map['pctGrade'],
+      letterGrade: map['letterGrade'],
+      teacher: StaffMember.fromMap(map['teacher']),
+      block: Block.fromMap(map['block']),
     );
   }
 
   factory Class.fromDocumentSnapshot(DocumentSnapshot doc) {
     return Class(
-      className: doc['className'] as String,
-      classTeacher: doc['classTeacher'] as String,
-      classTeacherEmail: doc['classTeacherEmail'] as String,
-      markingPeriod: doc['markingPeriod'] as String,
-      roomNumber: doc['roomNumber'] as String,
-      pctGrade: doc['pctGrade'] as String,
-      letterGrade: doc['letterGrade'] as String,
-      period: doc['period'] as int,
+      className: doc['className'],
+      roomNumber: doc['roomNumber'],
+      pctGrade: doc['pctGrade'],
+      letterGrade: doc['letterGrade'],
+      teacher: StaffMember.fromDocumentSnapshot(doc['teacher']),
+      block: Block.fromDocumentSnapshot(doc['block']),
     );
   }
 
@@ -97,7 +85,7 @@ class Class {
 
   @override
   String toString() {
-    return 'Class(className: $className, classTeacher: $classTeacher, classTeacherEmail: $classTeacherEmail, markingPeriod: $markingPeriod, roomNumber: $roomNumber, pctGrade: $pctGrade, letterGrade: $letterGrade, period: $period, assignments: $assignments)';
+    return 'Class(className: $className, roomNumber: $roomNumber, pctGrade: $pctGrade, letterGrade: $letterGrade, teacher: $teacher, block: $block, assignments: $assignments)';
   }
 
   @override
@@ -106,26 +94,22 @@ class Class {
 
     return other is Class &&
         other.className == className &&
-        other.classTeacher == classTeacher &&
-        other.classTeacherEmail == classTeacherEmail &&
-        other.markingPeriod == markingPeriod &&
         other.roomNumber == roomNumber &&
         other.pctGrade == pctGrade &&
         other.letterGrade == letterGrade &&
-        other.period == period &&
+        other.teacher == teacher &&
+        other.block == block &&
         listEquals(other.assignments, assignments);
   }
 
   @override
   int get hashCode {
     return className.hashCode ^
-        classTeacher.hashCode ^
-        classTeacherEmail.hashCode ^
-        markingPeriod.hashCode ^
         roomNumber.hashCode ^
         pctGrade.hashCode ^
         letterGrade.hashCode ^
-        period.hashCode ^
+        teacher.hashCode ^
+        block.hashCode ^
         assignments.hashCode;
   }
 }
