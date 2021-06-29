@@ -35,14 +35,14 @@ class ScheduleView extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
-    User user = FirebaseAuth.instance.currentUser;
+    User user = FirebaseAuth.instance.currentUser!;
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: context.read(studentProvider).getStudentClasses(user.uid),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           return Expanded(
             child: ListView(
-              children: _getClasses(snapshot.data.docs),
+              children: _getClasses(snapshot.data!.docs),
             ),
           );
         } else {
@@ -58,7 +58,7 @@ class ScheduleView extends StatelessWidget {
     for (var item in snapshots) {
       classes.add(
         ClassCard(
-          schoolClass: Class.fromMap(item.data()),
+          schoolClass: Class.fromMap(item.data() as Map<String, dynamic>),
         ),
       );
     }

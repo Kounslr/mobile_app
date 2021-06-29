@@ -5,7 +5,7 @@ class ClassCard extends StatelessWidget {
   const ClassCard({this.schoolClass});
 
   @required
-  final Class schoolClass;
+  final Class? schoolClass;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class ClassCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  schoolClass.className ?? 'CLASS',
+                  schoolClass?.className ?? 'CLASS',
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 const SizedBox(height: 10),
@@ -31,8 +31,8 @@ class ClassCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 7),
                     Text(
-                      schoolClass.roomNumber ?? 'LOCATION',
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                      schoolClass?.roomNumber ?? 'LOCATION',
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
                             color:
                                 Theme.of(context).colorScheme.secondaryVariant,
                           ),
@@ -49,8 +49,8 @@ class ClassCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 7),
                     Text(
-                      schoolClass.classTeacher ?? 'TEACHER',
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                      schoolClass?.teacher?.name ?? 'TEACHER',
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
                             color:
                                 Theme.of(context).colorScheme.secondaryVariant,
                           ),

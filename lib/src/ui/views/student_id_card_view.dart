@@ -32,7 +32,7 @@ class StudentIDCardView extends StatelessWidget {
         Spacer(),
         Text(
           'ID Card',
-          style: Theme.of(context).textTheme.headline5.copyWith(
+          style: Theme.of(context).textTheme.headline5!.copyWith(
                 color: Theme.of(context).primaryColor,
               ),
         ),

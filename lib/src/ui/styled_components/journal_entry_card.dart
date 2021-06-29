@@ -48,12 +48,12 @@ class JournalEntryCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        journalEntry.title,
+                        journalEntry.title!,
                         style: Theme.of(context).textTheme.headline6,
                       ),
                       const SizedBox(height: 7),
                       Text(
-                        journalEntry.summary,
+                        journalEntry.summary!,
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                     ],

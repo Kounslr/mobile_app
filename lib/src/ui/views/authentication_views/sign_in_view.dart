@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 
 class SignInView extends ConsumerWidget {
-  final Function toggleView;
+  final Function? toggleView;
   const SignInView({this.toggleView});
   @override
   Widget build(BuildContext context, ScopedReader watch) {
@@ -49,7 +49,7 @@ class SignInView extends ConsumerWidget {
               containerWidth: MediaQuery.of(context).size.width / 2 - 34,
               containerColor: Theme.of(context).colorScheme.secondary,
               textColor: Theme.of(context).colorScheme.secondaryVariant,
-              onPressed: () => toggleView(),
+              onPressed: () => toggleView!(),
             ),
             Spacer(),
             CantonPrimaryButton(
@@ -57,8 +57,8 @@ class SignInView extends ConsumerWidget {
               containerWidth: MediaQuery.of(context).size.width / 2 - 34,
               containerColor: Theme.of(context).primaryColor,
               textColor: CantonColors.white,
-              onPressed: () {
-                context.read(authenticationServiceProvider).signIn(
+              onPressed: () async {
+                await context.read(authenticationServiceProvider).signIn(
                       email: _emailController.text.trim(),
                       password: _passwordController.text.trim(),
                     );
@@ -75,7 +75,7 @@ class SignInView extends ConsumerWidget {
       children: [
         Text(
           'Sign In',
-          style: Theme.of(context).textTheme.headline5.copyWith(
+          style: Theme.of(context).textTheme.headline5!.copyWith(
                 color: Theme.of(context).primaryColor,
               ),
         ),
