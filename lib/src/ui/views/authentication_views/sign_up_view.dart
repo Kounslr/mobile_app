@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 
 class SignUpView extends ConsumerWidget {
-  final Function toggleView;
+  final Function? toggleView;
   const SignUpView({this.toggleView});
   @override
   Widget build(BuildContext context, ScopedReader watch) {
@@ -68,7 +68,7 @@ class SignUpView extends ConsumerWidget {
               containerWidth: MediaQuery.of(context).size.width / 2 - 34,
               containerColor: Theme.of(context).colorScheme.secondary,
               textColor: Theme.of(context).colorScheme.secondaryVariant,
-              onPressed: () => toggleView(),
+              onPressed: () => toggleView!(),
             ),
             Spacer(),
             CantonPrimaryButton(
@@ -95,7 +95,7 @@ class SignUpView extends ConsumerWidget {
       children: [
         Text(
           'Sign Up',
-          style: Theme.of(context).textTheme.headline5.copyWith(
+          style: Theme.of(context).textTheme.headline5!.copyWith(
                 color: Theme.of(context).primaryColor,
               ),
         ),
