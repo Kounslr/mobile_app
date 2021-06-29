@@ -1,6 +1,11 @@
 import 'package:canton_design_system/canton_design_system.dart';
 
+import 'package:kounslr/src/models/class.dart';
+
 class AssignmentCard extends StatelessWidget {
+  final Class schoolClass;
+  const AssignmentCard(this.schoolClass);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -21,7 +26,7 @@ class AssignmentCard extends StatelessWidget {
             SizedBox(height: 7),
             Text(
               'TIME',
-              style: Theme.of(context).textTheme.bodyText1.copyWith(
+              style: Theme.of(context).textTheme.bodyText1!.copyWith(
                     color: Theme.of(context).colorScheme.secondaryVariant,
                   ),
             ),
@@ -39,7 +44,7 @@ class AssignmentCard extends StatelessWidget {
                     children: [
                       Text(
                         'CLASS NAME',
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
                               color: Theme.of(context).primaryColor,
                             ),
                       ),
@@ -51,7 +56,7 @@ class AssignmentCard extends StatelessWidget {
                       SizedBox(height: 7),
                       Text(
                         'DUE DATE',
-                        style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
                                   .secondaryVariant,
