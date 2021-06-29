@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 class ZipCodeResult {
-  String districtName;
-  String districtUrl;
+  String? districtName;
+  String? districtUrl;
 
   ZipCodeResult({
     this.districtName,
@@ -10,8 +10,8 @@ class ZipCodeResult {
   });
 
   ZipCodeResult copyWith({
-    String districtName,
-    String districtUrl,
+    String? districtName,
+    String? districtUrl,
   }) {
     return ZipCodeResult(
       districtName: districtName ?? this.districtName,

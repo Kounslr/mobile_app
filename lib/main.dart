@@ -27,8 +27,8 @@ class MyApp extends StatelessWidget {
           title: kAppTitle,
           primaryLightColor: CantonColors.orange,
           primaryDarkColor: CantonDarkColors.orange,
-          primaryLightVariantColor: CantonColors.orange[400],
-          primaryDarkVariantColor: CantonDarkColors.orange[400],
+          primaryLightVariantColor: CantonColors.orange[400]!,
+          primaryDarkVariantColor: CantonDarkColors.orange[400]!,
           home: AuthenticationWrapper(),
         );
       },
