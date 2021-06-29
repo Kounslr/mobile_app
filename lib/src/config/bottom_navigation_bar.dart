@@ -15,21 +15,28 @@ class _BottomNavBarState extends State<BottomNavBar> {
     return BottomNavigationBar(
       currentIndex: widget.currentIndex,
       onTap: widget.onTabTapped,
+      selectedFontSize: 12,
+      unselectedFontSize: 12,
+      selectedItemColor: Theme.of(context).primaryColor,
+      unselectedItemColor: Theme.of(context).colorScheme.secondaryVariant,
       items: [
         BottomNavigationBarItem(
+          tooltip: '',
+          label: 'Home',
           icon: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 8.0),
             child: IconlyIcon(
               IconlyBold.Home,
               size: 24,
               color: widget.currentIndex == 0
                   ? Theme.of(context).primaryColor
-                  : Theme.of(context).colorScheme.secondary,
+                  : Theme.of(context).colorScheme.secondaryVariant,
             ),
           ),
-          label: '',
         ),
         BottomNavigationBarItem(
+          tooltip: '',
+          label: 'Hall Pass',
           icon: Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: IconlyIcon(
@@ -37,12 +44,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
               size: 24,
               color: widget.currentIndex == 1
                   ? Theme.of(context).primaryColor
-                  : Theme.of(context).colorScheme.secondary,
+                  : Theme.of(context).colorScheme.secondaryVariant,
             ),
           ),
-          label: '',
         ),
         BottomNavigationBarItem(
+          tooltip: '',
+          label: 'Journal',
           icon: Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: IconlyIcon(
@@ -50,10 +58,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
               size: 24,
               color: widget.currentIndex == 2
                   ? Theme.of(context).primaryColor
-                  : Theme.of(context).colorScheme.secondary,
+                  : Theme.of(context).colorScheme.secondaryVariant,
             ),
           ),
-          label: '',
         ),
       ],
     );
