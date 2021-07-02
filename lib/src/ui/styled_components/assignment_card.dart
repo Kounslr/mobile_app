@@ -1,10 +1,10 @@
 import 'package:canton_design_system/canton_design_system.dart';
-
-import 'package:kounslr/src/models/class.dart';
+import 'package:intl/intl.dart';
+import 'package:kounslr/src/models/assignment.dart';
 
 class AssignmentCard extends StatelessWidget {
-  final Class schoolClass;
-  const AssignmentCard(this.schoolClass);
+  final Assignment? assignment;
+  const AssignmentCard(this.assignment);
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class AssignmentCard extends StatelessWidget {
             ),
             SizedBox(height: 7),
             Text(
-              'TIME',
-              style: Theme.of(context).textTheme.bodyText1!.copyWith(
+              _assignmentTime(DateFormat.jm().format(assignment!.dueDate!)),
+              style: Theme.of(context).textTheme.bodyText1?.copyWith(
                     color: Theme.of(context).colorScheme.secondaryVariant,
                   ),
             ),
@@ -43,20 +43,20 @@ class AssignmentCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'CLASS NAME',
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        assignment?.schoolClass?.className ?? 'CLASS NAME',
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
                               color: Theme.of(context).primaryColor,
                             ),
                       ),
                       SizedBox(height: 7),
                       Text(
-                        'ASSIGNMENT NAME',
+                        _assignmentName(assignment?.assignmentName),
                         style: Theme.of(context).textTheme.headline5,
                       ),
                       SizedBox(height: 7),
                       Text(
-                        'DUE DATE',
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        _assignmentDate(assignment?.dueDate),
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
                               color: Theme.of(context)
                                   .colorScheme
                                   .secondaryVariant,
@@ -64,8 +64,6 @@ class AssignmentCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  //Spacer(),
-                  //Container(width: 5, height: 5, color: CantonColors.blue)
                 ],
               ),
             ),
@@ -73,5 +71,28 @@ class AssignmentCard extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String _assignmentName(String? string) {
+    if (string == null) {
+      return 'ASSIGNMENT NAME';
+    } else if (string.length > 29) {
+      return string.substring(0, 28) + '...';
+    }
+    return string;
+  }
+
+  String _assignmentDate(DateTime? date) {
+    if (date == null) {
+      return 'DUE DATE';
+    }
+    return DateFormat.yMMMd().format(date).toString();
+  }
+
+  String _assignmentTime(String? time) {
+    if (time == null) {
+      return 'TIME';
+    }
+    return time;
   }
 }
