@@ -211,9 +211,11 @@ class _JournalEntryViewState extends State<JournalEntryView> {
             .bodyText1!
             .copyWith(color: CantonColors.white),
       ),
-      onDelete: (_) {},
+      onDelete: (name) {
+        _tags?.remove(Tag(name: name));
+      },
       onTag: (name) {
-        _tags!.add(Tag(name: name));
+        _tags?.add(Tag(name: name));
       },
     );
   }

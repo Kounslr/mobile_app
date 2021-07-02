@@ -2,7 +2,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
-import 'package:kounslr/src/ui/styled_components/journal_entry_card.dart';
+import 'package:kounslr/src/ui/styled_components/journal_entry_tag_card.dart';
 
 class JournalEntriesView extends StatefulWidget {
   const JournalEntriesView();
@@ -32,7 +32,6 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
     return ViewHeaderTwo(
       title: 'Journal Entries',
       backButton: true,
-      isBackButtonClear: true,
     );
   }
 
@@ -59,14 +58,12 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
                 ? ListView.builder(
                     itemCount: _tagList.length,
                     itemBuilder: (context, index) {
-                      return _tagCard(
-                        context,
-                        _tagList[index],
-                        _listOfEntries(snapshot)
-                            .where((element) =>
-                                element.tags!.contains(_tagList[index]))
-                            .toList(),
-                      );
+                      return JournalEntryTagCard(
+                          _listOfEntries(snapshot)
+                              .where((element) =>
+                                  element.tags!.contains(_tagList[index]))
+                              .toList(),
+                          _tagList[index]);
                     },
                   )
                 : Center(
@@ -105,24 +102,4 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   }
 
   List<Tag> _tagList = [];
-
-  Widget _tagCard(BuildContext context, Tag tag, List<JournalEntry> entries) {
-    List<Widget> children = [];
-
-    for (var entry in entries) {
-      children.add(JournalEntryCard(entry));
-    }
-
-    return Card(
-      child: CantonExpansionTile(
-        childrenPadding: const EdgeInsets.all(8.0),
-        iconColor: Theme.of(context).primaryColor,
-        title: Text(
-          tag.name!,
-          style: Theme.of(context).textTheme.headline6,
-        ),
-        children: children,
-      ),
-    );
-  }
 }
