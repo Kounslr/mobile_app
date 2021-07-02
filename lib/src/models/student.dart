@@ -1,9 +1,12 @@
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:kounslr/src/models/staff_member.dart';
 
 class Student {
   String? id;
+  String? studentId;
   String? name;
   String? gender;
   String? grade;
@@ -19,6 +22,7 @@ class Student {
 
   Student({
     this.id,
+    this.studentId,
     this.name,
     this.gender,
     this.grade,
@@ -35,6 +39,7 @@ class Student {
 
   Student copyWith({
     String? id,
+    String? studentId,
     String? name,
     String? gender,
     String? grade,
@@ -50,6 +55,7 @@ class Student {
   }) {
     return Student(
       id: id ?? this.id,
+      studentId: studentId ?? this.studentId,
       name: name ?? this.name,
       gender: gender ?? this.gender,
       grade: grade ?? this.grade,
@@ -68,6 +74,7 @@ class Student {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'studentId': studentId,
       'name': name,
       'gender': gender,
       'grade': grade,
@@ -86,6 +93,7 @@ class Student {
   factory Student.fromMap(Map<String, dynamic> map) {
     return Student(
       id: map['id'],
+      studentId: map['studentId'],
       name: map['name'],
       gender: map['gender'],
       grade: map['grade'],
@@ -96,14 +104,15 @@ class Student {
       phone: map['phone'],
       photo: map['photo'],
       currentSchool: map['currentSchool'],
-      homeroomTeacher: StaffMember.fromMap(map['homeroomTeacher'] ?? {}),
-      counselor: StaffMember.fromMap(map['counselor'] ?? {}),
+      homeroomTeacher: StaffMember.fromMap(map['homeroomTeacher']),
+      counselor: StaffMember.fromMap(map['counselor']),
     );
   }
 
   factory Student.fromDocumentSnapshot(DocumentSnapshot doc) {
     return Student(
-      id: doc.data() as String?,
+      id: doc.id,
+      studentId: doc['studentId'],
       name: doc['name'],
       gender: doc['gender'],
       grade: doc['grade'],
@@ -126,7 +135,7 @@ class Student {
 
   @override
   String toString() {
-    return 'Student(id: $id, name: $name, gender: $gender, grade: $grade, address: $address, nickname: $nickname, birthdate: $birthdate, email: $email, phone: $phone, photo: $photo, currentSchool: $currentSchool, homeroomTeacher: $homeroomTeacher, counselorName: $counselor)';
+    return 'Student(id: $id, studentId: $studentId, name: $name, gender: $gender, grade: $grade, address: $address, nickname: $nickname, birthdate: $birthdate, email: $email, phone: $phone, photo: $photo, currentSchool: $currentSchool, homeroomTeacher: $homeroomTeacher, counselor: $counselor)';
   }
 
   @override
@@ -135,6 +144,7 @@ class Student {
 
     return other is Student &&
         other.id == id &&
+        other.studentId == studentId &&
         other.name == name &&
         other.gender == gender &&
         other.grade == grade &&
@@ -152,6 +162,7 @@ class Student {
   @override
   int get hashCode {
     return id.hashCode ^
+        studentId.hashCode ^
         name.hashCode ^
         gender.hashCode ^
         grade.hashCode ^
