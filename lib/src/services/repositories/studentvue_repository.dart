@@ -1,14 +1,17 @@
+import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
+import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/models/zip_code_result.dart';
 import 'package:dio/dio.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:xml/xml.dart';
 import 'package:kounslr/src/models/assignment.dart';
+// import 'dart:developer' as dev;
 
 class StudentVueClient {
   final domain;
-  String reqURL;
+  late String reqURL;
 
   final bool mock;
   final String username, password;
@@ -20,12 +23,12 @@ class StudentVueClient {
 
   final Dio _dio = Dio(BaseOptions(validateStatus: (_) => true));
 
-  String _formattedStringName(String string) {
-    return string?.replaceAll('.', '')?.replaceAll('/', ' ') ?? 'Assignment';
+  String _formattedStringName(String? string) {
+    return string?.replaceFirst('.', '').replaceAll('/', ' ') ?? 'Assignment';
   }
 
-  Future<List<Class>> loadGradebook({Function(double) callback}) async {
-    String resData;
+  Future<List<Class>> loadGradebook({Function(double)? callback}) async {
+    String? resData;
     if (!mock) {
       var requestData = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -56,17 +59,10 @@ class StudentVueClient {
         }
       });
 
-      resData = res.data;
+      resData = res.data as String;
     }
 
-    final document = XmlDocument.parse(HtmlUnescape().convert(resData));
-    // if (resData.contains('Invalid user id or password')) {
-    //   return StudentGradeData()..error = 'Invalid user id or password';
-    // }
-    // if (resData.contains('The user name or password is incorrect')) {
-    //   return StudentGradeData()
-    //     ..error = 'The user name or password is incorrect';
-    // }
+    final document = XmlDocument.parse(HtmlUnescape().convert(resData!));
 
     var svData = <Class>[];
 
@@ -76,33 +72,30 @@ class StudentVueClient {
       XmlNode current = courses.children[i];
 
       if (current.getAttribute('Title') == null) continue;
-      Class _class = Class();
+      Class _class = Class(block: Block(), teacher: StaffMember());
 
       _class.className = _formattedStringName(current
-          .getAttribute('Title')
-          .substring(0, current.getAttribute('Title').indexOf('(')));
+          .getAttribute('Title')!
+          .substring(0, current.getAttribute('Title')!.indexOf('(')));
 
-      _class.period = int.tryParse(current.getAttribute('Period') ?? '0') ?? -1;
+      _class.block?.period =
+          int.tryParse(current.getAttribute('Period') ?? '0') ?? -1;
       _class.roomNumber = current.getAttribute('Room') ?? 'N/A';
-      _class.classTeacher = current.getAttribute('Staff') ?? 'N/A';
-      _class.classTeacherEmail = current.getAttribute('StaffEMail') ?? 'N/A';
+      _class.teacher?.roomNumber = current.getAttribute('Room') ?? 'N/A';
+      _class.teacher?.name = current.getAttribute('Staff') ?? 'N/A';
+      _class.teacher?.emailAddress =
+          current.getAttribute('StaffEMail') ?? 'N/A';
+      _class.teacher?.role = 'Teacher';
+      _class.teacher?.phoneNumber = '';
+      _class.teacher?.id = '';
 
-      var mark = current.findAllElements('Mark')?.first;
-      if (mark != null) {
-        _class.pctGrade = mark.getAttribute('CalculatedScoreRaw');
-        _class.letterGrade = mark.getAttribute('CalculatedScoreString');
-      }
+      var mark = current.findAllElements('Mark').first;
+      _class.pctGrade = mark.getAttribute('CalculatedScoreRaw');
+      _class.letterGrade = mark.getAttribute('CalculatedScoreString');
+
       current = current.findAllElements('GradeCalculationSummary').first;
-      if (current == null) {
-        classes.add(_class);
-        continue;
-      }
 
-      current = current.parent.findAllElements('Assignments').first;
-      if (current == null) {
-        classes.add(_class);
-        continue;
-      }
+      current = current.parent!.findAllElements('Assignments').first;
 
       _class.assignments = <Assignment>[];
       for (int i = 0; i < current.children.length; i++) {
@@ -110,9 +103,19 @@ class StudentVueClient {
 
         ass.assignmentName =
             _formattedStringName(current.children[i].getAttribute('Measure'));
-        ass.category =
-            current.children[i].getAttribute('Type') ?? 'No Category';
-        ass.date = current.children[i].getAttribute('DueDate') ?? '';
+        ass.type = current.children[i].getAttribute('Type') ?? 'No Type';
+
+        // bool dueDateIsNull = false;
+
+        // TODO: fix dateString
+
+        // String? dateString = dateStringMethod();
+
+        // ass.dueDate = DateTime.parse(dateString);
+        ass.dueDate = DateTime.now();
+
+        ass.schoolClass = _class;
+
         ass.earnedPoints =
             current.children[i].getAttribute('Score') == 'Not Graded'
                 ? -1
@@ -136,7 +139,7 @@ class StudentVueClient {
             if (pointsStr.length < 2) {
               ass.possiblePoints = -1;
             } else {
-              double pp = double.tryParse(pointsStr[1]);
+              double? pp = double.tryParse(pointsStr[1]);
               ass.possiblePoints = pp ?? -1;
             }
           } else {
@@ -144,7 +147,7 @@ class StudentVueClient {
                 current.children[i].getAttribute('Score') ?? 'N/A');
           }
         }
-        _class.assignments.add(ass);
+        _class.assignments!.add(ass);
       }
 
       classes.add(_class);
@@ -154,8 +157,8 @@ class StudentVueClient {
     return svData;
   }
 
-  Future<Student> loadStudentData({Function(double) callback}) async {
-    String resData;
+  Future<Student> loadStudentData({Function(double)? callback}) async {
+    String? resData;
     if (!mock) {
       var requestData = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -187,15 +190,29 @@ class StudentVueClient {
       });
       resData = res.data;
     }
-    final document = XmlDocument.parse(HtmlUnescape().convert(resData));
+    final document = XmlDocument.parse(HtmlUnescape().convert(resData!));
 
     // the StudentInfo element is inside four other dumb elements
-    final el = document.root.firstElementChild.firstElementChild
-        .firstElementChild.firstElementChild.firstElementChild;
+    final el = document.root.firstElementChild!.firstElementChild!
+        .firstElementChild!.firstElementChild!.firstElementChild!;
+
+    var homeroomTeacher = StaffMember();
+    homeroomTeacher.name = el.getElement('HomeRoomTch')?.innerText;
+    homeroomTeacher.emailAddress = el.getElement('HomeRoomTchEMail')?.innerText;
+    homeroomTeacher.roomNumber = el.getElement('HomeRoom')?.innerText;
+    homeroomTeacher.role = 'Teacher';
+    homeroomTeacher.phoneNumber = '';
+
+    var counselor = StaffMember();
+    counselor.name = el.getElement('CounselorName')?.innerText;
+    counselor.role = 'Counselor';
+    counselor.emailAddress = '';
+    counselor.phoneNumber = '';
+    counselor.roomNumber = '';
 
     return Student(
+      studentId: el.getElement('PermID')?.innerText,
       name: el.getElement('FormattedName')?.innerText,
-      id: el.getElement('PermID')?.innerText,
       gender: el.getElement('Gender')?.innerText,
       grade: el.getElement('Grade')?.innerText,
       address: el.getElement('Address')?.innerText,
@@ -204,17 +221,15 @@ class StudentVueClient {
       email: el.getElement('EMail')?.innerText,
       phone: el.getElement('Phone')?.innerText,
       currentSchool: el.getElement('CurrentSchool')?.innerText,
-      homeroomTeacher: el.getElement('HomeRoomTch')?.innerText,
-      homeroomTeacherEmail: el.getElement('HomeRoomTchEMail')?.innerText,
-      homeroom: el.getElement('HomeRoom')?.innerText,
-      counselorName: el.getElement('CounselorName')?.innerText,
-      photo: el.getElement('Photo')?.innerText,
+      photo: '', // The string supplied was too complex for my understanding
+      homeroomTeacher: homeroomTeacher,
+      counselor: counselor,
     );
   }
 
   static Future<List<ZipCodeResult>> loadDistrictsFromZip(String zip,
-      {Function(double) callback, bool mock = false}) async {
-    String resData;
+      {Function(double)? callback, bool mock = false}) async {
+    String? resData;
     if (!mock) {
       var requestData = '''<?xml version="1.0" encoding="utf-8"?>
 <v:Envelope xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:d="http://www.w3.org/2001/XMLSchema" xmlns:c="http://schemas.xmlsoap.org/soap/encoding/" xmlns:v="http://schemas.xmlsoap.org/soap/envelope/">
@@ -253,10 +268,10 @@ class StudentVueClient {
       resData = res.data;
     }
 
-    final document = XmlDocument.parse(HtmlUnescape().convert(resData));
+    final document = XmlDocument.parse(HtmlUnescape().convert(resData!));
 
-    return document.firstElementChild.firstElementChild.firstElementChild
-        .firstElementChild.firstElementChild.firstElementChild.children
+    return document.firstElementChild!.firstElementChild!.firstElementChild!
+        .firstElementChild!.firstElementChild!.firstElementChild!.children
         .map((e) => ZipCodeResult(
             districtName: e.getAttribute('Name'),
             districtUrl: e.getAttribute('PvueURL')))
