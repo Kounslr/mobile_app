@@ -18,14 +18,10 @@ class ProfileView extends ConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ViewHeaderTwo(
-          title: 'Profile',
-          backButton: true,
-          isBackButtonClear: true,
-        ),
+        _header(context),
         _body(context, student),
 
-        // Null widget so UI will format properly
+        // Invisible widget so UI will format properly
         CantonHeaderButton(
           onPressed: () {},
           backgroundColor: CantonColors.transparent,
@@ -33,6 +29,14 @@ class ProfileView extends ConsumerWidget {
       ],
     );
   }
+}
+
+Widget _header(BuildContext context) {
+  return ViewHeaderTwo(
+    title: 'Profile',
+    backButton: true,
+    isBackButtonClear: true,
+  );
 }
 
 Widget _body(BuildContext context, Student student) {
@@ -94,7 +98,7 @@ Widget _profileCard(BuildContext context, Student student) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                student.name! + ' (' + student.id! + ')',
+                student.name! + ' (' + student.studentId! + ')',
                 style: Theme.of(context).textTheme.headline5,
               ),
               Text(

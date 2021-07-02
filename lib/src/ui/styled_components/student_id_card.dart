@@ -43,7 +43,7 @@ class StudentIDCard extends StatelessWidget {
               children: [
                 _titleUserText(context, 'Name', student.name!),
                 _titleUserText(context, 'Grade', student.grade!),
-                _titleUserText(context, 'ID', student.id!)
+                _titleUserText(context, 'ID', student.studentId!)
               ],
             ),
           ],
