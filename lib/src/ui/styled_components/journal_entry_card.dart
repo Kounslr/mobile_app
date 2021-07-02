@@ -24,16 +24,7 @@ class JournalEntryCard extends ConsumerWidget {
             SlideActionType.primary: 1.0,
             SlideActionType.secondary: 1.0,
           },
-          onDismissed: (direction) {
-            if (direction == SlideActionType.secondary) {
-              context.read(studentProvider).deleteJournalEntry(journalEntry);
-            }
-          },
-          // DeleteNoteAction(repo, note);
         ),
-        actions: <Widget>[
-          // PinNoteAction(repo, note),
-        ],
         secondaryActions: <Widget>[
           _deleteEntryAction(context, journalEntry),
         ],

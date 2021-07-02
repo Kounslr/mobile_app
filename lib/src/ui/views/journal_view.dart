@@ -87,11 +87,17 @@ class _JournalViewState extends State<JournalView> {
     Color _bgColor = Theme.of(context).canvasColor;
     Color _barColor = Theme.of(context).primaryColor;
     Color _barTooltipColor = Theme.of(context).colorScheme.primaryVariant;
-    Color _xAxisTitleColor = Theme.of(context).primaryColor;
+    Color _xAxisTitleColor = Theme.of(context).colorScheme.secondaryVariant;
+    Color _titleTextColor = Theme.of(context).colorScheme.secondaryVariant;
     List<BarChartGroupData> _barGroups = [];
 
+    int number() {
+      if (tags.values.length < 3) return tags.values.length;
+      return 3;
+    }
+
     /// Bar group data
-    for (int i = 0; i < tags.values.length; i++) {
+    for (int i = 0; i < number(); i++) {
       _barGroups.add(
         BarChartGroupData(
           x: i,
@@ -117,7 +123,7 @@ class _JournalViewState extends State<JournalView> {
         color: _bgColor,
         child: Padding(
           padding: const EdgeInsets.only(top: 50.0),
-          child: _barGroups.length != 0
+          child: _barGroups.length > 0
               ? BarChart(
                   BarChartData(
                     alignment: BarChartAlignment.spaceAround,
@@ -131,7 +137,7 @@ class _JournalViewState extends State<JournalView> {
                         margin: 50,
                         textStyle:
                             Theme.of(context).textTheme.headline6?.copyWith(
-                                  color: Theme.of(context).primaryColor,
+                                  color: _titleTextColor,
                                 ),
                       ),
                     ),
@@ -199,9 +205,7 @@ class _JournalViewState extends State<JournalView> {
 
   Widget _viewCard(BuildContext context, String text, Widget view) {
     return GestureDetector(
-      onTap: () {
-        CantonMethods.viewTransition(context, view);
-      },
+      onTap: () => CantonMethods.viewTransition(context, view),
       child: Card(
         child: Padding(
           padding: EdgeInsets.all(15),
@@ -210,7 +214,7 @@ class _JournalViewState extends State<JournalView> {
               Text(
                 text,
                 style: Theme.of(context).textTheme.headline6!.copyWith(
-                      color: Theme.of(context).primaryColor,
+                    //color: Theme.of(context).primaryColor,
                     ),
               ),
               Spacer(),
