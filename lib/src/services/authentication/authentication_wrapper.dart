@@ -45,7 +45,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
               }
             } else {
               return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                stream: context.read(studentProvider).getStudent(user.uid),
+                stream: context.read(studentProvider).getStudent(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.active &&
                       snapshot.data != null &&
