@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:kounslr/src/models/class.dart';
+
 class Assignment {
   String? assignmentName;
   String? type;
@@ -10,6 +12,7 @@ class Assignment {
   bool? completed;
   DateTime? creationDate;
   DateTime? dueDate;
+  Class? schoolClass;
 
   Assignment({
     this.assignmentName,
@@ -19,6 +22,7 @@ class Assignment {
     this.completed,
     this.creationDate,
     this.dueDate,
+    this.schoolClass,
   });
 
   Assignment copyWith({
@@ -29,6 +33,7 @@ class Assignment {
     bool? completed,
     DateTime? creationDate,
     DateTime? dueDate,
+    Class? schoolClass,
   }) {
     return Assignment(
       assignmentName: assignmentName ?? this.assignmentName,
@@ -38,6 +43,7 @@ class Assignment {
       completed: completed ?? this.completed,
       creationDate: creationDate ?? this.creationDate,
       dueDate: dueDate ?? this.dueDate,
+      schoolClass: schoolClass ?? this.schoolClass,
     );
   }
 
@@ -50,6 +56,7 @@ class Assignment {
       'completed': completed,
       'creationDate': creationDate?.millisecondsSinceEpoch,
       'dueDate': dueDate?.millisecondsSinceEpoch,
+      'schoolClass': schoolClass?.toMap(),
     };
   }
 
@@ -60,8 +67,11 @@ class Assignment {
       earnedPoints: map['earnedPoints'],
       possiblePoints: map['possiblePoints'],
       completed: map['completed'],
-      creationDate: DateTime.fromMillisecondsSinceEpoch(map['creationDate']),
+      creationDate: DateTime.fromMillisecondsSinceEpoch(
+        map['creationDate'] ?? DateTime.now().millisecondsSinceEpoch,
+      ),
       dueDate: DateTime.fromMillisecondsSinceEpoch(map['dueDate']),
+      schoolClass: Class.fromMap(map['schoolClass']),
     );
   }
 
@@ -72,8 +82,11 @@ class Assignment {
       earnedPoints: doc['earnedPoints'],
       possiblePoints: doc['possiblePoints'],
       completed: doc['completed'],
-      creationDate: DateTime.fromMillisecondsSinceEpoch(doc['creationDate']),
+      creationDate: DateTime.fromMillisecondsSinceEpoch(
+        doc['creationDate'] ?? DateTime.now().millisecondsSinceEpoch,
+      ),
       dueDate: DateTime.fromMillisecondsSinceEpoch(doc['dueDate']),
+      schoolClass: Class.fromDocumentSnapshot(doc['schoolClass']),
     );
   }
 
@@ -84,7 +97,7 @@ class Assignment {
 
   @override
   String toString() {
-    return 'Assignment(assignmentName: $assignmentName, type: $type, earnedPoints: $earnedPoints, possiblePoints: $possiblePoints, completed: $completed, creationDate: $creationDate, dueDate: $dueDate)';
+    return 'Assignment(assignmentName: $assignmentName, type: $type, earnedPoints: $earnedPoints, possiblePoints: $possiblePoints, completed: $completed, creationDate: $creationDate, dueDate: $dueDate, schoolClass: $schoolClass)';
   }
 
   @override
@@ -98,7 +111,8 @@ class Assignment {
         other.possiblePoints == possiblePoints &&
         other.completed == completed &&
         other.creationDate == creationDate &&
-        other.dueDate == dueDate;
+        other.dueDate == dueDate &&
+        other.schoolClass == schoolClass;
   }
 
   @override
@@ -109,6 +123,7 @@ class Assignment {
         possiblePoints.hashCode ^
         completed.hashCode ^
         creationDate.hashCode ^
-        dueDate.hashCode;
+        dueDate.hashCode ^
+        schoolClass.hashCode;
   }
 }

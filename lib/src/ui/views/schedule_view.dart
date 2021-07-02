@@ -1,6 +1,5 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/ui/providers/student_provider.dart';
@@ -35,9 +34,8 @@ class ScheduleView extends StatelessWidget {
   }
 
   Widget _body(BuildContext context) {
-    User user = FirebaseAuth.instance.currentUser!;
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: context.read(studentProvider).getStudentClasses(user.uid),
+      stream: context.read(studentProvider).getStudentClasses(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           return Expanded(
