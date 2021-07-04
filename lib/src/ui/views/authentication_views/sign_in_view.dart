@@ -24,25 +24,52 @@ class SignInView extends ConsumerWidget {
       children: [
         _header(context),
         SizedBox(height: 50),
-        CantonTextInput(
+        _emailTextInput(context, _emailController),
+        SizedBox(height: 15),
+        _passwordTextInput(context, _passwordController),
+        SizedBox(height: 20),
+        _signInAndSignUpButtons(context, _emailController, _passwordController),
+      ],
+    );
+  }
+
+  Widget _header(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          'Sign In',
+          style: Theme.of(context).textTheme.headline5!.copyWith(
+                color: Theme.of(context).primaryColor,
+              ),
+        ),
+      ],
+    );
+  }
+
+  Widget _emailTextInput(BuildContext context, TextEditingController _emailController) {
+    return CantonTextInput(
           hintText: 'Email',
           isTextFormField: true,
           obscureText: false,
           controller: _emailController,
           border: BorderSide.none,
           radius: BorderRadius.circular(45),
-        ),
-        SizedBox(height: 15),
-        CantonTextInput(
+        );
+  }
+
+  Widget _passwordTextInput(BuildContext context, TextEditingController _passwordController) {
+    return CantonTextInput(
           hintText: 'Password',
           isTextFormField: true,
           obscureText: true,
           controller: _passwordController,
           border: BorderSide.none,
           radius: BorderRadius.all(Radius.circular(45)),
-        ),
-        SizedBox(height: 20),
-        Row(
+        );
+  }
+
+  Widget _signInAndSignUpButtons(BuildContext context, TextEditingController _emailController, TextEditingController _passwordController,) {
+    return Row(
           children: [
             CantonPrimaryButton(
               buttonText: 'Sign Up',
@@ -65,21 +92,6 @@ class SignInView extends ConsumerWidget {
               },
             ),
           ],
-        ),
-      ],
-    );
-  }
-
-  Widget _header(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          'Sign In',
-          style: Theme.of(context).textTheme.headline5!.copyWith(
-                color: Theme.of(context).primaryColor,
-              ),
-        ),
-      ],
-    );
+        );
   }
 }
