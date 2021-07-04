@@ -1,10 +1,9 @@
-import 'dart:collection';
-
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
+import 'package:kounslr/src/ui/providers/student_provider.dart';
 import 'package:kounslr/src/ui/views/journal_entries_view.dart';
 import 'package:kounslr/src/ui/views/journal_entry_view.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -23,7 +22,7 @@ class _JournalViewState extends State<JournalView> {
   Widget _content(BuildContext context) {
     return Consumer(
       builder: (context, watch, child) {
-        User user = FirebaseAuth.instance.currentUser;
+        User user = FirebaseAuth.instance.currentUser!;
 
         var _stream = FirebaseFirestore.instance
             .collection('customers')
@@ -60,10 +59,15 @@ class _JournalViewState extends State<JournalView> {
                   SizedBox(height: 20),
                   _graphJournalStatistics(
                     context,
-                    _getTopThreeMostUsedTags(snapshot.data.docs),
+                    context
+                        .read(studentProvider)
+                        .getTopThreeMostUsedTags(snapshot.data!.docs),
                   ),
                   SizedBox(height: 20),
-                  _viewCard(context, 'View all entries', JournalEntriesView()),
+                  snapshot.data!.docs.length != 0
+                      ? _viewCard(
+                          context, 'View all entries', JournalEntriesView())
+                      : Container(),
                 ],
               );
             } else {
@@ -75,28 +79,37 @@ class _JournalViewState extends State<JournalView> {
     );
   }
 
-  Widget _graphJournalStatistics(BuildContext context, Map<String, int> tags) {
+  Widget _graphJournalStatistics(
+    BuildContext context,
+    Map<String?, int?> tags,
+  ) {
     /// Variables
-    Color _bgColor = Theme.of(context).primaryColor;
-    Color _barColor = CantonColors.white;
+    Color _bgColor = Theme.of(context).canvasColor;
+    Color _barColor = Theme.of(context).primaryColor;
     Color _barTooltipColor = Theme.of(context).colorScheme.primaryVariant;
-    Color _xAxisTitleColor = CantonColors.white;
+    Color _xAxisTitleColor = Theme.of(context).colorScheme.secondaryVariant;
+    Color _titleTextColor = Theme.of(context).colorScheme.secondaryVariant;
     List<BarChartGroupData> _barGroups = [];
 
+    int number() {
+      if (tags.values.length < 3) return tags.values.length;
+      return 3;
+    }
+
     /// Bar group data
-    for (int i = 0; i < tags.values.length; i++) {
+    for (int i = 0; i < number(); i++) {
       _barGroups.add(
         BarChartGroupData(
           x: i,
+          showingTooltipIndicators: [0],
           barRods: [
             BarChartRodData(
-              y: tags.values.toList()[i].toDouble(),
+              y: tags.values.toList()[i]!.toDouble(),
               borderRadius: BorderRadius.circular(5),
               colors: [_barColor],
               width: 15,
             ),
           ],
-          showingTooltipIndicators: [0],
         ),
       );
     }
@@ -110,125 +123,89 @@ class _JournalViewState extends State<JournalView> {
         color: _bgColor,
         child: Padding(
           padding: const EdgeInsets.only(top: 50.0),
-          child: BarChart(
-            BarChartData(
-              alignment: BarChartAlignment.spaceAround,
-              // axisTitleData: FlAxisTitleData(
-              //   show: true,
-              //   topTitle: AxisTitle(
-              //     showTitle: true,
-              //     titleText: 'Most used tags',
-              //     textAlign: TextAlign.left,
-              //     //margin: 10,
-              //     textStyle: Theme.of(context).textTheme.headline4.copyWith(
-              //           color: CantonColors.white,
-              //         ),
-              //   ),
-              // ),
-              barTouchData: BarTouchData(
-                enabled: false,
-                touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.transparent,
-                  tooltipPadding: const EdgeInsets.all(0),
-                  tooltipMargin: 8,
-                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    return BarTooltipItem(
-                      rod.y.round().toString(),
-                      Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(color: _barTooltipColor),
-                    );
-                  },
+          child: _barGroups.length > 0
+              ? BarChart(
+                  BarChartData(
+                    alignment: BarChartAlignment.spaceAround,
+                    axisTitleData: FlAxisTitleData(
+                      show: true,
+                      topTitle: AxisTitle(
+                        showTitle: true,
+                        titleText: 'Most used tags',
+                        textAlign: TextAlign.left,
+                        reservedSize: -30,
+                        margin: 50,
+                        textStyle:
+                            Theme.of(context).textTheme.headline6?.copyWith(
+                                  color: _titleTextColor,
+                                ),
+                      ),
+                    ),
+                    barTouchData: BarTouchData(
+                      enabled: false,
+                      touchTooltipData: BarTouchTooltipData(
+                        tooltipBgColor: Colors.transparent,
+                        tooltipPadding: const EdgeInsets.all(0),
+                        tooltipMargin: 8,
+                        getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                          return BarTooltipItem(
+                            rod.y.round().toString(),
+                            Theme.of(context)
+                                .textTheme
+                                .headline5!
+                                .copyWith(color: _barTooltipColor),
+                          );
+                        },
+                      ),
+                    ),
+                    titlesData: FlTitlesData(
+                      show: true,
+                      bottomTitles: SideTitles(
+                        showTitles: true,
+                        getTextStyles: (value) {
+                          return Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(
+                                height: 0.9,
+                                color: _xAxisTitleColor,
+                              );
+                        },
+                        margin: 20,
+                        getTitles: (double value) {
+                          switch (value.toInt()) {
+                            case 0:
+                              return tags.keys.toList(growable: false)[0]!;
+                            case 1:
+                              return tags.keys.toList(growable: false)[1]!;
+                            case 2:
+                              return tags.keys.toList(growable: false)[2]!;
+                            default:
+                              return '';
+                          }
+                        },
+                      ),
+                      leftTitles: SideTitles(showTitles: false),
+                    ),
+                    borderData: FlBorderData(
+                      show: false,
+                    ),
+                    barGroups: _barGroups,
+                  ),
+                )
+              : Text(
+                  'Click the "+" button to create your first journal entry',
+                  style: Theme.of(context).textTheme.headline5,
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              titlesData: FlTitlesData(
-                show: true,
-                bottomTitles: SideTitles(
-                  showTitles: true,
-                  getTextStyles: (value) {
-                    return Theme.of(context).textTheme.bodyText1.copyWith(
-                          height: 0.9,
-                          color: _xAxisTitleColor,
-                        );
-                  },
-                  margin: 20,
-                  getTitles: (double value) {
-                    switch (value.toInt()) {
-                      case 0:
-                        return tags.keys.toList(growable: false)[0];
-                      case 1:
-                        return tags.keys.toList(growable: false)[1];
-                      case 2:
-                        return tags.keys.toList(growable: false)[2];
-                      default:
-                        return '';
-                    }
-                  },
-                ),
-                leftTitles: SideTitles(showTitles: false),
-              ),
-              borderData: FlBorderData(
-                show: false,
-              ),
-              barGroups: _barGroups,
-            ),
-          ),
         ),
       ),
     );
   }
 
-  Map<String, int> _getTopThreeMostUsedTags(
-    List<QueryDocumentSnapshot> entries,
-  ) {
-    /// Variables
-    List<JournalEntry> _entries = [];
-    List<Tag> _tags = [];
-    var map = <dynamic, dynamic>{};
-
-    /// Convert firebase data to [Journal Entry]
-    entries.forEach((element) {
-      _entries.add(JournalEntry.fromMap(element.data()));
-    });
-
-    /// Adds [Tag] (s) from [JournalEntry] to a list
-    _entries.forEach((element) {
-      element.tags.forEach((element) {
-        _tags.add(element);
-      });
-    });
-
-    /// Counts the number of times the entry has been used
-    for (var x in _tags) map[x.name] = ((map[x.name] ?? 0) + 1);
-
-    var sortedKeys = map.keys.toList()
-      ..sort((k1, k2) => map[k2].compareTo(map[k1]));
-
-    for (int i = 0; i < sortedKeys.length; i++) {
-      if (i >= 3) {
-        sortedKeys.removeAt(i);
-      }
-    }
-
-    var sortedMap = Map<String, int>.fromIterable(
-      sortedKeys,
-      key: (k) => k,
-      value: (k) => map[k],
-    );
-
-    map = sortedMap;
-
-    map.removeWhere((key, value) => false);
-
-    return map;
-  }
-
   Widget _viewCard(BuildContext context, String text, Widget view) {
     return GestureDetector(
-      onTap: () {
-        CantonMethods.viewTransition(context, view);
-      },
+      onTap: () => CantonMethods.viewTransition(context, view),
       child: Card(
         child: Padding(
           padding: EdgeInsets.all(15),
@@ -236,8 +213,8 @@ class _JournalViewState extends State<JournalView> {
             children: [
               Text(
                 text,
-                style: Theme.of(context).textTheme.headline6.copyWith(
-                      color: Theme.of(context).primaryColor,
+                style: Theme.of(context).textTheme.headline6!.copyWith(
+                    //color: Theme.of(context).primaryColor,
                     ),
               ),
               Spacer(),

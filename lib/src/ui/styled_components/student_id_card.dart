@@ -28,10 +28,10 @@ class StudentIDCard extends StatelessWidget {
                 ),
                 SizedBox(width: 15),
                 Text(
-                  student.currentSchool,
+                  student.currentSchool!,
                   style: Theme.of(context)
                       .textTheme
-                      .headline4
+                      .headline4!
                       .copyWith(color: CantonColors.white),
                 ),
               ],
@@ -41,9 +41,9 @@ class StudentIDCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _titleUserText(context, 'Name', student.name),
-                _titleUserText(context, 'Grade', student.grade),
-                _titleUserText(context, 'ID', student.id)
+                _titleUserText(context, 'Name', student.name!),
+                _titleUserText(context, 'Grade', student.grade!),
+                _titleUserText(context, 'ID', student.studentId!)
               ],
             ),
           ],
@@ -62,13 +62,13 @@ class StudentIDCard extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.headline6.copyWith(
+          style: Theme.of(context).textTheme.headline6!.copyWith(
                 color: Theme.of(context).colorScheme.primaryVariant,
               ),
         ),
         Text(
           description,
-          style: Theme.of(context).textTheme.headline5.copyWith(
+          style: Theme.of(context).textTheme.headline5!.copyWith(
                 color: CantonColors.white,
               ),
         ),

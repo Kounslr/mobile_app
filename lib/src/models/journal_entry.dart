@@ -1,15 +1,16 @@
 import 'dart:convert';
 
 import 'package:canton_design_system/models/tag.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class JournalEntry {
-  String id;
-  String title;
-  String summary;
-  DateTime creationDate;
-  DateTime lastEditDate;
-  List<Tag> tags;
+  String? id;
+  String? title;
+  String? summary;
+  DateTime? creationDate;
+  DateTime? lastEditDate;
+  List<Tag>? tags;
   JournalEntry({
     this.id,
     this.title,
@@ -20,12 +21,12 @@ class JournalEntry {
   });
 
   JournalEntry copyWith({
-    String id,
-    String title,
-    String summary,
-    DateTime creationDate,
-    DateTime lastEditDate,
-    List<Tag> tags,
+    String? id,
+    String? title,
+    String? summary,
+    DateTime? creationDate,
+    DateTime? lastEditDate,
+    List<Tag>? tags,
   }) {
     return JournalEntry(
       id: id ?? this.id,
@@ -42,9 +43,9 @@ class JournalEntry {
       'id': id,
       'title': title,
       'summary': summary,
-      'creationDate': creationDate.millisecondsSinceEpoch,
-      'lastEditDate': lastEditDate.millisecondsSinceEpoch,
-      'tags': tags?.map((x) => x.toMap())?.toList(),
+      'creationDate': creationDate!.millisecondsSinceEpoch,
+      'lastEditDate': lastEditDate!.millisecondsSinceEpoch,
+      'tags': tags?.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -56,6 +57,17 @@ class JournalEntry {
       creationDate: DateTime.fromMillisecondsSinceEpoch(map['creationDate']),
       lastEditDate: DateTime.fromMillisecondsSinceEpoch(map['lastEditDate']),
       tags: List<Tag>.from(map['tags']?.map((x) => Tag.fromMap(x))),
+    );
+  }
+
+  factory JournalEntry.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return JournalEntry(
+      id: doc['id'],
+      title: doc['title'],
+      summary: doc['summary'],
+      creationDate: DateTime.fromMillisecondsSinceEpoch(doc['creationDate']),
+      lastEditDate: DateTime.fromMillisecondsSinceEpoch(doc['lastEditDate']),
+      tags: List<Tag>.from(doc['tags']?.map((x) => Tag.fromMap(x))),
     );
   }
 

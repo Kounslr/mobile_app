@@ -1,25 +1,28 @@
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:kounslr/src/models/staff_member.dart';
+
 class Student {
-  String id;
-  String name;
-  String gender;
-  String grade;
-  String address;
-  String nickname;
-  String birthdate;
-  String email;
-  String phone;
-  String photo;
-  String currentSchool;
-  String homeroom;
-  String homeroomTeacher;
-  String homeroomTeacherEmail;
-  String counselorName;
+  String? id;
+  String? studentId;
+  String? name;
+  String? gender;
+  String? grade;
+  String? address;
+  String? nickname;
+  String? birthdate;
+  String? email;
+  String? phone;
+  String? photo;
+  String? currentSchool;
+  StaffMember? homeroomTeacher;
+  StaffMember? counselor;
 
   Student({
     this.id,
+    this.studentId,
     this.name,
     this.gender,
     this.grade,
@@ -30,31 +33,29 @@ class Student {
     this.phone,
     this.photo,
     this.currentSchool,
-    this.homeroom,
     this.homeroomTeacher,
-    this.homeroomTeacherEmail,
-    this.counselorName,
+    this.counselor,
   });
 
   Student copyWith({
-    String id,
-    String name,
-    String gender,
-    String grade,
-    String address,
-    String nickname,
-    String birthdate,
-    String email,
-    String phone,
-    String photo,
-    String currentSchool,
-    String homeroom,
-    String homeroomTeacher,
-    String homeroomTeacherEmail,
-    String counselorName,
+    String? id,
+    String? studentId,
+    String? name,
+    String? gender,
+    String? grade,
+    String? address,
+    String? nickname,
+    String? birthdate,
+    String? email,
+    String? phone,
+    String? photo,
+    String? currentSchool,
+    StaffMember? homeroomTeacher,
+    StaffMember? counselor,
   }) {
     return Student(
       id: id ?? this.id,
+      studentId: studentId ?? this.studentId,
       name: name ?? this.name,
       gender: gender ?? this.gender,
       grade: grade ?? this.grade,
@@ -65,16 +66,15 @@ class Student {
       phone: phone ?? this.phone,
       photo: photo ?? this.photo,
       currentSchool: currentSchool ?? this.currentSchool,
-      homeroom: homeroom ?? this.homeroom,
       homeroomTeacher: homeroomTeacher ?? this.homeroomTeacher,
-      homeroomTeacherEmail: homeroomTeacherEmail ?? this.homeroomTeacherEmail,
-      counselorName: counselorName ?? this.counselorName,
+      counselor: counselor ?? this.counselor,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'studentId': studentId,
       'name': name,
       'gender': gender,
       'grade': grade,
@@ -85,16 +85,15 @@ class Student {
       'phone': phone,
       'photo': photo,
       'currentSchool': currentSchool,
-      'homeroom': homeroom,
-      'homeroomTeacher': homeroomTeacher,
-      'homeroomTeacherEmail': homeroomTeacherEmail,
-      'counselorName': counselorName,
+      'homeroomTeacher': homeroomTeacher?.toMap(),
+      'counselor': counselor?.toMap(),
     };
   }
 
   factory Student.fromMap(Map<String, dynamic> map) {
     return Student(
       id: map['id'],
+      studentId: map['studentId'],
       name: map['name'],
       gender: map['gender'],
       grade: map['grade'],
@@ -105,16 +104,15 @@ class Student {
       phone: map['phone'],
       photo: map['photo'],
       currentSchool: map['currentSchool'],
-      homeroom: map['homeroom'],
-      homeroomTeacher: map['homeroomTeacher'],
-      homeroomTeacherEmail: map['homeroomTeacherEmail'],
-      counselorName: map['counselorName'],
+      homeroomTeacher: StaffMember.fromMap(map['homeroomTeacher']),
+      counselor: StaffMember.fromMap(map['counselor']),
     );
   }
 
   factory Student.fromDocumentSnapshot(DocumentSnapshot doc) {
     return Student(
-      id: doc.data(),
+      id: doc.id,
+      studentId: doc['studentId'],
       name: doc['name'],
       gender: doc['gender'],
       grade: doc['grade'],
@@ -125,10 +123,8 @@ class Student {
       phone: doc['phone'],
       photo: doc['photo'],
       currentSchool: doc['currentSchool'],
-      homeroom: doc['homeroom'],
-      homeroomTeacher: doc['homeroomTeacher'],
-      homeroomTeacherEmail: doc['homeroomTeacherEmail'],
-      counselorName: doc['counselorName'],
+      homeroomTeacher: StaffMember.fromDocumentSnapshot(doc['homeroomTeacher']),
+      counselor: StaffMember.fromDocumentSnapshot(doc['counselor']),
     );
   }
 
@@ -139,7 +135,7 @@ class Student {
 
   @override
   String toString() {
-    return 'Student(id: $id, name: $name, gender: $gender, grade: $grade, address: $address, nickname: $nickname, birthdate: $birthdate, email: $email, phone: $phone, photo: $photo, currentSchool: $currentSchool, homeroom: $homeroom, homeroomTeacher: $homeroomTeacher, homeroomTeacherEmail: $homeroomTeacherEmail, counselorName: $counselorName)';
+    return 'Student(id: $id, studentId: $studentId, name: $name, gender: $gender, grade: $grade, address: $address, nickname: $nickname, birthdate: $birthdate, email: $email, phone: $phone, photo: $photo, currentSchool: $currentSchool, homeroomTeacher: $homeroomTeacher, counselor: $counselor)';
   }
 
   @override
@@ -148,6 +144,7 @@ class Student {
 
     return other is Student &&
         other.id == id &&
+        other.studentId == studentId &&
         other.name == name &&
         other.gender == gender &&
         other.grade == grade &&
@@ -158,15 +155,14 @@ class Student {
         other.phone == phone &&
         other.photo == photo &&
         other.currentSchool == currentSchool &&
-        other.homeroom == homeroom &&
         other.homeroomTeacher == homeroomTeacher &&
-        other.homeroomTeacherEmail == homeroomTeacherEmail &&
-        other.counselorName == counselorName;
+        other.counselor == counselor;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
+        studentId.hashCode ^
         name.hashCode ^
         gender.hashCode ^
         grade.hashCode ^
@@ -177,9 +173,7 @@ class Student {
         phone.hashCode ^
         photo.hashCode ^
         currentSchool.hashCode ^
-        homeroom.hashCode ^
         homeroomTeacher.hashCode ^
-        homeroomTeacherEmail.hashCode ^
-        counselorName.hashCode;
+        counselor.hashCode;
   }
 }

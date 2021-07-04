@@ -1,55 +1,92 @@
 import 'dart:convert';
 
-class Assignment {
-  String assignmentName;
-  String date;
-  String category;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-  // earn points = -1 means grade not added
-  double earnedPoints;
-  double possiblePoints;
+import 'package:kounslr/src/models/class.dart';
+
+class Assignment {
+  String? assignmentName;
+  String? type;
+  double? earnedPoints;
+  double? possiblePoints;
+  bool? completed;
+  DateTime? creationDate;
+  DateTime? dueDate;
+  Class? schoolClass;
 
   Assignment({
     this.assignmentName,
-    this.date,
-    this.category,
+    this.type,
     this.earnedPoints,
     this.possiblePoints,
+    this.completed,
+    this.creationDate,
+    this.dueDate,
+    this.schoolClass,
   });
 
   Assignment copyWith({
-    String assignmentName,
-    String date,
-    String category,
-    double earnedPoints,
-    double possiblePoints,
+    String? assignmentName,
+    String? type,
+    double? earnedPoints,
+    double? possiblePoints,
+    bool? completed,
+    DateTime? creationDate,
+    DateTime? dueDate,
+    Class? schoolClass,
   }) {
     return Assignment(
       assignmentName: assignmentName ?? this.assignmentName,
-      date: date ?? this.date,
-      category: category ?? this.category,
+      type: type ?? this.type,
       earnedPoints: earnedPoints ?? this.earnedPoints,
       possiblePoints: possiblePoints ?? this.possiblePoints,
+      completed: completed ?? this.completed,
+      creationDate: creationDate ?? this.creationDate,
+      dueDate: dueDate ?? this.dueDate,
+      schoolClass: schoolClass ?? this.schoolClass,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'assignmentName': assignmentName,
-      'date': date,
-      'category': category,
+      'type': type,
       'earnedPoints': earnedPoints,
       'possiblePoints': possiblePoints,
+      'completed': completed,
+      'creationDate': creationDate?.millisecondsSinceEpoch,
+      'dueDate': dueDate?.millisecondsSinceEpoch,
+      'schoolClass': schoolClass?.toMap(),
     };
   }
 
   factory Assignment.fromMap(Map<String, dynamic> map) {
     return Assignment(
       assignmentName: map['assignmentName'],
-      date: map['date'],
-      category: map['category'],
+      type: map['type'],
       earnedPoints: map['earnedPoints'],
       possiblePoints: map['possiblePoints'],
+      completed: map['completed'],
+      creationDate: DateTime.fromMillisecondsSinceEpoch(
+        map['creationDate'] ?? DateTime.now().millisecondsSinceEpoch,
+      ),
+      dueDate: DateTime.fromMillisecondsSinceEpoch(map['dueDate']),
+      schoolClass: Class.fromMap(map['schoolClass']),
+    );
+  }
+
+  factory Assignment.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return Assignment(
+      assignmentName: doc['assignmentName'],
+      type: doc['type'],
+      earnedPoints: doc['earnedPoints'],
+      possiblePoints: doc['possiblePoints'],
+      completed: doc['completed'],
+      creationDate: DateTime.fromMillisecondsSinceEpoch(
+        doc['creationDate'] ?? DateTime.now().millisecondsSinceEpoch,
+      ),
+      dueDate: DateTime.fromMillisecondsSinceEpoch(doc['dueDate']),
+      schoolClass: Class.fromDocumentSnapshot(doc['schoolClass']),
     );
   }
 
@@ -60,7 +97,7 @@ class Assignment {
 
   @override
   String toString() {
-    return 'Assignment(assignmentName: $assignmentName, date: $date, category: $category, earnedPoints: $earnedPoints, possiblePoints: $possiblePoints)';
+    return 'Assignment(assignmentName: $assignmentName, type: $type, earnedPoints: $earnedPoints, possiblePoints: $possiblePoints, completed: $completed, creationDate: $creationDate, dueDate: $dueDate, schoolClass: $schoolClass)';
   }
 
   @override
@@ -69,18 +106,24 @@ class Assignment {
 
     return other is Assignment &&
         other.assignmentName == assignmentName &&
-        other.date == date &&
-        other.category == category &&
+        other.type == type &&
         other.earnedPoints == earnedPoints &&
-        other.possiblePoints == possiblePoints;
+        other.possiblePoints == possiblePoints &&
+        other.completed == completed &&
+        other.creationDate == creationDate &&
+        other.dueDate == dueDate &&
+        other.schoolClass == schoolClass;
   }
 
   @override
   int get hashCode {
     return assignmentName.hashCode ^
-        date.hashCode ^
-        category.hashCode ^
+        type.hashCode ^
         earnedPoints.hashCode ^
-        possiblePoints.hashCode;
+        possiblePoints.hashCode ^
+        completed.hashCode ^
+        creationDate.hashCode ^
+        dueDate.hashCode ^
+        schoolClass.hashCode;
   }
 }

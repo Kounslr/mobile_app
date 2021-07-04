@@ -18,14 +18,10 @@ class ProfileView extends ConsumerWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ViewHeaderTwo(
-          title: 'Profile',
-          backButton: true,
-          isBackButtonClear: true,
-        ),
+        _header(context),
         _body(context, student),
 
-        // Null widget so UI will format properly
+        // Invisible widget so UI will format properly
         CantonHeaderButton(
           onPressed: () {},
           backgroundColor: CantonColors.transparent,
@@ -33,6 +29,14 @@ class ProfileView extends ConsumerWidget {
       ],
     );
   }
+}
+
+Widget _header(BuildContext context) {
+  return ViewHeaderTwo(
+    title: 'Profile',
+    backButton: true,
+    isBackButtonClear: true,
+  );
 }
 
 Widget _body(BuildContext context, Student student) {
@@ -68,7 +72,7 @@ Widget _studentIDCard(BuildContext context, Student student) {
           children: [
             Text(
               'ID Card',
-              style: Theme.of(context).textTheme.headline6.copyWith(
+              style: Theme.of(context).textTheme.headline6!.copyWith(
                     color: Theme.of(context).primaryColor,
                   ),
             ),
@@ -94,15 +98,15 @@ Widget _profileCard(BuildContext context, Student student) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                student.name + ' (' + student.id + ')',
+                student.name! + ' (' + student.studentId! + ')',
                 style: Theme.of(context).textTheme.headline5,
               ),
               Text(
-                student.email,
+                student.email!,
                 style: Theme.of(context).textTheme.bodyText1,
               ),
               Text(
-                student.currentSchool,
+                student.currentSchool!,
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ],
