@@ -36,7 +36,7 @@ class StudentRepository extends ChangeNotifier {
   }
 
   List<Assignment> assignments = [];
-  Future<List<Assignment>> getTopSevenUpcomingAssignments() async {
+  Future<List<Assignment>> getUpcomingAssignments() async {
     List<Assignment> _assignments = [];
 
     await user

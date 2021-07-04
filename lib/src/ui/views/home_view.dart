@@ -70,7 +70,7 @@ class _HomeViewState extends State<HomeView> {
   Widget _content(BuildContext context, AsyncSnapshot snapshot) {
     Student student = Student.fromMap(snapshot.data?.data());
     return FutureBuilder<List<Assignment>>(
-        future: context.read(studentProvider).getTopSevenUpcomingAssignments(),
+        future: context.read(studentProvider).getUpcomingAssignments(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return ListView(
