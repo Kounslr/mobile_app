@@ -1,152 +1,231 @@
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kounslr/src/models/assignment.dart';
+import 'package:kounslr/src/models/block.dart';
+import 'package:kounslr/src/models/class.dart';
+import 'package:kounslr/src/models/school.dart';
+import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
-import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
-import 'package:kounslr/src/ui/providers/student_provider.dart';
+import 'package:kounslr/src/ui/providers/next_class_providers/next_block_stream_provider.dart';
+import 'package:kounslr/src/ui/providers/next_class_providers/next_class_stream_provider.dart';
+import 'package:kounslr/src/ui/providers/next_class_providers/next_class_teacher_stream_provider.dart';
+import 'package:kounslr/src/ui/providers/school_stream_provider.dart';
+import 'package:kounslr/src/ui/providers/student_assignments_provider.dart';
+import 'package:kounslr/src/ui/providers/student_classes_stream_provider.dart';
+import 'package:kounslr/src/ui/providers/student_stream_provider.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
+import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/profile_view.dart';
 import 'package:kounslr/src/ui/views/schedule_view.dart';
+import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
 
 class HomeView extends StatefulWidget {
   @override
   _HomeViewState createState() => _HomeViewState();
 }
 
+// Fix Next Class Card
+
 class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, watch, child) {
-        return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-          stream: context.read(studentProvider).getStudent(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData || snapshot.data == null) {
-              return Loading();
-            } else if (!snapshot.hasError &&
-                snapshot.hasData &&
-                snapshot.data?.data() != null) {
-              return _content(context, snapshot);
-            } else {
-              return _somethingWentWrong(context);
-            }
+        // General Student info variables
+        final schoolStream = watch(schoolStreamProvider);
+        final studentStream = watch(studentStreamProvider);
+        final studentClassesStream = watch(studentClassesFutureProvider);
+        final studentAssignmentsStream =
+            watch(upcomingAssignmentsFutureProvider);
+
+        // Next class variables
+        final nextClassStream = watch(nextClassStreamProvider);
+        final nextBlockStream = watch(nextBlockStreamProvider);
+        final nextClassTeacherStream = watch(nextClassTeacherStreamProvider);
+
+        return schoolStream.when(
+          error: (e, s) {
+            return SomethingWentWrong();
+          },
+          loading: () => Loading(),
+          data: (school) {
+            return studentStream.when(
+              error: (e, s) {
+                return SomethingWentWrong();
+              },
+              loading: () => Loading(),
+              data: (student) {
+                return studentClassesStream.when(
+                  error: (e, s) {
+                    return SomethingWentWrong();
+                  },
+                  loading: () => Loading(),
+                  data: (classes) {
+                    if (classes.length == 0) {
+                      return Loading();
+                    }
+                    return studentAssignmentsStream.when(
+                      error: (e, s) {
+                        return SomethingWentWrong();
+                      },
+                      loading: () => Loading(),
+                      data: (assignments) {
+                        if (assignments.length == 0) {
+                          return Loading();
+                        }
+                        return nextBlockStream.when(
+                          loading: () => Loading(),
+                          error: (e, s) {
+                            return SomethingWentWrong();
+                          },
+                          data: (nextBlock) {
+                            return nextClassStream.when(
+                              error: (e, s) {
+                                return SomethingWentWrong();
+                              },
+                              loading: () => Loading(),
+                              data: (nextClass) {
+                                return nextClassTeacherStream.when(
+                                  error: (e, s) {
+                                    return SomethingWentWrong();
+                                  },
+                                  loading: () => Loading(),
+                                  data: (nextClassTeacher) {
+                                    return _content(
+                                      context,
+                                      school,
+                                      student,
+                                      classes,
+                                      assignments,
+                                      nextClass,
+                                      nextBlock,
+                                      nextClassTeacher,
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            );
           },
         );
       },
     );
   }
 
-  Widget _somethingWentWrong(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Something went wrong',
-            style: Theme.of(context).textTheme.headline5!.copyWith(
-                  color: Theme.of(context).colorScheme.secondaryVariant,
-                ),
-          ),
-          SizedBox(height: 20),
-          CantonPrimaryButton(
-            buttonText: 'Sign out',
-            textColor: CantonColors.white,
-            containerColor: Theme.of(context).primaryColor,
-            containerWidth: MediaQuery.of(context).size.width / 2 - 34,
-            onPressed: () {
-              context.read(authenticationServiceProvider).signOut(context);
-            },
-          ),
-        ],
-      ),
+  Widget _content(
+      BuildContext context,
+      SchoolM school,
+      StudentM student,
+      List<ClassM> classes,
+      List<AssignmentM> assignments,
+      ClassM nextClass,
+      BlockM nextBlock,
+      StaffMember teacher) {
+    return ListView(
+      shrinkWrap: false,
+      children: _contentChildren(context, school, student, classes, assignments,
+          nextClass, nextBlock, teacher),
     );
   }
 
-  List<Assignment> assignments = [];
-
-  Widget _content(BuildContext context, AsyncSnapshot snapshot) {
-    Student student = Student.fromMap(snapshot.data?.data());
-    return FutureBuilder<List<Assignment>>(
-        future: context.read(studentProvider).getUpcomingAssignments(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return ListView(
-              shrinkWrap: false,
-              children: _contentChildren(context, student, snapshot.data!),
-            );
-          } else {
-            return Loading();
-          }
-        });
-  }
-
   List<Widget> _contentChildren(
-    BuildContext context,
-    Student student,
-    List<Assignment> list,
-  ) {
+      BuildContext context,
+      SchoolM school,
+      StudentM student,
+      List<ClassM> classes,
+      List<AssignmentM> assignments,
+      ClassM nextClass,
+      BlockM nextBlock,
+      StaffMember teacher) {
     List<Widget> children = [
       _header(context, student),
       SizedBox(height: 10),
-      _dateCard(context),
-      _nextClassCard(context),
+      _dateCard(context, school),
+      _nextClassCard(context, nextClass, nextBlock, teacher.name!),
 
       // ListView controls
-      Row(
-        children: [
-          Text(
-            'Upcoming Assignments',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          Spacer(),
-          TextButton(
-            style: ButtonStyle(
-              alignment: Alignment.centerRight,
-              animationDuration: Duration.zero,
-              elevation: MaterialStateProperty.all<double>(0),
-              overlayColor: MaterialStateProperty.all<Color>(
-                CantonColors.transparent,
-              ),
-              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                EdgeInsets.zero,
-              ),
+    ];
+
+    if (assignments.length != 0) {
+      children.add(
+        Row(
+          children: [
+            Text(
+              'Upcoming Assignments',
+              style: Theme.of(context).textTheme.headline6,
             ),
+            Spacer(),
+            TextButton(
+              style: ButtonStyle(
+                alignment: Alignment.centerRight,
+                animationDuration: Duration.zero,
+                elevation: MaterialStateProperty.all<double>(0),
+                overlayColor: MaterialStateProperty.all<Color>(
+                  CantonColors.transparent,
+                ),
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                  EdgeInsets.zero,
+                ),
+              ),
+              child: Text(
+                'View All',
+                style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: Theme.of(context).primaryColor,
+                    ),
+              ),
+              onPressed: () => CantonMethods.viewTransition(
+                  context, UpcomingAssignmentView()),
+            ),
+            CantonActionButton(
+              icon: IconlyIcon(
+                IconlyBold.ArrowRight2,
+                color: Theme.of(context).primaryColor,
+              ),
+              onPressed: () => CantonMethods.viewTransition(
+                  context, UpcomingAssignmentView()),
+            ),
+          ],
+        ),
+      );
+      for (var i = 0;
+          i < ((assignments.length < 7) ? assignments.length : 7);
+          i++) {
+        if (assignments[i].dueDate!.isAfter(DateTime.now())) {
+          children.add(AssignmentCard(
+              classes.where((e) => e.id == assignments[i].id).toList()[0],
+              assignments[i]));
+        }
+      }
+    } else {
+      children.add(
+        Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Center(
             child: Text(
-              'View All',
-              style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).primaryColor,
+              'No upcoming assignments',
+              style: Theme.of(context).textTheme.headline4?.copyWith(
+                    color: Theme.of(context).colorScheme.secondaryVariant,
                   ),
             ),
-            onPressed: () {},
           ),
-          CantonActionButton(
-            icon: IconlyIcon(
-              IconlyBold.ArrowRight2,
-              color: Theme.of(context).primaryColor,
-            ),
-            onPressed: () {},
-          ),
-        ],
-      ),
-
-      // List of upcoming assignments
-      AssignmentCard(list[0]),
-      AssignmentCard(list[1]),
-      AssignmentCard(list[2]),
-      AssignmentCard(list[3]),
-      AssignmentCard(list[4]),
-      AssignmentCard(list[5]),
-      AssignmentCard(list[6]),
-    ];
+        ),
+      );
+    }
 
     return children;
   }
 
-  Widget _header(BuildContext context, Student student) {
+  Widget _header(BuildContext context, StudentM student) {
     return Row(
       children: [
         Column(
@@ -183,7 +262,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _dateCard(BuildContext context) {
+  Widget _dateCard(BuildContext context, SchoolM school) {
     return Row(
       children: [
         Container(
@@ -195,7 +274,7 @@ class _HomeViewState extends State<HomeView> {
           child: Column(
             children: [
               Text(
-                'M',
+                school.currentDay?.dayType ?? 'M',
                 style: Theme.of(context).textTheme.headline4!.copyWith(
                       color: CantonColors.white,
                     ),
@@ -220,117 +299,9 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _nextClassCard(BuildContext context) {
-    if (![DateTime.saturday, DateTime.sunday]
-        .contains(DateTime.now().weekday)) {
-      return Column(
-        children: [
-          Row(
-            children: [
-              Text('Next Class', style: Theme.of(context).textTheme.headline6),
-              const Spacer(),
-              TextButton(
-                style: ButtonStyle(
-                  alignment: Alignment.centerRight,
-                  animationDuration: Duration.zero,
-                  elevation: MaterialStateProperty.all<double>(0),
-                  overlayColor: MaterialStateProperty.all<Color>(
-                    CantonColors.transparent,
-                  ),
-                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                    EdgeInsets.zero,
-                  ),
-                ),
-                child: Text(
-                  'View Full Schedule',
-                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                ),
-                onPressed: () {
-                  CantonMethods.viewTransition(context, ScheduleView());
-                },
-              ),
-              CantonActionButton(
-                icon: IconlyIcon(
-                  IconlyBold.ArrowRight2,
-                  color: Theme.of(context).primaryColor,
-                ),
-                onPressed: () {
-                  CantonMethods.viewTransition(context, ScheduleView());
-                },
-              ),
-            ],
-          ),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'CLASS',
-                        style: Theme.of(context).textTheme.headline4,
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          IconlyIcon(
-                            IconlyBold.Location,
-                            color:
-                                Theme.of(context).colorScheme.secondaryVariant,
-                            size: 17,
-                          ),
-                          const SizedBox(width: 7),
-                          Text(
-                            'LOCATION',
-                            style:
-                                Theme.of(context).textTheme.bodyText1!.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondaryVariant,
-                                    ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          IconlyIcon(
-                            IconlyBold.Profile,
-                            color:
-                                Theme.of(context).colorScheme.secondaryVariant,
-                            size: 17,
-                          ),
-                          const SizedBox(width: 7),
-                          Text(
-                            'TEACHER',
-                            style:
-                                Theme.of(context).textTheme.bodyText1!.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondaryVariant,
-                                    ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  Text(
-                    'TIME',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    } else {
+  Widget _nextClassCard(BuildContext context, ClassM schoolClass, BlockM block,
+      String teacherName) {
+    if (schoolClass.id == null) {
       return Card(
         margin: EdgeInsets.only(top: 15),
         child: Padding(
@@ -338,12 +309,160 @@ class _HomeViewState extends State<HomeView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Enjoy your weekend!',
-                  style: Theme.of(context).textTheme.headline4),
+              Text('Sorry! We couldn\'t figure out your next class',
+                  style: Theme.of(context).textTheme.headline6),
             ],
           ),
         ),
       );
+    } else {
+      if (![DateTime.saturday, DateTime.sunday]
+          .contains(DateTime.now().weekday)) {
+        return Column(
+          children: [
+            Row(
+              children: [
+                Text('Next Class',
+                    style: Theme.of(context).textTheme.headline6),
+                const Spacer(),
+                TextButton(
+                  style: ButtonStyle(
+                    alignment: Alignment.centerRight,
+                    animationDuration: Duration.zero,
+                    elevation: MaterialStateProperty.all<double>(0),
+                    overlayColor: MaterialStateProperty.all<Color>(
+                      CantonColors.transparent,
+                    ),
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                      EdgeInsets.zero,
+                    ),
+                  ),
+                  child: Text(
+                    'View Full Schedule',
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                  onPressed: () {
+                    CantonMethods.viewTransition(context, ScheduleView());
+                  },
+                ),
+                CantonActionButton(
+                  icon: IconlyIcon(
+                    IconlyBold.ArrowRight2,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {
+                    CantonMethods.viewTransition(context, ScheduleView());
+                  },
+                ),
+              ],
+            ),
+            (block.period != null)
+                ? _classCard(schoolClass, teacherName, block)
+                : Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('No more classes for today! 😃',
+                              style: Theme.of(context).textTheme.headline4),
+                        ],
+                      ),
+                    ),
+                  ),
+          ],
+        );
+      } else {
+        return Card(
+          margin: EdgeInsets.only(top: 15),
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Enjoy your weekend!',
+                    style: Theme.of(context).textTheme.headline4),
+              ],
+            ),
+          ),
+        );
+      }
     }
+  }
+
+  Widget _classCard(
+      ClassM schoolClass, String teacherName, BlockM currentBlock) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  schoolClass.name ?? 'CLASS',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    IconlyIcon(
+                      IconlyBold.Location,
+                      color: Theme.of(context).colorScheme.secondaryVariant,
+                      size: 17,
+                    ),
+                    const SizedBox(width: 7),
+                    Text(
+                      schoolClass.roomNumber ?? 'LOCATION',
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.secondaryVariant,
+                          ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    IconlyIcon(
+                      IconlyBold.Profile,
+                      color: Theme.of(context).colorScheme.secondaryVariant,
+                      size: 17,
+                    ),
+                    const SizedBox(width: 7),
+                    Text(
+                      teacherName,
+                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.secondaryVariant,
+                          ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Spacer(),
+            Text(
+              _nextClassTime(currentBlock.time.toString()),
+              style: Theme.of(context).textTheme.headline6,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _nextClassTime(String string) {
+    String time =
+        string.substring(string.indexOf(' '), string.lastIndexOf(':')).trim();
+    if (time.startsWith('0')) {
+      time = time.substring(1);
+    }
+
+    return time;
   }
 }
