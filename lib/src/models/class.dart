@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/staff_member.dart';
+import 'package:kounslr/src/models/student.dart';
 
 class Class {
   String? className;
@@ -110,6 +111,122 @@ class Class {
         letterGrade.hashCode ^
         teacher.hashCode ^
         block.hashCode ^
+        assignments.hashCode;
+  }
+}
+
+class ClassM {
+  String? id;
+  String? name;
+  String? roomNumber;
+  String? teacherId;
+  int? block;
+  List<StudentM>? students;
+  List<AssignmentM>? assignments;
+
+  ClassM({
+    this.id,
+    this.name,
+    this.block,
+    this.roomNumber,
+    this.teacherId,
+    this.students,
+    this.assignments,
+  });
+
+  ClassM copyWith({
+    String? id,
+    String? name,
+    String? roomNumber,
+    String? teacherId,
+    int? block,
+    List<StudentM>? students,
+    List<AssignmentM>? assignments,
+  }) {
+    return ClassM(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      block: block ?? this.block,
+      roomNumber: roomNumber ?? this.roomNumber,
+      teacherId: teacherId ?? this.teacherId,
+      students: students ?? this.students,
+      assignments: assignments ?? this.assignments,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'block': block,
+      'roomNumber': roomNumber,
+      'teacherId': teacherId,
+      'students': students?.map((x) => x.toMapId()).toList(),
+      'assignments': assignments?.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  factory ClassM.fromMap(Map<String, dynamic> map) {
+    return ClassM(
+      id: map['id'],
+      name: map['name'],
+      block: map['block'],
+      roomNumber: map['roomNumber'],
+      teacherId: map['teacherId'],
+      students:
+          List<StudentM>.from(map['students']?.map((x) => StudentM.fromMap(x))),
+      assignments: List<AssignmentM>.from(
+          map['assignments']?.map((x) => AssignmentM.fromMap(x))),
+    );
+  }
+
+  factory ClassM.fromDocumentSnapshot(
+    DocumentSnapshot doc,
+    List<AssignmentM> assignments,
+  ) {
+    return ClassM(
+      id: doc['id'],
+      name: doc['name'],
+      block: doc['block'],
+      roomNumber: doc['roomNumber'],
+      teacherId: doc['teacherId'],
+      students: List<StudentM>.from(
+          doc['students']?.map((x) => StudentM.fromMapId(x))),
+      assignments: assignments,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory ClassM.fromJson(String source) => ClassM.fromMap(json.decode(source));
+
+  @override
+  String toString() {
+    return 'ClassM(id: $id, name: $name, block: $block, roomNumber: $roomNumber, teacherId: $teacherId, students: $students, assignments: $assignments)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ClassM &&
+        other.id == id &&
+        other.name == name &&
+        other.block == block &&
+        other.roomNumber == roomNumber &&
+        other.teacherId == teacherId &&
+        listEquals(other.students, students) &&
+        listEquals(other.assignments, assignments);
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        name.hashCode ^
+        block.hashCode ^
+        roomNumber.hashCode ^
+        teacherId.hashCode ^
+        students.hashCode ^
         assignments.hashCode;
   }
 }
