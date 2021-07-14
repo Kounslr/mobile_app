@@ -6,7 +6,6 @@ class StaffMember {
   String? id;
   String? name;
   String? role;
-  String? roomNumber;
   String? phoneNumber;
   String? emailAddress;
 
@@ -14,7 +13,6 @@ class StaffMember {
     this.id,
     this.name,
     this.role,
-    this.roomNumber,
     this.phoneNumber,
     this.emailAddress,
   });
@@ -31,7 +29,6 @@ class StaffMember {
       id: id ?? this.id,
       name: name ?? this.name,
       role: role ?? this.role,
-      roomNumber: roomNumber ?? this.roomNumber,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       emailAddress: emailAddress ?? this.emailAddress,
     );
@@ -42,7 +39,6 @@ class StaffMember {
       'id': id,
       'name': name,
       'role': role,
-      'roomNumber': roomNumber,
       'phoneNumber': phoneNumber,
       'emailAddress': emailAddress,
     };
@@ -53,7 +49,6 @@ class StaffMember {
       id: map['id'],
       name: map['name'],
       role: map['role'],
-      roomNumber: map['roomNumber'],
       phoneNumber: map['phoneNumber'],
       emailAddress: map['emailAddress'],
     );
@@ -64,7 +59,6 @@ class StaffMember {
       id: doc['id'],
       name: doc['name'],
       role: doc['role'],
-      roomNumber: doc['roomNumber'],
       phoneNumber: doc['phoneNumber'],
       emailAddress: doc['emailAddress'],
     );
@@ -77,7 +71,7 @@ class StaffMember {
 
   @override
   String toString() {
-    return 'StaffMember(id: $id, name: $name, role: $role, roomNumber: $roomNumber, phoneNumber: $phoneNumber, emailAddress: $emailAddress)';
+    return 'StaffMember(id: $id, name: $name, role: $role, phoneNumber: $phoneNumber, emailAddress: $emailAddress)';
   }
 
   @override
@@ -88,7 +82,6 @@ class StaffMember {
         other.id == id &&
         other.name == name &&
         other.role == role &&
-        other.roomNumber == roomNumber &&
         other.phoneNumber == phoneNumber &&
         other.emailAddress == emailAddress;
   }
@@ -98,7 +91,6 @@ class StaffMember {
     return id.hashCode ^
         name.hashCode ^
         role.hashCode ^
-        roomNumber.hashCode ^
         phoneNumber.hashCode ^
         emailAddress.hashCode;
   }
