@@ -2,7 +2,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
-import 'package:kounslr/src/ui/providers/student_provider.dart';
+import 'package:kounslr/src/ui/providers/student_repository_provider.dart';
 
 class JournalEntryView extends StatefulWidget {
   final JournalEntry entry;
@@ -54,20 +54,14 @@ class _JournalEntryViewState extends State<JournalEntryView> {
   Widget _header(BuildContext context) {
     return Consumer(
       builder: (context, watch, child) {
-        final repo = watch(studentProvider);
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             CantonBackButton(
               isClear: true,
-              onPressed: () => {
-                repo.completeJournalEntry(
-                  entry: widget.entry,
-                  title: _titleController.text,
-                  summary: _summaryController.text,
-                  tags: _tags,
-                ),
-                Navigator.of(context).pop(),
+              onPressed: () {
+                _completeJournalEntry();
+                Navigator.of(context).pop();
               },
             ),
             Text(
@@ -103,14 +97,9 @@ class _JournalEntryViewState extends State<JournalEntryView> {
                   style: Theme.of(context).textTheme.headline6!.copyWith(
                       fontWeight: FontWeight.w500, color: CantonColors.white),
                 ),
-                onPressed: () => {
-                  repo.completeJournalEntry(
-                    entry: widget.entry,
-                    title: _titleController.text,
-                    summary: _summaryController.text,
-                    tags: _tags,
-                  ),
-                  Navigator.of(context).pop(),
+                onPressed: () {
+                  _completeJournalEntry();
+                  Navigator.of(context).pop();
                 },
               ),
             ),
@@ -167,6 +156,8 @@ class _JournalEntryViewState extends State<JournalEntryView> {
 
     return CantonTagTextInput(
       initialTags: initTags,
+      maxCharactersPerTag: 10,
+      maxTags: 3,
       textFieldStyler: TagTextInputStyler(
         cursorColor: Theme.of(context).primaryColor,
         hintText: 'Tags',
@@ -239,6 +230,17 @@ class _JournalEntryViewState extends State<JournalEntryView> {
         focusedErrorBorder: InputBorder.none,
         hintText: 'Summary',
       ),
+    );
+  }
+
+  Future<void> _completeJournalEntry() async {
+    final repo = context.read(studentRepositoryProvider);
+
+    await repo.completeJournalEntry(
+      entry: widget.entry,
+      title: _titleController.text,
+      summary: _summaryController.text,
+      tags: _tags,
     );
   }
 }
