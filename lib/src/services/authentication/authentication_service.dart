@@ -16,18 +16,17 @@ class AuthenticationService {
       .doc('independence')
       .collection('students');
 
-  String uid = '';
+  // String uid = '';
 
   Future<void> _createStudentInDatabase(
-    Student student,
+    StudentM student,
     List<Class> classes,
-    String uid,
   ) async {
-    await user.doc(uid).set(student.toMap());
+    await user.doc(student.id).set(student.toMap());
 
     classes.forEach((element) async {
       await user
-          .doc(uid)
+          .doc(student.id)
           .collection('classes')
           .doc(element.className)
           .set(element.toMap());
@@ -36,7 +35,7 @@ class AuthenticationService {
     classes.forEach((e) async {
       e.assignments!.forEach((element) async {
         await user
-            .doc(uid)
+            .doc(student.id)
             .collection('classes')
             .doc(e.className)
             .collection('assignments')
@@ -47,17 +46,20 @@ class AuthenticationService {
   }
 
   Future<void> _updateStudentInDatabase(
-    Student student,
+    StudentM student,
     List<Class> classes,
-    String uid,
   ) async {
-    await user.doc(uid).set(student.toMap());
+    await user.doc(student.id).set(student.toMap());
 
     classes.forEach((element) async {
-      await user.doc(uid).collection('classes').doc(element.className).delete();
+      await user
+          .doc(student.id)
+          .collection('classes')
+          .doc(element.className)
+          .delete();
 
       await user
-          .doc(uid)
+          .doc(student.id)
           .collection('classes')
           .doc(element.className)
           .set(element.toMap());
@@ -66,7 +68,7 @@ class AuthenticationService {
     classes.forEach((e) async {
       e.assignments!.forEach((element) async {
         await user
-            .doc(uid)
+            .doc(student.id)
             .collection('classes')
             .doc(e.className)
             .collection('assignments')
@@ -74,7 +76,7 @@ class AuthenticationService {
             .delete();
 
         await user
-            .doc(uid)
+            .doc(student.id)
             .collection('classes')
             .doc(e.className)
             .collection('assignments')
@@ -92,27 +94,24 @@ class AuthenticationService {
 
   Future<void> signIn({required String email, required String password}) async {
     try {
-      Student student = Student();
+      var student = StudentM();
       List<Class> classes = [];
       String username = email.substring(0, email.indexOf('@'));
       String domain = 'portal.lcps.org';
 
-      await _firebaseAuth
-          .signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          )
-          .then((value) => uid = value.user!.uid);
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      // .then((value) => uid = value.user!.uid);
 
-      await StudentVueClient(username, password, domain)
-          .loadStudentData()
-          .then((value) => {student = value});
+      student =
+          await StudentVueClient(username, password, domain).loadStudentData();
 
-      await StudentVueClient(username, password, domain)
-          .loadGradebook()
-          .then((value) => {classes = value});
+      classes =
+          await StudentVueClient(username, password, domain).loadGradebook();
 
-      await _updateStudentInDatabase(student, classes, uid);
+      await _updateStudentInDatabase(student, classes);
     } on FirebaseAuthException catch (e) {
       throw e.message!;
     }
@@ -124,26 +123,21 @@ class AuthenticationService {
     String? domain,
   }) async {
     try {
-      Student student = Student();
+      var student = StudentM();
       List<Class> classes = [];
       String username = email.substring(0, email.indexOf('@'));
 
-      await _firebaseAuth
-          .createUserWithEmailAndPassword(
-            email: email,
-            password: password,
-          )
-          .then((value) => {uid = value.user!.uid, student.id = uid});
+      await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      // .then((value) => {uid = value.user!.uid, student.id = uid});
 
-      await StudentVueClient(username, password, domain)
-          .loadStudentData()
-          .then((value) => {student = value});
+      student =
+          await StudentVueClient(username, password, domain).loadStudentData();
 
-      await StudentVueClient(username, password, domain)
-          .loadGradebook()
-          .then((value) => {classes = value});
+      classes =
+          await StudentVueClient(username, password, domain).loadGradebook();
 
-      await _createStudentInDatabase(student, classes, uid);
+      await _createStudentInDatabase(student, classes);
     } on FirebaseAuthException catch (e) {
       throw e.message!;
     }
