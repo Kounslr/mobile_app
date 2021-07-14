@@ -2,10 +2,9 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
-import 'package:kounslr/src/ui/views/student_id_card_view.dart';
 
 class ProfileView extends ConsumerWidget {
-  final Student student;
+  final StudentM student;
 
   const ProfileView(this.student);
 
@@ -39,7 +38,7 @@ Widget _header(BuildContext context) {
   );
 }
 
-Widget _body(BuildContext context, Student student) {
+Widget _body(BuildContext context, StudentM student) {
   return Column(
     children: [
       _profileCard(context, student),
@@ -60,10 +59,10 @@ Widget _body(BuildContext context, Student student) {
   );
 }
 
-Widget _studentIDCard(BuildContext context, Student student) {
+Widget _studentIDCard(BuildContext context, StudentM student) {
   return GestureDetector(
     onTap: () {
-      CantonMethods.viewTransition(context, StudentIDCardView(student));
+      // CantonMethods.viewTransition(context, StudentIDCardView(student));
     },
     child: Card(
       child: Padding(
@@ -88,7 +87,7 @@ Widget _studentIDCard(BuildContext context, Student student) {
   );
 }
 
-Widget _profileCard(BuildContext context, Student student) {
+Widget _profileCard(BuildContext context, StudentM student) {
   return Card(
     child: Padding(
       padding: const EdgeInsets.all(12.0),
@@ -106,7 +105,7 @@ Widget _profileCard(BuildContext context, Student student) {
                 style: Theme.of(context).textTheme.bodyText1,
               ),
               Text(
-                student.currentSchool!,
+                'student.currentSchool!',
                 style: Theme.of(context).textTheme.bodyText1,
               ),
             ],
