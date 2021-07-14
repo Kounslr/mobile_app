@@ -4,73 +4,224 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kounslr/src/models/assignment.dart';
+import 'package:kounslr/src/models/block.dart';
+import 'package:kounslr/src/models/class.dart';
 
 import 'package:kounslr/src/models/journal_entry.dart';
+import 'package:kounslr/src/models/school.dart';
+import 'package:kounslr/src/models/staff_member.dart';
+import 'package:kounslr/src/models/student.dart';
+import 'package:kounslr/src/services/repositories/school_repository.dart';
+import 'package:uuid/uuid.dart';
 
-class StudentRepository extends ChangeNotifier {
-  final CollectionReference user = FirebaseFirestore.instance
+class StudentRepository {
+  var ref = FirebaseFirestore.instance
       .collection('customers')
       .doc('lcps')
       .collection('schools')
-      .doc('independence')
-      .collection('students');
+      .doc('independence');
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getStudent() {
+  var uid = FirebaseAuth.instance.currentUser?.uid;
+
+  Stream<SchoolM> get school {
     try {
-      return user.doc(FirebaseAuth.instance.currentUser?.uid).snapshots()
-          as Stream<DocumentSnapshot<Map<String, dynamic>>>;
+      var school =
+          ref.snapshots().map((event) => SchoolM.fromDocumentSnapshot(event));
+
+      return school;
     } catch (e) {
       rethrow;
     }
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getStudentClasses() {
+  Stream<StudentM> get student {
     try {
-      return user
-          .doc(FirebaseAuth.instance.currentUser?.uid)
+      var student = ref
+          .collection('students')
+          .doc(uid)
+          .snapshots()
+          .map((event) => StudentM.fromDocumentSnapshot(event));
+
+      return student;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<ClassM> getClassByBlock(int block) async {
+    try {
+      List<AssignmentM> assignments = [];
+      var classesRef = await ref
           .collection('classes')
-          .snapshots();
+          .where('students', arrayContains: {'id': uid})
+          .where('block', isEqualTo: block)
+          .get();
+
+      var assignmentsRef =
+          await classesRef.docs[0].reference.collection('assignments').get();
+
+      assignmentsRef.docs.forEach((element) {
+        assignments.add(AssignmentM.fromDocumentSnapshot(element));
+      });
+
+      Map<String, AssignmentM> mapFilter = {};
+      for (var item in assignments) {
+        mapFilter[item.id!] = item;
+      }
+      assignments = mapFilter.values.toList();
+
+      assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+
+      var schoolClass =
+          ClassM.fromDocumentSnapshot(classesRef.docs[0], assignments);
+
+      return schoolClass;
     } catch (e) {
       rethrow;
     }
   }
 
-  List<Assignment> assignments = [];
-  Future<List<Assignment>> getUpcomingAssignments() async {
-    List<Assignment> _assignments = [];
+  Stream<BlockM> get nextBlockStream async* {
+    var school = await SchoolRepository().getSchool();
+    var nextBlock = BlockM();
 
-    await user
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .collection('classes')
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        element.reference.collection('assignments').get().then((value) {
-          value.docs.forEach((sAssignment) {
-            assignments.add(Assignment.fromMap(sAssignment.data()));
-            assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
-          });
-        });
-      });
-    });
+    List<BlockM> blocks = school.currentDay!.blocks!;
 
-    for (var item in assignments) {
-      if (item.dueDate!.isAfter(DateTime.now())) {
-        _assignments.add(item);
+    for (int i = 0; i < blocks.length; i++) {
+      if (DateTime.now().isAfter(blocks[blocks.length - 2].time!)) {
+        nextBlock = blocks[blocks.length - 2];
+      } else if (DateTime.now().isAfter(blocks[blocks.length - 3].time!)) {
+        nextBlock = blocks[blocks.length - 3];
+      } else {
+        nextBlock = blocks[blocks.length - 4];
       }
     }
 
-    return _assignments;
+    print(nextBlock);
+
+    yield nextBlock;
+  }
+
+  Future<BlockM> get nextBlock async {
+    var school = await SchoolRepository().getSchool();
+    var nextBlock = BlockM();
+
+    List<BlockM> blocks = school.currentDay!.blocks!;
+
+    for (int i = 0; i < blocks.length; i++) {
+      if (DateTime.now().isAfter(blocks[blocks.length - 2].time!)) {
+        nextBlock = blocks[blocks.length - 2];
+      } else if (DateTime.now().isAfter(blocks[blocks.length - 3].time!)) {
+        nextBlock = blocks[blocks.length - 3];
+      } else {
+        nextBlock = blocks[blocks.length - 4];
+      }
+    }
+
+    print(nextBlock);
+
+    return nextBlock;
+  }
+
+  Stream<StaffMember> get nextClassTeacher async* {
+    var schoolClass = await nextClass;
+    var teacher =
+        await SchoolRepository().getTeacherByTeacherId(schoolClass.teacherId!);
+
+    yield teacher;
+  }
+
+  Stream<ClassM> get nextClassStream async* {
+    var upcomingClass = ClassM();
+    var upcomingBlock = await nextBlock;
+    upcomingClass = upcomingBlock.period != null
+        ? await getClassByBlock(upcomingBlock.period!)
+        : ClassM();
+    yield upcomingClass;
+  }
+
+  Future<ClassM> get nextClass async {
+    var upcomingClass = ClassM();
+    var upcomingBlock = await nextBlock;
+    upcomingClass = upcomingBlock.period != null
+        ? await getClassByBlock(upcomingBlock.period!)
+        : ClassM();
+    return upcomingClass;
+  }
+
+  Future<List<ClassM>> get studentClasses async {
+    try {
+      List<ClassM> classes = [];
+      var classesRef = await ref
+          .collection('classes')
+          .where('students', arrayContains: {'id': uid}).get();
+
+      classesRef.docs.forEach((element) async {
+        List<AssignmentM> ass = [];
+        var assignmentsRef =
+            await element.reference.collection('assignments').get();
+        assignmentsRef.docs.forEach((element) {
+          ass.add(AssignmentM.fromDocumentSnapshot(element));
+        });
+        classes.add(ClassM.fromDocumentSnapshot(element, ass));
+      });
+
+      /// Fixes glitch where duplicate Classes are returned in list
+      Map<String, ClassM> mapFilter = {};
+      for (var item in classes) {
+        mapFilter[item.id!] = item;
+      }
+      classes = mapFilter.values.toList();
+
+      classes.sort((a, b) => a.block!.compareTo(b.block!));
+
+      return classes;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<AssignmentM>> get upcomingAssignments async {
+    try {
+      List<AssignmentM> ass = [];
+      var classesRef = await ref
+          .collection('classes')
+          .where('students', arrayContains: {'id': uid}).get();
+
+      classesRef.docs.forEach((element) async {
+        var assignmentRef =
+            await element.reference.collection('assignments').get();
+        assignmentRef.docs.forEach((element) {
+          ass.add(AssignmentM.fromDocumentSnapshot(element));
+        });
+      });
+
+      for (var item in ass) {
+        if (item.dueDate!.isBefore(DateTime.now())) {
+          ass.remove(item);
+        }
+      }
+
+      /// Fixes glitch where duplicate Assignments are returned in list
+      Map<String, AssignmentM> mapFilter = {};
+      for (var item in ass) {
+        mapFilter[item.id!] = item;
+      }
+      ass = mapFilter.values.toList();
+
+      ass.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+
+      return ass;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<void> addJournalEntry(JournalEntry entry) async {
-    String id = user
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('journal entries')
-        .doc()
-        .id;
+    String id = Uuid().v4();
 
-    await user
+    await ref
+        .collection('students')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('journal entries')
         .doc(id)
@@ -78,20 +229,21 @@ class StudentRepository extends ChangeNotifier {
   }
 
   Future<void> deleteJournalEntry(JournalEntry entry) async {
-    await user
+    await ref
+        .collection('students')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('journal entries')
         .doc(entry.id)
         .delete();
   }
 
-  Future<void> updateJournalEntry({
-    required JournalEntry entry,
-    String? title,
-    String? summary,
-    List<Tag>? tags,
-  }) async {
-    await user
+  Future<void> updateJournalEntry(
+      {required JournalEntry entry,
+      String? title,
+      String? summary,
+      List<Tag>? tags}) async {
+    await ref
+        .collection('students')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('journal entries')
         .doc(entry.id)
