@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
-import 'package:kounslr/src/ui/providers/student_provider.dart';
+import 'package:kounslr/src/ui/providers/student_repository_provider.dart';
 import 'package:kounslr/src/ui/views/journal_entries_view.dart';
 import 'package:kounslr/src/ui/views/journal_entry_view.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -60,7 +60,7 @@ class _JournalViewState extends State<JournalView> {
                   _graphJournalStatistics(
                     context,
                     context
-                        .read(studentProvider)
+                        .read(studentRepositoryProvider)
                         .getTopThreeMostUsedTags(snapshot.data!.docs),
                   ),
                   SizedBox(height: 20),
