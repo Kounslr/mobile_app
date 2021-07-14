@@ -59,3 +59,75 @@ class Block {
   @override
   int get hashCode => period.hashCode ^ time.hashCode;
 }
+
+class BlockM {
+  int? period;
+  DateTime? time;
+
+  BlockM({
+    this.period,
+    this.time,
+  });
+
+  BlockM copyWith({
+    int? period,
+    DateTime? time,
+  }) {
+    return BlockM(
+      period: period ?? this.period,
+      time: time ?? this.time,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'period': period,
+      'time': time?.millisecondsSinceEpoch,
+    };
+  }
+
+  Map<String, dynamic> toDocumentSnapshot() {
+    return {
+      'period': period,
+      'time': Timestamp.fromDate(time!),
+    };
+  }
+
+  factory BlockM.fromMap(Map<String, dynamic> map) {
+    return BlockM(
+      period: map['period'],
+      time: DateTime.fromMillisecondsSinceEpoch(map['time']),
+    );
+  }
+
+  factory BlockM.fromMapFromDocumentSnapshot(Map<String, dynamic> map) {
+    return BlockM(
+      period: map['period'],
+      time: map['time'].toDate(),
+    );
+  }
+
+  factory BlockM.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return BlockM(
+      period: doc['period'],
+      time: doc['time'].toDate(),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory BlockM.fromJson(String source) => BlockM.fromMap(json.decode(source));
+
+  @override
+  String toString() => 'BlockM(period: $period, time: $time)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is BlockM && other.period == period && other.time == time;
+  }
+
+  @override
+  int get hashCode => period.hashCode ^ time.hashCode;
+}
