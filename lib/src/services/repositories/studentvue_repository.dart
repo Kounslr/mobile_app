@@ -81,7 +81,6 @@ class StudentVueClient {
       _class.block?.period =
           int.tryParse(current.getAttribute('Period') ?? '0') ?? -1;
       _class.roomNumber = current.getAttribute('Room') ?? 'N/A';
-      _class.teacher?.roomNumber = current.getAttribute('Room') ?? 'N/A';
       _class.teacher?.name = current.getAttribute('Staff') ?? 'N/A';
       _class.teacher?.emailAddress =
           current.getAttribute('StaffEMail') ?? 'N/A';
@@ -106,8 +105,6 @@ class StudentVueClient {
         ass.type = current.children[i].getAttribute('Type') ?? 'No Type';
 
         // bool dueDateIsNull = false;
-
-        // TODO: fix dateString
 
         // String? dateString = dateStringMethod();
 
@@ -157,7 +154,7 @@ class StudentVueClient {
     return svData;
   }
 
-  Future<Student> loadStudentData({Function(double)? callback}) async {
+  Future<StudentM> loadStudentData({Function(double)? callback}) async {
     String? resData;
     if (!mock) {
       var requestData = '''<?xml version="1.0" encoding="utf-8"?>
@@ -190,41 +187,75 @@ class StudentVueClient {
       });
       resData = res.data;
     }
+
     final document = XmlDocument.parse(HtmlUnescape().convert(resData!));
 
     // the StudentInfo element is inside four other dumb elements
     final el = document.root.firstElementChild!.firstElementChild!
         .firstElementChild!.firstElementChild!.firstElementChild!;
 
+    // final school = FirebaseFirestore.instance
+    //     .collection('customers')
+    //     .doc('lcps')
+    //     .collection('schools')
+    //     .doc('independence');
+
     var homeroomTeacher = StaffMember();
+    // homeroomTeacher.id = Uuid().v4();
     homeroomTeacher.name = el.getElement('HomeRoomTch')?.innerText;
     homeroomTeacher.emailAddress = el.getElement('HomeRoomTchEMail')?.innerText;
-    homeroomTeacher.roomNumber = el.getElement('HomeRoom')?.innerText;
     homeroomTeacher.role = 'Teacher';
     homeroomTeacher.phoneNumber = '';
+    // homeroomTeacher.roomNumber = el.getElement('HomeRoom')?.innerText;
 
     var counselor = StaffMember();
+    // counselor.id = Uuid().v4();
     counselor.name = el.getElement('CounselorName')?.innerText;
     counselor.role = 'Counselor';
     counselor.emailAddress = '';
     counselor.phoneNumber = '';
-    counselor.roomNumber = '';
 
-    return Student(
+    var student = StudentM(
+      // id: Uuid().v4(),
       studentId: el.getElement('PermID')?.innerText,
       name: el.getElement('FormattedName')?.innerText,
       gender: el.getElement('Gender')?.innerText,
-      grade: el.getElement('Grade')?.innerText,
       address: el.getElement('Address')?.innerText,
       nickname: el.getElement('NickName')?.innerText,
       birthdate: el.getElement('BirthDate')?.innerText,
       email: el.getElement('EMail')?.innerText,
       phone: el.getElement('Phone')?.innerText,
-      currentSchool: el.getElement('CurrentSchool')?.innerText,
-      photo: '', // The string supplied was too complex for my understanding
-      homeroomTeacher: homeroomTeacher,
-      counselor: counselor,
+      photo: '',
     );
+
+    // var staffMembers = await school.collection('staff').get();
+    // var classes = await school.collection('school').get();
+
+    // staffMembers.docs.forEach((element) {
+    //   if (element.data()['emailAddress'] == homeroomTeacher.emailAddress) {
+    //     classes.docs.forEach((element) {
+    //       element.data()[''] = 3;
+    //     });
+    //   }
+    // });
+
+    // var student = Student(
+    //   studentId: el.getElement('PermID')?.innerText,
+    //   name: el.getElement('FormattedName')?.innerText,
+    //   gender: el.getElement('Gender')?.innerText,
+    //   grade: el.getElement('Grade')?.innerText,
+    //   address: el.getElement('Address')?.innerText,
+    //   nickname: el.getElement('NickName')?.innerText,
+    //   birthdate: el.getElement('BirthDate')?.innerText,
+    //   email: el.getElement('EMail')?.innerText,
+    //   phone: el.getElement('Phone')?.innerText,
+    //   currentSchool: el.getElement('CurrentSchool')?.innerText,
+    //   photo: '',
+    //   homeroomTeacher: homeroomTeacher,
+    //   counselor: counselor,
+    // );
+
+    return student;
   }
 
   static Future<List<ZipCodeResult>> loadDistrictsFromZip(String zip,
