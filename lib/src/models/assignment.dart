@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:kounslr/src/models/class.dart';
+import 'package:kounslr/src/models/student.dart';
 
 class Assignment {
   String? assignmentName;
@@ -125,5 +127,140 @@ class Assignment {
         creationDate.hashCode ^
         dueDate.hashCode ^
         schoolClass.hashCode;
+  }
+}
+
+class AssignmentM {
+  String? id;
+  String? classId;
+  String? name;
+  String? type;
+  double? possiblePoints;
+  DateTime? creationDate;
+  DateTime? dueDate;
+  List<StudentInAssignment>? students;
+
+  AssignmentM({
+    this.id,
+    this.classId,
+    this.name,
+    this.type,
+    this.possiblePoints,
+    this.creationDate,
+    this.dueDate,
+    this.students,
+  });
+
+  AssignmentM copyWith({
+    String? id,
+    String? classId,
+    String? name,
+    String? type,
+    double? possiblePoints,
+    DateTime? creationDate,
+    DateTime? dueDate,
+    List<StudentInAssignment>? students,
+  }) {
+    return AssignmentM(
+      id: id ?? this.id,
+      classId: classId ?? this.classId,
+      name: name ?? this.name,
+      type: type ?? this.type,
+      possiblePoints: possiblePoints ?? this.possiblePoints,
+      creationDate: creationDate ?? this.creationDate,
+      dueDate: dueDate ?? this.dueDate,
+      students: students ?? this.students,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'classId': classId,
+      'name': name,
+      'type': type,
+      'possiblePoints': possiblePoints,
+      'creationDate': creationDate?.millisecondsSinceEpoch,
+      'dueDate': dueDate?.millisecondsSinceEpoch,
+      'students': students?.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  Map<String, dynamic> toDocumentSnapshot() {
+    return {
+      'id': id,
+      'classId': classId,
+      'name': name,
+      'type': type,
+      'possiblePoints': possiblePoints,
+      'creationDate': Timestamp.fromDate(creationDate!),
+      'dueDate': Timestamp.fromDate(dueDate!),
+      'students': students?.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  factory AssignmentM.fromMap(Map<String, dynamic> map) {
+    return AssignmentM(
+      id: map['id'],
+      classId: map['classId'],
+      name: map['name'],
+      type: map['type'],
+      possiblePoints: map['possiblePoints'],
+      creationDate: DateTime.fromMillisecondsSinceEpoch(map['creationDate']),
+      dueDate: DateTime.fromMillisecondsSinceEpoch(map['dueDate']),
+      students: List<StudentInAssignment>.from(
+          map['students']?.map((x) => StudentInAssignment.fromMap(x))),
+    );
+  }
+
+  factory AssignmentM.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return AssignmentM(
+      id: doc['id'],
+      classId: doc['classId'],
+      name: doc['name'],
+      type: doc['type'],
+      possiblePoints: doc['possiblePoints'],
+      creationDate: (doc['creationDate'] as Timestamp).toDate(),
+      dueDate: (doc['dueDate'] as Timestamp).toDate(),
+      students: List<StudentInAssignment>.from(
+          doc['students']?.map((x) => StudentInAssignment.fromMap(x))),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory AssignmentM.fromJson(String source) =>
+      AssignmentM.fromMap(json.decode(source));
+
+  @override
+  String toString() {
+    return 'AssignmentM(id: $id, classId: $classId, name: $name, type: $type, possiblePoints: $possiblePoints, creationDate: $creationDate, dueDate: $dueDate, students: $students)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is AssignmentM &&
+        other.id == id &&
+        other.classId == classId &&
+        other.name == name &&
+        other.type == type &&
+        other.possiblePoints == possiblePoints &&
+        other.creationDate == creationDate &&
+        other.dueDate == dueDate &&
+        listEquals(other.students, students);
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        classId.hashCode ^
+        name.hashCode ^
+        type.hashCode ^
+        possiblePoints.hashCode ^
+        creationDate.hashCode ^
+        dueDate.hashCode ^
+        students.hashCode;
   }
 }
