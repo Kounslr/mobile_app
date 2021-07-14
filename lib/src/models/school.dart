@@ -121,3 +121,126 @@ class School {
         staff.hashCode;
   }
 }
+
+class SchoolM {
+  String? id;
+  String? name;
+  String? address;
+  String? phoneNumber;
+  String? faxNumber;
+  String? websiteURL;
+  CurrentDayM? currentDay;
+
+  SchoolM({
+    this.id,
+    this.name,
+    this.address,
+    this.phoneNumber,
+    this.faxNumber,
+    this.websiteURL,
+    this.currentDay,
+  });
+
+  SchoolM copyWith({
+    String? id,
+    String? name,
+    String? address,
+    String? phoneNumber,
+    String? faxNumber,
+    String? websiteURL,
+    CurrentDayM? currentDay,
+  }) {
+    return SchoolM(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      address: address ?? this.address,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      faxNumber: faxNumber ?? this.faxNumber,
+      websiteURL: websiteURL ?? this.websiteURL,
+      currentDay: currentDay ?? this.currentDay,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'address': address,
+      'phoneNumber': phoneNumber,
+      'faxNumber': faxNumber,
+      'websiteURL': websiteURL,
+      'currentDay': currentDay?.toMap(),
+    };
+  }
+
+  Map<String, dynamic> toDocumentSnapshot() {
+    return {
+      'id': id,
+      'name': name,
+      'address': address,
+      'phoneNumber': phoneNumber,
+      'faxNumber': faxNumber,
+      'websiteURL': websiteURL,
+      'currentDay': currentDay?.toDocumentSnapshot(),
+    };
+  }
+
+  factory SchoolM.fromMap(Map<String, dynamic> map) {
+    return SchoolM(
+      id: map['id'],
+      name: map['name'],
+      address: map['address'],
+      phoneNumber: map['phoneNumber'],
+      faxNumber: map['faxNumber'],
+      websiteURL: map['websiteURL'],
+      currentDay: CurrentDayM.fromMap(map['currentDay']),
+    );
+  }
+
+  factory SchoolM.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return SchoolM(
+      id: doc['id'],
+      name: doc['name'],
+      address: doc['address'],
+      phoneNumber: doc['phoneNumber'],
+      faxNumber: doc['faxNumber'],
+      websiteURL: doc['websiteURL'],
+      currentDay: CurrentDayM.fromMapFromDocumentSnapshot(doc['currentDay']),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SchoolM.fromJson(String source) =>
+      SchoolM.fromMap(json.decode(source));
+
+  @override
+  String toString() {
+    return 'SchoolM(id: $id, name: $name, address: $address, phoneNumber: $phoneNumber, faxNumber: $faxNumber, websiteURL: $websiteURL, currentDay: $currentDay)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is SchoolM &&
+        other.id == id &&
+        other.name == name &&
+        other.address == address &&
+        other.phoneNumber == phoneNumber &&
+        other.faxNumber == faxNumber &&
+        other.websiteURL == websiteURL &&
+        other.currentDay == currentDay;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        name.hashCode ^
+        address.hashCode ^
+        phoneNumber.hashCode ^
+        faxNumber.hashCode ^
+        websiteURL.hashCode ^
+        currentDay.hashCode;
+  }
+}
