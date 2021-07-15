@@ -155,7 +155,11 @@ class _HomeViewState extends State<HomeView> {
       // ListView controls
     ];
 
-    if (assignments.length != 0) {
+    List<AssignmentM> upcomingAssignments = assignments
+        .where((element) => element.dueDate!.isAfter(DateTime.now()))
+        .toList();
+
+    if (upcomingAssignments.length > 0) {
       children.add(
         Row(
           children: [
@@ -198,13 +202,14 @@ class _HomeViewState extends State<HomeView> {
         ),
       );
       for (var i = 0;
-          i < ((assignments.length < 7) ? assignments.length : 7);
+          i <
+              ((upcomingAssignments.length < 7)
+                  ? upcomingAssignments.length
+                  : 7);
           i++) {
-        if (assignments[i].dueDate!.isAfter(DateTime.now())) {
-          children.add(AssignmentCard(
-              classes.where((e) => e.id == assignments[i].id).toList()[0],
-              assignments[i]));
-        }
+        children.add(AssignmentCard(
+            classes.where((e) => e.id == assignments[i].id).toList()[0],
+            assignments[i]));
       }
     } else {
       children.add(
