@@ -23,10 +23,10 @@ class StudentRepository {
 
   var uid = FirebaseAuth.instance.currentUser?.uid;
 
-  Stream<SchoolM> get school {
+  Stream<School> get school {
     try {
       var school =
-          ref.snapshots().map((event) => SchoolM.fromDocumentSnapshot(event));
+          ref.snapshots().map((event) => School.fromDocumentSnapshot(event));
 
       return school;
     } catch (e) {
@@ -34,13 +34,13 @@ class StudentRepository {
     }
   }
 
-  Stream<StudentM> get student {
+  Stream<Student> get student {
     try {
       var student = ref
           .collection('students')
           .doc(uid)
           .snapshots()
-          .map((event) => StudentM.fromDocumentSnapshot(event));
+          .map((event) => Student.fromDocumentSnapshot(event));
 
       return student;
     } catch (e) {
@@ -48,9 +48,9 @@ class StudentRepository {
     }
   }
 
-  Future<ClassM> getClassByBlock(int block) async {
+  Future<Class> getClassByBlock(int block) async {
     try {
-      List<AssignmentM> assignments = [];
+      List<Assignment> assignments = [];
       var classesRef = await ref
           .collection('classes')
           .where('students', arrayContains: {'id': uid})
@@ -61,10 +61,10 @@ class StudentRepository {
           await classesRef.docs[0].reference.collection('assignments').get();
 
       assignmentsRef.docs.forEach((element) {
-        assignments.add(AssignmentM.fromDocumentSnapshot(element));
+        assignments.add(Assignment.fromDocumentSnapshot(element));
       });
 
-      Map<String, AssignmentM> mapFilter = {};
+      Map<String, Assignment> mapFilter = {};
       for (var item in assignments) {
         mapFilter[item.id!] = item;
       }
@@ -73,7 +73,7 @@ class StudentRepository {
       assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
 
       var schoolClass =
-          ClassM.fromDocumentSnapshot(classesRef.docs[0], assignments);
+          Class.fromDocumentSnapshot(classesRef.docs[0], assignments);
 
       return schoolClass;
     } catch (e) {
@@ -81,11 +81,11 @@ class StudentRepository {
     }
   }
 
-  Stream<BlockM> get nextBlockStream async* {
-    var school = await SchoolRepository().getSchool();
-    var nextBlock = BlockM();
+  Stream<Block> get nextBlockStream async* {
+    var school = await SchoolRepository().school;
+    var nextBlock = Block();
 
-    List<BlockM> blocks = school.currentDay!.blocks!;
+    List<Block> blocks = school.currentDay!.blocks!;
 
     for (int i = 0; i < blocks.length; i++) {
       if (DateTime.now().isAfter(blocks[blocks.length - 2].time!)) {
@@ -100,11 +100,11 @@ class StudentRepository {
     yield nextBlock;
   }
 
-  Future<BlockM> get nextBlock async {
-    var school = await SchoolRepository().getSchool();
-    var nextBlock = BlockM();
+  Future<Block> get nextBlock async {
+    var school = await SchoolRepository().school;
+    var nextBlock = Block();
 
-    List<BlockM> blocks = school.currentDay!.blocks!;
+    List<Block> blocks = school.currentDay!.blocks!;
 
     for (int i = 0; i < blocks.length; i++) {
       if (DateTime.now().isAfter(blocks[blocks.length - 2].time!)) {
@@ -127,43 +127,43 @@ class StudentRepository {
     yield teacher;
   }
 
-  Stream<ClassM> get nextClassStream async* {
-    var upcomingClass = ClassM();
+  Stream<Class> get nextClassStream async* {
+    var upcomingClass = Class();
     var upcomingBlock = await nextBlock;
     upcomingClass = upcomingBlock.period != null
         ? await getClassByBlock(upcomingBlock.period!)
-        : ClassM();
+        : Class();
     yield upcomingClass;
   }
 
-  Future<ClassM> get nextClass async {
-    var upcomingClass = ClassM();
+  Future<Class> get nextClass async {
+    var upcomingClass = Class();
     var upcomingBlock = await nextBlock;
     upcomingClass = upcomingBlock.period != null
         ? await getClassByBlock(upcomingBlock.period!)
-        : ClassM();
+        : Class();
     return upcomingClass;
   }
 
-  Future<List<ClassM>> get studentClasses async {
+  Future<List<Class>> get studentClasses async {
     try {
-      List<ClassM> classes = [];
+      List<Class> classes = [];
       var classesRef = await ref
           .collection('classes')
           .where('students', arrayContains: {'id': uid}).get();
 
       classesRef.docs.forEach((element) async {
-        List<AssignmentM> ass = [];
+        List<Assignment> ass = [];
         var assignmentsRef =
             await element.reference.collection('assignments').get();
         assignmentsRef.docs.forEach((element) {
-          ass.add(AssignmentM.fromDocumentSnapshot(element));
+          ass.add(Assignment.fromDocumentSnapshot(element));
         });
-        classes.add(ClassM.fromDocumentSnapshot(element, ass));
+        classes.add(Class.fromDocumentSnapshot(element, ass));
       });
 
       /// Fixes glitch where duplicate Classes are returned in list
-      Map<String, ClassM> mapFilter = {};
+      Map<String, Class> mapFilter = {};
       for (var item in classes) {
         mapFilter[item.id!] = item;
       }
@@ -177,9 +177,9 @@ class StudentRepository {
     }
   }
 
-  Future<List<AssignmentM>> get upcomingAssignments async {
+  Future<List<Assignment>> get upcomingAssignments async {
     try {
-      List<AssignmentM> ass = [];
+      List<Assignment> ass = [];
       var classesRef = await ref
           .collection('classes')
           .where('students', arrayContains: {'id': uid}).get();
@@ -188,7 +188,7 @@ class StudentRepository {
         var assignmentRef =
             await element.reference.collection('assignments').get();
         assignmentRef.docs.forEach((element) {
-          ass.add(AssignmentM.fromDocumentSnapshot(element));
+          ass.add(Assignment.fromDocumentSnapshot(element));
         });
       });
 
@@ -199,7 +199,7 @@ class StudentRepository {
       }
 
       /// Fixes glitch where duplicate Assignments are returned in list
-      Map<String, AssignmentM> mapFilter = {};
+      Map<String, Assignment> mapFilter = {};
       for (var item in ass) {
         mapFilter[item.id!] = item;
       }
