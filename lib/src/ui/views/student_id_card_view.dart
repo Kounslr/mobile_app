@@ -1,12 +1,14 @@
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/ui/styled_components/student_id_card.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class StudentIDCardView extends StatelessWidget {
   final Student student;
+  final School school;
 
-  const StudentIDCardView(this.student);
+  const StudentIDCardView(this.student, this.school);
   @override
   Widget build(BuildContext context) {
     return _content(context);
@@ -48,7 +50,7 @@ class StudentIDCardView extends StatelessWidget {
   Widget _body(BuildContext context, Student student) {
     return Column(
       children: [
-        StudentIDCard(student),
+        StudentIDCard(student, school),
         SizedBox(height: 20),
         QrImage(
           data: 'https://portal.lcps.org',
