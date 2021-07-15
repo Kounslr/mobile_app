@@ -8,7 +8,7 @@ class ClassCard extends StatefulWidget {
   const ClassCard({this.schoolClass});
 
   @required
-  final ClassM? schoolClass;
+  final Class? schoolClass;
 
   @override
   _ClassCardState createState() => _ClassCardState();
@@ -16,7 +16,7 @@ class ClassCard extends StatefulWidget {
 
 class _ClassCardState extends State<ClassCard> {
   String teacherName = '';
-  BlockM currentBlock = BlockM();
+  Block currentBlock = Block();
 
   @override
   void initState() {
