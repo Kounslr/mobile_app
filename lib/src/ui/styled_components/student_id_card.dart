@@ -1,11 +1,12 @@
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/student.dart';
 
 class StudentIDCard extends StatelessWidget {
   final Student student;
+  final School school;
 
-  const StudentIDCard(this.student);
+  const StudentIDCard(this.student, this.school);
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -24,14 +25,13 @@ class StudentIDCard extends StatelessWidget {
                     width: 80,
                     color: Theme.of(context).colorScheme.secondary,
                   ),
-                  // child: Image.network(student.photo, width: 80, height: 80)
                 ),
                 SizedBox(width: 15),
                 Text(
-                  student.currentSchool!,
+                  school.name!,
                   style: Theme.of(context)
                       .textTheme
-                      .headline4!
+                      .headline5!
                       .copyWith(color: CantonColors.white),
                 ),
               ],
@@ -67,12 +67,19 @@ class StudentIDCard extends StatelessWidget {
               ),
         ),
         Text(
-          description,
+          _contentText(description),
           style: Theme.of(context).textTheme.headline5!.copyWith(
                 color: CantonColors.white,
               ),
         ),
       ],
     );
+  }
+
+  String _contentText(String string) {
+    if (string.length > 23) {
+      return string.substring(0, 20) + '...';
+    }
+    return string;
   }
 }
