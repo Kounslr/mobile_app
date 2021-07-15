@@ -12,10 +12,10 @@ class SchoolRepository {
       .collection('schools')
       .doc('independence');
 
-  Future<SchoolM> getSchool() async {
+  Future<School> get school async {
     try {
       var _school = await ref.get();
-      var school = SchoolM.fromDocumentSnapshot(_school);
+      var school = School.fromDocumentSnapshot(_school);
 
       return school;
     } catch (e) {
@@ -23,17 +23,17 @@ class SchoolRepository {
     }
   }
 
-  List<AssignmentM> _assignments = [];
-  Future<ClassM> getClass({String? id}) async {
+  List<Assignment> _assignments = [];
+  Future<Class> getClass({String? id}) async {
     var _class = await ref.collection('classes').doc(id).get();
     var assignmentsRef =
         await ref.collection('classes').doc(id).collection('assignments').get();
 
     assignmentsRef.docs.forEach((element) {
-      _assignments.add(AssignmentM.fromDocumentSnapshot(element));
+      _assignments.add(Assignment.fromDocumentSnapshot(element));
     });
 
-    Map<String, AssignmentM> mapFilter = {};
+    Map<String, Assignment> mapFilter = {};
     for (var item in _assignments) {
       mapFilter[item.id!] = item;
     }
@@ -41,7 +41,7 @@ class SchoolRepository {
 
     _assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
 
-    var schoolClass = ClassM.fromDocumentSnapshot(_class, _assignments);
+    var schoolClass = Class.fromDocumentSnapshot(_class, _assignments);
 
     return schoolClass;
   }
@@ -64,8 +64,8 @@ class SchoolRepository {
     return _teacher;
   }
 
-  Future<BlockM> getBlockByPeriod(int period) async {
-    var _school = await getSchool();
+  Future<Block> getBlockByPeriod(int period) async {
+    var _school = await school;
 
     var _block = _school.currentDay!.blocks!
         .where((element) => element.period == period)
