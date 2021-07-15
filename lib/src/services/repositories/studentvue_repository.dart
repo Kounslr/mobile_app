@@ -1,4 +1,3 @@
-import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
@@ -72,35 +71,34 @@ class StudentVueClient {
       XmlNode current = courses.children[i];
 
       if (current.getAttribute('Title') == null) continue;
-      Class _class = Class(block: Block(), teacher: StaffMember());
+      Class _class = Class();
 
-      _class.className = _formattedStringName(current
+      _class.name = _formattedStringName(current
           .getAttribute('Title')!
           .substring(0, current.getAttribute('Title')!.indexOf('(')));
 
-      _class.block?.period =
-          int.tryParse(current.getAttribute('Period') ?? '0') ?? -1;
+      _class.block = int.tryParse(current.getAttribute('Period') ?? '0') ?? -1;
       _class.roomNumber = current.getAttribute('Room') ?? 'N/A';
-      _class.teacher?.name = current.getAttribute('Staff') ?? 'N/A';
-      _class.teacher?.emailAddress =
-          current.getAttribute('StaffEMail') ?? 'N/A';
-      _class.teacher?.role = 'Teacher';
-      _class.teacher?.phoneNumber = '';
-      _class.teacher?.id = '';
+      // _class.teacher?.name = current.getAttribute('Staff') ?? 'N/A';
+      // _class.teacher?.emailAddress =
+      //     current.getAttribute('StaffEMail') ?? 'N/A';
+      // _class.teacher?.role = 'Teacher';
+      // _class.teacher?.phoneNumber = '';
+      // _class.teacher?.id = '';
 
-      var mark = current.findAllElements('Mark').first;
-      _class.pctGrade = mark.getAttribute('CalculatedScoreRaw');
-      _class.letterGrade = mark.getAttribute('CalculatedScoreString');
+      // var mark = current.findAllElements('Mark').first;
+      // _class.pctGrade = mark.getAttribute('CalculatedScoreRaw');
+      // _class.letterGrade = mark.getAttribute('CalculatedScoreString');
 
       current = current.findAllElements('GradeCalculationSummary').first;
 
       current = current.parent!.findAllElements('Assignments').first;
 
-      _class.assignments = <Assignment>[];
+      // _class.assignments = <Assignment>[];
       for (int i = 0; i < current.children.length; i++) {
-        Assignment ass = Assignment();
+        var ass = Assignment();
 
-        ass.assignmentName =
+        ass.name =
             _formattedStringName(current.children[i].getAttribute('Measure'));
         ass.type = current.children[i].getAttribute('Type') ?? 'No Type';
 
@@ -111,16 +109,14 @@ class StudentVueClient {
         // ass.dueDate = DateTime.parse(dateString);
         ass.dueDate = DateTime.now();
 
-        ass.schoolClass = _class;
-
-        ass.earnedPoints =
-            current.children[i].getAttribute('Score') == 'Not Graded'
-                ? -1
-                : double.tryParse(
-                        (current.children[i].getAttribute('Points') ?? 'N/A')
-                            .replaceAll(' ', '')
-                            .split('/')[0]) ??
-                    -1;
+        // ass.earnedPoints =
+        //     current.children[i].getAttribute('Score') == 'Not Graded'
+        //         ? -1
+        //         : double.tryParse(
+        //                 (current.children[i].getAttribute('Points') ?? 'N/A')
+        //                     .replaceAll(' ', '')
+        //                     .split('/')[0]) ??
+        //             -1;
         if (current.children[i].getAttribute('Score') == 'Not Graded') {
           ass.possiblePoints = double.tryParse(
               (current.children[i].getAttribute('Points') ?? '')
@@ -154,7 +150,7 @@ class StudentVueClient {
     return svData;
   }
 
-  Future<StudentM> loadStudentData({Function(double)? callback}) async {
+  Future<Student> loadStudentData({Function(double)? callback}) async {
     String? resData;
     if (!mock) {
       var requestData = '''<?xml version="1.0" encoding="utf-8"?>
@@ -215,7 +211,7 @@ class StudentVueClient {
     counselor.emailAddress = '';
     counselor.phoneNumber = '';
 
-    var student = StudentM(
+    var student = Student(
       // id: Uuid().v4(),
       studentId: el.getElement('PermID')?.innerText,
       name: el.getElement('FormattedName')?.innerText,
