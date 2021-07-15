@@ -123,12 +123,12 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _content(
       BuildContext context,
-      SchoolM school,
-      StudentM student,
-      List<ClassM> classes,
-      List<AssignmentM> assignments,
-      ClassM nextClass,
-      BlockM nextBlock,
+      School school,
+      Student student,
+      List<Class> classes,
+      List<Assignment> assignments,
+      Class nextClass,
+      Block nextBlock,
       StaffMember teacher) {
     return ListView(
       shrinkWrap: false,
@@ -139,12 +139,12 @@ class _HomeViewState extends State<HomeView> {
 
   List<Widget> _contentChildren(
       BuildContext context,
-      SchoolM school,
-      StudentM student,
-      List<ClassM> classes,
-      List<AssignmentM> assignments,
-      ClassM nextClass,
-      BlockM nextBlock,
+      School school,
+      Student student,
+      List<Class> classes,
+      List<Assignment> assignments,
+      Class nextClass,
+      Block nextBlock,
       StaffMember teacher) {
     List<Widget> children = [
       _header(context, student),
@@ -155,7 +155,7 @@ class _HomeViewState extends State<HomeView> {
       // ListView controls
     ];
 
-    List<AssignmentM> upcomingAssignments = assignments
+    List<Assignment> upcomingAssignments = assignments
         .where((element) => element.dueDate!.isAfter(DateTime.now()))
         .toList();
 
@@ -230,7 +230,7 @@ class _HomeViewState extends State<HomeView> {
     return children;
   }
 
-  Widget _header(BuildContext context, StudentM student) {
+  Widget _header(BuildContext context, Student student) {
     return Row(
       children: [
         Column(
@@ -267,7 +267,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _dateCard(BuildContext context, SchoolM school) {
+  Widget _dateCard(BuildContext context, School school) {
     return Row(
       children: [
         Container(
@@ -304,7 +304,7 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _nextClassCard(BuildContext context, ClassM schoolClass, BlockM block,
+  Widget _nextClassCard(BuildContext context, Class schoolClass, Block block,
       String teacherName) {
     if (schoolClass.id == null) {
       return Card(
@@ -398,8 +398,7 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
-  Widget _classCard(
-      ClassM schoolClass, String teacherName, BlockM currentBlock) {
+  Widget _classCard(Class schoolClass, String teacherName, Block currentBlock) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
