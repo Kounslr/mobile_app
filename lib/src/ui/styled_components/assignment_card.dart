@@ -4,8 +4,8 @@ import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/models/class.dart';
 
 class AssignmentCard extends StatelessWidget {
-  final ClassM? schoolClass;
-  final AssignmentM? assignment;
+  final Class? schoolClass;
+  final Assignment? assignment;
   const AssignmentCard(this.schoolClass, this.assignment);
 
   @override
