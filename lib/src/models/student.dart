@@ -2,14 +2,11 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:kounslr/src/models/staff_member.dart';
-
 class Student {
   String? id;
   String? studentId;
   String? name;
   String? gender;
-  // Grade may need some collection changes
   String? grade;
   String? address;
   String? nickname;
@@ -17,9 +14,6 @@ class Student {
   String? email;
   String? phone;
   String? photo;
-  String? currentSchool;
-  StaffMember? homeroomTeacher;
-  StaffMember? counselor;
 
   Student({
     this.id,
@@ -33,9 +27,10 @@ class Student {
     this.email,
     this.phone,
     this.photo,
-    this.currentSchool,
-    this.homeroomTeacher,
-    this.counselor,
+  });
+
+  Student.id({
+    this.id,
   });
 
   Student copyWith({
@@ -50,9 +45,6 @@ class Student {
     String? email,
     String? phone,
     String? photo,
-    String? currentSchool,
-    StaffMember? homeroomTeacher,
-    StaffMember? counselor,
   }) {
     return Student(
       id: id ?? this.id,
@@ -66,9 +58,6 @@ class Student {
       email: email ?? this.email,
       phone: phone ?? this.phone,
       photo: photo ?? this.photo,
-      currentSchool: currentSchool ?? this.currentSchool,
-      homeroomTeacher: homeroomTeacher ?? this.homeroomTeacher,
-      counselor: counselor ?? this.counselor,
     );
   }
 
@@ -85,9 +74,6 @@ class Student {
       'email': email,
       'phone': phone,
       'photo': photo,
-      'currentSchool': currentSchool,
-      'homeroomTeacher': homeroomTeacher?.toMap(),
-      'counselor': counselor?.toMap(),
     };
   }
 
@@ -104,174 +90,11 @@ class Student {
       email: map['email'],
       phone: map['phone'],
       photo: map['photo'],
-      currentSchool: map['currentSchool'],
-      homeroomTeacher: StaffMember.fromMap(map['homeroomTeacher']),
-      counselor: StaffMember.fromMap(map['counselor']),
     );
   }
 
   factory Student.fromDocumentSnapshot(DocumentSnapshot doc) {
     return Student(
-      id: doc.id,
-      studentId: doc['studentId'],
-      name: doc['name'],
-      gender: doc['gender'],
-      grade: doc['grade'],
-      address: doc['address'],
-      nickname: doc['nickname'],
-      birthdate: doc['birthdate'],
-      email: doc['email'],
-      phone: doc['phone'],
-      photo: doc['photo'],
-      currentSchool: doc['currentSchool'],
-      homeroomTeacher: StaffMember.fromDocumentSnapshot(doc['homeroomTeacher']),
-      counselor: StaffMember.fromDocumentSnapshot(doc['counselor']),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Student.fromJson(String source) =>
-      Student.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'Student(id: $id, studentId: $studentId, name: $name, gender: $gender, grade: $grade, address: $address, nickname: $nickname, birthdate: $birthdate, email: $email, phone: $phone, photo: $photo, currentSchool: $currentSchool, homeroomTeacher: $homeroomTeacher, counselor: $counselor)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Student &&
-        other.id == id &&
-        other.studentId == studentId &&
-        other.name == name &&
-        other.gender == gender &&
-        other.grade == grade &&
-        other.address == address &&
-        other.nickname == nickname &&
-        other.birthdate == birthdate &&
-        other.email == email &&
-        other.phone == phone &&
-        other.photo == photo &&
-        other.currentSchool == currentSchool &&
-        other.homeroomTeacher == homeroomTeacher &&
-        other.counselor == counselor;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        studentId.hashCode ^
-        name.hashCode ^
-        gender.hashCode ^
-        grade.hashCode ^
-        address.hashCode ^
-        nickname.hashCode ^
-        birthdate.hashCode ^
-        email.hashCode ^
-        phone.hashCode ^
-        photo.hashCode ^
-        currentSchool.hashCode ^
-        homeroomTeacher.hashCode ^
-        counselor.hashCode;
-  }
-}
-
-class StudentM {
-  String? id;
-  String? studentId;
-  String? name;
-  String? gender;
-  String? grade;
-  String? address;
-  String? nickname;
-  String? birthdate;
-  String? email;
-  String? phone;
-  String? photo;
-
-  StudentM({
-    this.id,
-    this.studentId,
-    this.name,
-    this.gender,
-    this.grade,
-    this.address,
-    this.nickname,
-    this.birthdate,
-    this.email,
-    this.phone,
-    this.photo,
-  });
-
-  StudentM.id({
-    this.id,
-  });
-
-  StudentM copyWith({
-    String? id,
-    String? studentId,
-    String? name,
-    String? gender,
-    String? grade,
-    String? address,
-    String? nickname,
-    String? birthdate,
-    String? email,
-    String? phone,
-    String? photo,
-  }) {
-    return StudentM(
-      id: id ?? this.id,
-      studentId: studentId ?? this.studentId,
-      name: name ?? this.name,
-      gender: gender ?? this.gender,
-      grade: grade ?? this.grade,
-      address: address ?? this.address,
-      nickname: nickname ?? this.nickname,
-      birthdate: birthdate ?? this.birthdate,
-      email: email ?? this.email,
-      phone: phone ?? this.phone,
-      photo: photo ?? this.photo,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'studentId': studentId,
-      'name': name,
-      'gender': gender,
-      'grade': grade,
-      'address': address,
-      'nickname': nickname,
-      'birthdate': birthdate,
-      'email': email,
-      'phone': phone,
-      'photo': photo,
-    };
-  }
-
-  factory StudentM.fromMap(Map<String, dynamic> map) {
-    return StudentM(
-      id: map['id'],
-      studentId: map['studentId'],
-      name: map['name'],
-      gender: map['gender'],
-      grade: map['grade'],
-      address: map['address'],
-      nickname: map['nickname'],
-      birthdate: map['birthdate'],
-      email: map['email'],
-      phone: map['phone'],
-      photo: map['photo'],
-    );
-  }
-
-  factory StudentM.fromDocumentSnapshot(DocumentSnapshot doc) {
-    return StudentM(
       id: doc['id'],
       studentId: doc['studentId'],
       name: doc['name'],
@@ -292,33 +115,33 @@ class StudentM {
     };
   }
 
-  factory StudentM.fromMapId(Map<String, dynamic> map) {
-    return StudentM.id(
+  factory Student.fromMapId(Map<String, dynamic> map) {
+    return Student.id(
       id: map['id'],
     );
   }
 
-  factory StudentM.fromDocumentSnapshotId(DocumentSnapshot doc) {
-    return StudentM.id(
+  factory Student.fromDocumentSnapshotId(DocumentSnapshot doc) {
+    return Student.id(
       id: doc['id'],
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory StudentM.fromJson(String source) =>
-      StudentM.fromMap(json.decode(source));
+  factory Student.fromJson(String source) =>
+      Student.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'StudentM(id: $id, studentId: $studentId, name: $name, gender: $gender, grade: $grade, address: $address, nickname: $nickname, birthdate: $birthdate, email: $email, phone: $phone, photo: $photo)';
+    return 'Student(id: $id, studentId: $studentId, name: $name, gender: $gender, grade: $grade, address: $address, nickname: $nickname, birthdate: $birthdate, email: $email, phone: $phone, photo: $photo)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is StudentM &&
+    return other is Student &&
         other.id == id &&
         other.studentId == studentId &&
         other.name == name &&
