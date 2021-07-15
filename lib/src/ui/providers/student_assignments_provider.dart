@@ -3,6 +3,6 @@ import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/services/repositories/student_repository.dart';
 
 final upcomingAssignmentsFutureProvider =
-    FutureProvider<List<AssignmentM>>((ref) {
+    FutureProvider<List<Assignment>>((ref) {
   return StudentRepository().upcomingAssignments;
 });
