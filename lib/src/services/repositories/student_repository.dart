@@ -97,8 +97,6 @@ class StudentRepository {
       }
     }
 
-    print(nextBlock);
-
     yield nextBlock;
   }
 
@@ -117,8 +115,6 @@ class StudentRepository {
         nextBlock = blocks[blocks.length - 4];
       }
     }
-
-    print(nextBlock);
 
     return nextBlock;
   }

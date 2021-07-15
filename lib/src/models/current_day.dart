@@ -183,7 +183,6 @@ class CurrentDayM {
   }
 
   factory CurrentDayM.fromDocumentSnapshot(DocumentSnapshot doc) {
-    print(doc);
     return CurrentDayM(
       id: doc['id'],
       dayType: doc['dayType'],
