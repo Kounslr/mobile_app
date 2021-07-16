@@ -1,6 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthenticationService {
   final FirebaseAuth _firebaseAuth;
@@ -89,7 +90,8 @@ class AuthenticationService {
     await _firebaseAuth.signOut();
   }
 
-  Future<void> signIn({required String email, required String password}) async {
+  Future<void> signInWithEmailAndPassword(
+      {required String email, required String password}) async {
     try {
       // var student = Student();
       // List<Class> classes = [];
@@ -109,6 +111,24 @@ class AuthenticationService {
       //     await StudentVueClient(username, password, domain).loadGradebook();
 
       // await _updateStudentInDatabase(student, classes);
+    } on FirebaseAuthException catch (e) {
+      throw e.message!;
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      var googleUser = await GoogleSignIn().signIn();
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       throw e.message!;
     }
