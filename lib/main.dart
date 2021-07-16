@@ -1,10 +1,12 @@
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/config/constants.dart';
 import 'package:kounslr/src/services/authentication/authentication_wrapper.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,9 @@ class MyApp extends StatelessWidget {
           primaryDarkColor: CantonDarkColors.orange,
           primaryLightVariantColor: CantonColors.orange[400]!,
           primaryDarkVariantColor: CantonDarkColors.orange[400]!,
+          navigatorObservers: [
+            FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+          ],
           home: AuthenticationWrapper(),
         );
       },
