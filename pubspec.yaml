@@ -27,7 +27,7 @@ dependencies:
   # UI Library
   canton_design_system:
     git:
-      url: git://github.com/31Carlton7/canton_design_system.git
+      url: https://github.com/31Carlton7/canton_design_system.git
       ref: master
 
   # API
@@ -42,6 +42,7 @@ dependencies:
   firebase_analytics: ^8.1.0
   firebase_auth: ^1.2.0
   cloud_firestore: ^2.2.0
+  google_sign_in: ^5.0.4
 
   # Other
   intl: ^0.17.0

@@ -20,8 +20,8 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: ee4392df37a9957c6738cf40580d0881a6414816
-      url: "git://github.com/31Carlton7/canton_design_system.git"
+      resolved-ref: "7f7148f68ced588ab5d7e3b96a7f7eab6300ce73"
+      url: "https://github.com/31Carlton7/canton_design_system.git"
     source: git
     version: "0.0.1"
   characters:
@@ -242,6 +242,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.2"
+  google_sign_in:
+    dependency: "direct main"
+    description:
+      name: google_sign_in
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.0.4"
+  google_sign_in_platform_interface:
+    dependency: transitive
+    description:
+      name: google_sign_in_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
+  google_sign_in_web:
+    dependency: transitive
+    description:
+      name: google_sign_in_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.0"
   html_unescape:
     dependency: "direct main"
     description:
@@ -368,6 +389,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.1"
   riverpod:
     dependency: transitive
     description:
