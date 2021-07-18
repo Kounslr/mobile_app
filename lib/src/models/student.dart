@@ -206,7 +206,7 @@ class StudentInAssignment {
     return StudentInAssignment(
       id: map['id'],
       completed: map['completed'],
-      earnedPoints: map['earnedPoints'],
+      earnedPoints: map['earnedPoints'].toDouble(),
     );
   }
 
