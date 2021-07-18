@@ -1,6 +1,8 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SignInView extends ConsumerWidget {
   final Function? toggleView;
@@ -11,6 +13,7 @@ class SignInView extends ConsumerWidget {
     final _passwordController = TextEditingController();
 
     return CantonScaffold(
+      padding: EdgeInsets.symmetric(vertical: 17, horizontal: 34),
       body: _content(context, _emailController, _passwordController),
     );
   }
@@ -23,8 +26,9 @@ class SignInView extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        SizedBox(height: 75),
         _header(context),
-        SizedBox(height: 50),
+        SizedBox(height: 40),
         _emailTextInput(context, _emailController),
         SizedBox(height: 15),
         _passwordTextInput(context, _passwordController),
@@ -46,7 +50,7 @@ class SignInView extends ConsumerWidget {
   Widget _header(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 75),
+        SizedBox(height: 50),
         Text(
           'Welcome!',
           style: Theme.of(context).textTheme.headline4!.copyWith(
@@ -102,7 +106,7 @@ class SignInView extends ConsumerWidget {
       TextEditingController _passwordController) {
     return CantonPrimaryButton(
       buttonText: 'Sign In',
-      containerWidth: MediaQuery.of(context).size.width / 2 - 34,
+      radius: BorderRadius.circular(37),
       containerColor: Theme.of(context).primaryColor,
       textColor: CantonColors.white,
       onPressed: () async {
@@ -117,16 +121,24 @@ class SignInView extends ConsumerWidget {
   }
 
   Widget _signInWithGoogleButton(
-    BuildContext context,
-    TextEditingController _emailController,
-    TextEditingController _passwordController,
-  ) {
+      BuildContext context,
+      TextEditingController _emailController,
+      TextEditingController _passwordController) {
     return CantonPrimaryButton(
       buttonText: 'Google',
-      containerWidth: MediaQuery.of(context).size.width / 2 - 34,
+      alignment: MainAxisAlignment.center,
       containerColor: Theme.of(context).canvasColor,
-      border: BorderSide(color: Theme.of(context).colorScheme.secondaryVariant),
+      radius: BorderRadius.circular(37),
+      border:
+          BorderSide(color: Theme.of(context).colorScheme.secondary, width: 2),
       textColor: Theme.of(context).colorScheme.secondaryVariant,
+      prefixIcon: Container(
+        margin: EdgeInsets.all(10),
+        child: FaIcon(
+          FontAwesomeIcons.google,
+          color: Theme.of(context).primaryColor,
+        ),
+      ),
       onPressed: () async {
         await context.read(authenticationServiceProvider).signInWithGoogle();
       },
@@ -135,10 +147,9 @@ class SignInView extends ConsumerWidget {
 
   // ignore: unused_element
   Widget _signInAndSignUpButtons(
-    BuildContext context,
-    TextEditingController _emailController,
-    TextEditingController _passwordController,
-  ) {
+      BuildContext context,
+      TextEditingController _emailController,
+      TextEditingController _passwordController) {
     return Row(
       children: [
         CantonPrimaryButton(
