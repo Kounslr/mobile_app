@@ -36,8 +36,8 @@ class _HomeViewState extends State<HomeView> {
         // General Student info variables
         final schoolStream = watch(schoolStreamProvider);
         final studentStream = watch(studentStreamProvider);
-        final studentClassesStream = watch(studentClassesFutureProvider);
-        final studentAssignmentsStream =
+        final studentClassesFuture = watch(studentClassesFutureProvider);
+        final studentAssignmentsFuture =
             watch(upcomingAssignmentsFutureProvider);
 
         // Next class variables
@@ -57,7 +57,7 @@ class _HomeViewState extends State<HomeView> {
               },
               loading: () => Loading(),
               data: (student) {
-                return studentClassesStream.when(
+                return studentClassesFuture.when(
                   error: (e, s) {
                     return SomethingWentWrong();
                   },
@@ -66,7 +66,7 @@ class _HomeViewState extends State<HomeView> {
                     if (classes.length == 0) {
                       return Loading();
                     }
-                    return studentAssignmentsStream.when(
+                    return studentAssignmentsFuture.when(
                       error: (e, s) {
                         return SomethingWentWrong();
                       },
@@ -208,7 +208,9 @@ class _HomeViewState extends State<HomeView> {
                   : 7);
           i++) {
         children.add(AssignmentCard(
-            classes.where((e) => e.id == assignments[i].id).toList()[0],
+            classes
+                .where((element) => element.id == assignments[i].classId)
+                .toList()[0],
             assignments[i]));
       }
     } else {
@@ -270,30 +272,37 @@ class _HomeViewState extends State<HomeView> {
   Widget _dateCard(BuildContext context, School school) {
     return Row(
       children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 7.5 * 2.5, vertical: 7.5),
-          decoration: ShapeDecoration(
-            color: Theme.of(context).primaryColor,
-            shape: SquircleBorder(radius: BorderRadius.circular(30)),
-          ),
-          child: Column(
-            children: [
-              Text(
-                school.currentDay?.dayType ?? 'M',
-                style: Theme.of(context).textTheme.headline4!.copyWith(
-                      color: CantonColors.white,
+        ![6, 7].contains(DateTime.now().weekday)
+            ? Container(
+                padding:
+                    EdgeInsets.symmetric(horizontal: 7.5 * 2.5, vertical: 7.5),
+                decoration: ShapeDecoration(
+                  color: Theme.of(context).primaryColor,
+                  shape: SquircleBorder(radius: BorderRadius.circular(30)),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      school.currentDay?.dayType ?? 'M',
+                      style: Theme.of(context).textTheme.headline4!.copyWith(
+                            color: CantonColors.white,
+                          ),
                     ),
-              ),
-              Text(
-                'Day',
-                style: Theme.of(context).textTheme.caption!.copyWith(
-                      color: CantonColors.white,
+                    Text(
+                      'Day',
+                      style: Theme.of(context).textTheme.caption!.copyWith(
+                            color: CantonColors.white,
+                          ),
                     ),
+                  ],
+                ),
+              )
+            : Container(
+                padding: EdgeInsets.symmetric(vertical: 7.5),
               ),
-            ],
-          ),
-        ),
-        SizedBox(width: 15),
+        ![6, 7].contains(DateTime.now().weekday)
+            ? SizedBox(width: 15)
+            : Container(),
         Text(
           DateFormat.yMMMMEEEEd().format(
             DateTime.now(),
