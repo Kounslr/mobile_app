@@ -1,5 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kounslr/src/models/assignment.dart';
+import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/ui/providers/student_assignments_provider.dart';
 import 'package:kounslr/src/ui/providers/student_classes_stream_provider.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
@@ -16,12 +18,36 @@ class UpcomingAssignmentView extends StatelessWidget {
   }
 
   Widget _content(BuildContext context) {
-    return Column(
-      children: [
-        _header(context),
-        SizedBox(height: 10),
-        _body(context),
-      ],
+    return Consumer(
+      builder: (context, watch, child) {
+        final upcomingAssignmentsRepo =
+            watch(upcomingAssignmentsFutureProvider);
+        final classesRepo = watch(studentClassesFutureProvider);
+
+        return classesRepo.when(
+          error: (e, s) {
+            return SomethingWentWrong();
+          },
+          loading: () => Loading(),
+          data: (classes) {
+            return upcomingAssignmentsRepo.when(
+              loading: () => Loading(),
+              error: (e, s) {
+                return SomethingWentWrong();
+              },
+              data: (assignments) {
+                return Column(
+                  children: [
+                    _header(context),
+                    SizedBox(height: 10),
+                    _body(context, classes, assignments),
+                  ],
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 
@@ -33,41 +59,20 @@ class UpcomingAssignmentView extends StatelessWidget {
     );
   }
 
-  Widget _body(BuildContext context) {
-    return Consumer(
-      builder: (context, watch, child) {
-        final upcomingAssignmentsRepo =
-            watch(upcomingAssignmentsFutureProvider);
-        final classesRepo = watch(studentClassesFutureProvider);
-
-        return classesRepo.when(
-            error: (e, s) {
-              return SomethingWentWrong();
-            },
-            loading: () => Loading(),
-            data: (classes) {
-              return upcomingAssignmentsRepo.when(
-                data: (assignments) {
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: assignments.length,
-                      itemBuilder: (context, index) {
-                        return AssignmentCard(
-                            classes
-                                .where((e) => e.id == assignments[index].id)
-                                .toList()[0],
-                            assignments[index]);
-                      },
-                    ),
-                  );
-                },
-                loading: () => Loading(),
-                error: (e, s) {
-                  return SomethingWentWrong();
-                },
-              );
-            });
-      },
+  Widget _body(
+      BuildContext context, List<Class> classes, List<Assignment> assignments) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: assignments.length,
+        itemBuilder: (context, index) {
+          return AssignmentCard(
+            classes
+                .where((element) => element.id == assignments[index].classId)
+                .toList()[0],
+            assignments[index],
+          );
+        },
+      ),
     );
   }
 }
