@@ -80,7 +80,7 @@ class Assignment {
       classId: map['classId'],
       name: map['name'],
       type: map['type'],
-      possiblePoints: map['possiblePoints'],
+      possiblePoints: map['possiblePoints'].toDouble(),
       creationDate: DateTime.fromMillisecondsSinceEpoch(map['creationDate']),
       dueDate: DateTime.fromMillisecondsSinceEpoch(map['dueDate']),
       students: List<StudentInAssignment>.from(
@@ -94,7 +94,7 @@ class Assignment {
       classId: doc['classId'],
       name: doc['name'],
       type: doc['type'],
-      possiblePoints: doc['possiblePoints'],
+      possiblePoints: doc['possiblePoints'].toDouble(),
       creationDate: (doc['creationDate'] as Timestamp).toDate(),
       dueDate: (doc['dueDate'] as Timestamp).toDate(),
       students: List<StudentInAssignment>.from(
