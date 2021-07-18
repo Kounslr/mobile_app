@@ -11,6 +11,8 @@ class CurrentDay {
   String? dayType; // Could be A-Day, B-Day etc.
   String? markingPeriod;
   DateTime? date;
+  DateTime? startingTime; // When the school day starts
+  DateTime? endingTime; // When the school day ends
   List<Block>? blocks; // Blocks 1 - 8, 1 - 4 etc.
   List<Event>? events; // Pep rally, Sports practice, lunch
 
@@ -19,6 +21,8 @@ class CurrentDay {
     this.dayType,
     this.markingPeriod,
     this.date,
+    this.startingTime,
+    this.endingTime,
     this.blocks,
     this.events,
   });
@@ -28,6 +32,8 @@ class CurrentDay {
     String? dayType,
     String? markingPeriod,
     DateTime? date,
+    DateTime? startingTime,
+    DateTime? endingTime,
     List<Block>? blocks,
     List<Event>? events,
   }) {
@@ -36,6 +42,8 @@ class CurrentDay {
       dayType: dayType ?? this.dayType,
       markingPeriod: markingPeriod ?? this.markingPeriod,
       date: date ?? this.date,
+      startingTime: startingTime ?? this.startingTime,
+      endingTime: endingTime ?? this.endingTime,
       blocks: blocks ?? this.blocks,
       events: events ?? this.events,
     );
@@ -47,6 +55,8 @@ class CurrentDay {
       'dayType': dayType,
       'markingPeriod': markingPeriod,
       'date': date?.millisecondsSinceEpoch,
+      'startingTime': startingTime?.millisecondsSinceEpoch,
+      'endingTime': endingTime?.millisecondsSinceEpoch,
       'blocks': blocks?.map((x) => x.toMap()).toList(),
       'events': events?.map((x) => x.toMap()).toList(),
     };
@@ -58,6 +68,8 @@ class CurrentDay {
       'dayType': dayType,
       'markingPeriod': markingPeriod,
       'date': Timestamp.fromDate(date!),
+      'startingTime': Timestamp.fromDate(startingTime!),
+      'endingTime': Timestamp.fromDate(endingTime!),
       'blocks': blocks?.map((x) => x.toDocumentSnapshot()).toList(),
       'events': events?.map((x) => x.toMap()).toList(),
     };
@@ -69,6 +81,8 @@ class CurrentDay {
       dayType: map['dayType'],
       markingPeriod: map['markingPeriod'],
       date: DateTime.fromMillisecondsSinceEpoch(map['date']),
+      startingTime: DateTime.fromMillisecondsSinceEpoch(map['startingTime']),
+      endingTime: DateTime.fromMillisecondsSinceEpoch(map['endingTime']),
       blocks: List<Block>.from(map['blocks']?.map((x) => Block.fromMap(x))),
       events: List<Event>.from(map['events']?.map((x) => Event.fromMap(x))),
     );
@@ -80,6 +94,8 @@ class CurrentDay {
       dayType: map['dayType'],
       markingPeriod: map['markingPeriod'],
       date: map['date'].toDate(),
+      startingTime: map['startingTime'].toDate(),
+      endingTime: map['endingTime'].toDate(),
       blocks: List<Block>.from(
           map['blocks']?.map((x) => Block.fromMapFromDocumentSnapshot(x))),
       events: List<Event>.from(
@@ -93,6 +109,8 @@ class CurrentDay {
       dayType: doc['dayType'],
       markingPeriod: doc['markingPeriod'],
       date: doc['date'].toDate(),
+      startingTime: doc['startingTime'].toDate(),
+      endingTime: doc['endingTime'].toDate(),
       blocks: List<Block>.from(
           doc['blocks']?.map((x) => Block.fromDocumentSnapshot(x))),
       events: List<Event>.from(
@@ -107,7 +125,7 @@ class CurrentDay {
 
   @override
   String toString() {
-    return 'CurrentDay(id: $id, dayType: $dayType, markingPeriod: $markingPeriod, date: $date, blocks: $blocks, events: $events)';
+    return 'CurrentDay(id: $id, dayType: $dayType, markingPeriod: $markingPeriod, date: $date, startingTime: $startingTime, endingTime: $endingTime, blocks: $blocks, events: $events)';
   }
 
   @override
@@ -119,6 +137,8 @@ class CurrentDay {
         other.dayType == dayType &&
         other.markingPeriod == markingPeriod &&
         other.date == date &&
+        other.startingTime == startingTime &&
+        other.endingTime == endingTime &&
         listEquals(other.blocks, blocks) &&
         listEquals(other.events, events);
   }
@@ -129,6 +149,8 @@ class CurrentDay {
         dayType.hashCode ^
         markingPeriod.hashCode ^
         date.hashCode ^
+        startingTime.hashCode ^
+        endingTime.hashCode ^
         blocks.hashCode ^
         events.hashCode;
   }
