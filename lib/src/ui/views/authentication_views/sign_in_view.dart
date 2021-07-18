@@ -2,7 +2,6 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SignInView extends ConsumerWidget {
   final Function? toggleView;
