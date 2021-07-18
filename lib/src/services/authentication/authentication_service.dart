@@ -119,9 +119,10 @@ class AuthenticationService {
   Future<void> signInWithGoogle() async {
     try {
       var googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return;
 
       final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
