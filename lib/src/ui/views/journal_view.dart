@@ -1,12 +1,13 @@
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/ui/providers/student_repository_provider.dart';
 import 'package:kounslr/src/ui/views/journal_entries_view.dart';
 import 'package:kounslr/src/ui/views/journal_entry_view.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class JournalView extends StatefulWidget {
   @override
@@ -57,7 +58,13 @@ class _JournalViewState extends State<JournalView> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  _graphJournalStatistics(
+                  // _graphJournalStatistics(
+                  //   context,
+                  //   context
+                  //       .read(studentRepositoryProvider)
+                  //       .getTopThreeMostUsedTags(snapshot.data!.docs),
+                  // ),
+                  _horizontalBarChart(
                     context,
                     context
                         .read(studentRepositoryProvider)
@@ -79,127 +86,36 @@ class _JournalViewState extends State<JournalView> {
     );
   }
 
-  Widget _graphJournalStatistics(
-    BuildContext context,
-    Map<String?, int?> tags,
-  ) {
-    /// Variables
-    Color _bgColor = Theme.of(context).canvasColor;
-    Color _barColor = Theme.of(context).primaryColor;
-    Color _barTooltipColor = Theme.of(context).colorScheme.primaryVariant;
-    Color _xAxisTitleColor = Theme.of(context).colorScheme.secondaryVariant;
-    Color _titleTextColor = Theme.of(context).colorScheme.secondaryVariant;
-    List<BarChartGroupData> _barGroups = [];
+  Widget _horizontalBarChart(BuildContext context, Map<String?, int?> tags) {
+    var data = tags.entries.toList();
+    charts.Color? seriesColor = charts.Color(
+      r: Theme.of(context).primaryColor.red,
+      g: Theme.of(context).primaryColor.green,
+      b: Theme.of(context).primaryColor.blue,
+    );
 
-    int number() {
-      if (tags.values.length < 3) return tags.values.length;
-      return 3;
-    }
+    List<charts.Series<dynamic, String>> series = [
+      new charts.Series(
+        id: 'Tags',
+        seriesColor: seriesColor,
+        domainFn: (tag, _) => tag.key,
+        measureFn: (tag, _) => tag.value,
+        data: data,
+      )
+    ];
 
-    /// Bar group data
-    for (int i = 0; i < number(); i++) {
-      _barGroups.add(
-        BarChartGroupData(
-          x: i,
-          showingTooltipIndicators: [0],
-          barRods: [
-            BarChartRodData(
-              y: tags.values.toList()[i]!.toDouble(),
-              borderRadius: BorderRadius.circular(5),
-              colors: [_barColor],
-              width: 15,
-            ),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Most Used Tags',
+          style: Theme.of(context).textTheme.headline5,
         ),
-      );
-    }
-
-    /// Graph UI
-    return AspectRatio(
-      aspectRatio: 2,
-      child: Card(
-        elevation: 0,
-        shape: SquircleBorder(radius: BorderRadius.circular(50)),
-        color: _bgColor,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 50.0),
-          child: _barGroups.length > 0
-              ? BarChart(
-                  BarChartData(
-                    alignment: BarChartAlignment.spaceAround,
-                    axisTitleData: FlAxisTitleData(
-                      show: true,
-                      topTitle: AxisTitle(
-                        showTitle: true,
-                        titleText: 'Most used tags',
-                        textAlign: TextAlign.left,
-                        reservedSize: -30,
-                        margin: 50,
-                        textStyle:
-                            Theme.of(context).textTheme.headline6?.copyWith(
-                                  color: _titleTextColor,
-                                ),
-                      ),
-                    ),
-                    barTouchData: BarTouchData(
-                      enabled: false,
-                      touchTooltipData: BarTouchTooltipData(
-                        tooltipBgColor: Colors.transparent,
-                        tooltipPadding: const EdgeInsets.all(0),
-                        tooltipMargin: 8,
-                        getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                          return BarTooltipItem(
-                            rod.y.round().toString(),
-                            Theme.of(context)
-                                .textTheme
-                                .headline5!
-                                .copyWith(color: _barTooltipColor),
-                          );
-                        },
-                      ),
-                    ),
-                    titlesData: FlTitlesData(
-                      show: true,
-                      bottomTitles: SideTitles(
-                        showTitles: true,
-                        getTextStyles: (value) {
-                          return Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(
-                                height: 0.9,
-                                color: _xAxisTitleColor,
-                              );
-                        },
-                        margin: 20,
-                        getTitles: (double value) {
-                          switch (value.toInt()) {
-                            case 0:
-                              return tags.keys.toList(growable: false)[0]!;
-                            case 1:
-                              return tags.keys.toList(growable: false)[1]!;
-                            case 2:
-                              return tags.keys.toList(growable: false)[2]!;
-                            default:
-                              return '';
-                          }
-                        },
-                      ),
-                      leftTitles: SideTitles(showTitles: false),
-                    ),
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    barGroups: _barGroups,
-                  ),
-                )
-              : Text(
-                  'Click the "+" button to create your first journal entry',
-                  style: Theme.of(context).textTheme.headline5,
-                  textAlign: TextAlign.center,
-                ),
+        AspectRatio(
+          aspectRatio: 2,
+          child: charts.BarChart(series, vertical: false),
         ),
-      ),
+      ],
     );
   }
 
