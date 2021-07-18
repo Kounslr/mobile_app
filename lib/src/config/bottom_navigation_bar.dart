@@ -17,6 +17,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
       onTap: widget.onTabTapped,
       selectedFontSize: 12,
       unselectedFontSize: 12,
+      type: BottomNavigationBarType.fixed,
+      showUnselectedLabels: true,
+      showSelectedLabels: true,
       selectedItemColor: Theme.of(context).primaryColor,
       unselectedItemColor: Theme.of(context).colorScheme.secondaryVariant,
       items: [
@@ -50,13 +53,27 @@ class _BottomNavBarState extends State<BottomNavBar> {
         ),
         BottomNavigationBarItem(
           tooltip: '',
+          label: 'Chat',
+          icon: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: IconlyIcon(
+              IconlyBold.Send,
+              size: 24,
+              color: widget.currentIndex == 2
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).colorScheme.secondaryVariant,
+            ),
+          ),
+        ),
+        BottomNavigationBarItem(
+          tooltip: '',
           label: 'Journal',
           icon: Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: IconlyIcon(
               IconlyBold.Edit,
               size: 24,
-              color: widget.currentIndex == 2
+              color: widget.currentIndex == 3
                   ? Theme.of(context).primaryColor
                   : Theme.of(context).colorScheme.secondaryVariant,
             ),
