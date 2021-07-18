@@ -27,7 +27,7 @@ dependencies:
   # UI Library
   canton_design_system:
     git:
-      url: https://github.com/31Carlton7/canton_design_system.git
+      url: git://github.com/31Carlton7/canton_design_system.git
       ref: master
 
   # API
@@ -48,8 +48,10 @@ dependencies:
   intl: ^0.17.0
   uuid: ^3.0.4
   qr_flutter: ^4.0.0
-  fl_chart: ^0.36.1
+  charts_flutter: ^0.11.0
   flutter_slidable: ^0.6.0
+  font_awesome_flutter: ^9.1.0
+  flutter_chat_ui: ^1.1.8
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
