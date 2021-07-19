@@ -20,7 +20,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: c784cf3ebce98415e4d4f8f1f5193856b0a6d246
+      resolved-ref: "339b56d1fb5b74086b7e2d8dc6312f4a838d24e6"
       url: "git://github.com/31Carlton7/canton_design_system.git"
     source: git
     version: "0.0.1"
@@ -246,6 +246,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.2"
+  flutter_phoenix:
+    dependency: "direct main"
+    description:
+      name: flutter_phoenix
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   flutter_riverpod:
     dependency: "direct main"
     description:
