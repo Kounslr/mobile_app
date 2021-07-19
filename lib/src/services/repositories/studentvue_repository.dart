@@ -1,12 +1,10 @@
 import 'package:kounslr/src/models/class.dart';
-import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/models/zip_code_result.dart';
 import 'package:dio/dio.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:xml/xml.dart';
 import 'package:kounslr/src/models/assignment.dart';
-// import 'dart:developer' as dev;
 
 class StudentVueClient {
   final domain;
@@ -190,32 +188,11 @@ class StudentVueClient {
     final el = document.root.firstElementChild!.firstElementChild!
         .firstElementChild!.firstElementChild!.firstElementChild!;
 
-    // final school = FirebaseFirestore.instance
-    //     .collection('customers')
-    //     .doc('lcps')
-    //     .collection('schools')
-    //     .doc('independence');
-
-    var homeroomTeacher = StaffMember();
-    // homeroomTeacher.id = Uuid().v4();
-    homeroomTeacher.name = el.getElement('HomeRoomTch')?.innerText;
-    homeroomTeacher.emailAddress = el.getElement('HomeRoomTchEMail')?.innerText;
-    homeroomTeacher.role = 'Teacher';
-    homeroomTeacher.phoneNumber = '';
-    // homeroomTeacher.roomNumber = el.getElement('HomeRoom')?.innerText;
-
-    var counselor = StaffMember();
-    // counselor.id = Uuid().v4();
-    counselor.name = el.getElement('CounselorName')?.innerText;
-    counselor.role = 'Counselor';
-    counselor.emailAddress = '';
-    counselor.phoneNumber = '';
-
     var student = Student(
-      // id: Uuid().v4(),
       studentId: el.getElement('PermID')?.innerText,
       name: el.getElement('FormattedName')?.innerText,
       gender: el.getElement('Gender')?.innerText,
+      grade: el.getElement('Grade')?.innerText,
       address: el.getElement('Address')?.innerText,
       nickname: el.getElement('NickName')?.innerText,
       birthdate: el.getElement('BirthDate')?.innerText,
@@ -223,33 +200,6 @@ class StudentVueClient {
       phone: el.getElement('Phone')?.innerText,
       photo: '',
     );
-
-    // var staffMembers = await school.collection('staff').get();
-    // var classes = await school.collection('school').get();
-
-    // staffMembers.docs.forEach((element) {
-    //   if (element.data()['emailAddress'] == homeroomTeacher.emailAddress) {
-    //     classes.docs.forEach((element) {
-    //       element.data()[''] = 3;
-    //     });
-    //   }
-    // });
-
-    // var student = Student(
-    //   studentId: el.getElement('PermID')?.innerText,
-    //   name: el.getElement('FormattedName')?.innerText,
-    //   gender: el.getElement('Gender')?.innerText,
-    //   grade: el.getElement('Grade')?.innerText,
-    //   address: el.getElement('Address')?.innerText,
-    //   nickname: el.getElement('NickName')?.innerText,
-    //   birthdate: el.getElement('BirthDate')?.innerText,
-    //   email: el.getElement('EMail')?.innerText,
-    //   phone: el.getElement('Phone')?.innerText,
-    //   currentSchool: el.getElement('CurrentSchool')?.innerText,
-    //   photo: '',
-    //   homeroomTeacher: homeroomTeacher,
-    //   counselor: counselor,
-    // );
 
     return student;
   }
