@@ -58,6 +58,8 @@ class SchoolRepository {
   }
 
   Future<StaffMember> getTeacherByTeacherId(String teacherId) async {
+    if (teacherId == '') return StaffMember();
+
     var teacherDocument = await ref.collection('staff').doc(teacherId).get();
     var _teacher = StaffMember.fromDocumentSnapshot(teacherDocument);
 
