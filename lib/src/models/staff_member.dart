@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class StaffMember {
   String? id;
   String? name;
+  String? gender;
   String? role;
   String? phoneNumber;
   String? emailAddress;
@@ -12,6 +13,7 @@ class StaffMember {
   StaffMember({
     this.id,
     this.name,
+    this.gender,
     this.role,
     this.phoneNumber,
     this.emailAddress,
@@ -20,6 +22,7 @@ class StaffMember {
   StaffMember copyWith({
     String? id,
     String? name,
+    String? gender,
     String? role,
     String? roomNumber,
     String? phoneNumber,
@@ -28,6 +31,7 @@ class StaffMember {
     return StaffMember(
       id: id ?? this.id,
       name: name ?? this.name,
+      gender: gender ?? this.gender,
       role: role ?? this.role,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       emailAddress: emailAddress ?? this.emailAddress,
@@ -38,6 +42,7 @@ class StaffMember {
     return {
       'id': id,
       'name': name,
+      'gender': gender,
       'role': role,
       'phoneNumber': phoneNumber,
       'emailAddress': emailAddress,
@@ -48,6 +53,7 @@ class StaffMember {
     return StaffMember(
       id: map['id'],
       name: map['name'],
+      gender: map['gender'],
       role: map['role'],
       phoneNumber: map['phoneNumber'],
       emailAddress: map['emailAddress'],
@@ -58,6 +64,7 @@ class StaffMember {
     return StaffMember(
       id: doc['id'],
       name: doc['name'],
+      gender: doc['gender'],
       role: doc['role'],
       phoneNumber: doc['phoneNumber'],
       emailAddress: doc['emailAddress'],
@@ -71,7 +78,7 @@ class StaffMember {
 
   @override
   String toString() {
-    return 'StaffMember(id: $id, name: $name, role: $role, phoneNumber: $phoneNumber, emailAddress: $emailAddress)';
+    return 'StaffMember(id: $id, name: $name, gender: $gender, role: $role, phoneNumber: $phoneNumber, emailAddress: $emailAddress)';
   }
 
   @override
@@ -81,6 +88,7 @@ class StaffMember {
     return other is StaffMember &&
         other.id == id &&
         other.name == name &&
+        other.gender == gender &&
         other.role == role &&
         other.phoneNumber == phoneNumber &&
         other.emailAddress == emailAddress;
@@ -90,6 +98,7 @@ class StaffMember {
   int get hashCode {
     return id.hashCode ^
         name.hashCode ^
+        gender.hashCode ^
         role.hashCode ^
         phoneNumber.hashCode ^
         emailAddress.hashCode;
