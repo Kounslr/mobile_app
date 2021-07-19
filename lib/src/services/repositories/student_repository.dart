@@ -50,12 +50,17 @@ class StudentRepository {
 
   Future<Class> getClassByBlock(int block) async {
     try {
+      Class schoolClass = Class(id: 'done');
       List<Assignment> assignments = [];
       var classesRef = await ref
           .collection('classes')
           .where('students', arrayContains: {'id': uid})
           .where('block', isEqualTo: block)
           .get();
+
+      if (classesRef.docs.isEmpty) {
+        return schoolClass;
+      }
 
       var assignmentsRef =
           await classesRef.docs[0].reference.collection('assignments').get();
@@ -72,8 +77,7 @@ class StudentRepository {
 
       assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
 
-      var schoolClass =
-          Class.fromDocumentSnapshot(classesRef.docs[0], assignments);
+      schoolClass = Class.fromDocumentSnapshot(classesRef.docs[0], assignments);
 
       return schoolClass;
     } catch (e) {
@@ -84,45 +88,63 @@ class StudentRepository {
   Stream<Block> get nextBlockStream async* {
     var school = await SchoolRepository().school;
     var nextBlock = Block();
+    var now = DateTime.now();
 
     List<Block> blocks = school.currentDay!.blocks!;
+    List<DateTime> times = blocks.map((e) => e.time!).toList();
+    List<DateTime> timesAfterNow = [];
 
-    for (int i = 0; i < blocks.length; i++) {
-      if (DateTime.now().isAfter(blocks[blocks.length - 2].time!)) {
-        nextBlock = blocks[blocks.length - 2];
-      } else if (DateTime.now().isAfter(blocks[blocks.length - 3].time!)) {
-        nextBlock = blocks[blocks.length - 3];
-      } else {
-        nextBlock = blocks[blocks.length - 4];
-      }
+    times.forEach((element) {
+      if (element.isAfter(now)) timesAfterNow.add(element);
+    });
+
+    if (timesAfterNow.isEmpty) {
+      yield Block(period: 0);
+    } else {
+      var closestTime = timesAfterNow.reduce(
+          (a, b) => a.difference(now).abs() < b.difference(now).abs() ? a : b);
+
+      nextBlock =
+          blocks.where((element) => element.time == closestTime).toList()[0];
+
+      yield nextBlock;
     }
-
-    yield nextBlock;
   }
 
   Future<Block> get nextBlock async {
     var school = await SchoolRepository().school;
     var nextBlock = Block();
+    var now = DateTime.now();
 
     List<Block> blocks = school.currentDay!.blocks!;
+    List<DateTime> times = blocks.map((e) => e.time!).toList();
+    List<DateTime> timesAfterNow = [];
 
-    for (int i = 0; i < blocks.length; i++) {
-      if (DateTime.now().isAfter(blocks[blocks.length - 2].time!)) {
-        nextBlock = blocks[blocks.length - 2];
-      } else if (DateTime.now().isAfter(blocks[blocks.length - 3].time!)) {
-        nextBlock = blocks[blocks.length - 3];
-      } else {
-        nextBlock = blocks[blocks.length - 4];
-      }
+    times.forEach((element) {
+      if (element.isAfter(now)) timesAfterNow.add(element);
+    });
+
+    if (timesAfterNow.isEmpty) {
+      return Block(period: 0);
     }
+
+    var closestTime = timesAfterNow.reduce(
+        (a, b) => a.difference(now).abs() < b.difference(now).abs() ? a : b);
+
+    nextBlock =
+        blocks.where((element) => element.time == closestTime).toList()[0];
 
     return nextBlock;
   }
 
   Stream<StaffMember> get nextClassTeacher async* {
     var schoolClass = await nextClass;
-    var teacher =
-        await SchoolRepository().getTeacherByTeacherId(schoolClass.teacherId!);
+    if (schoolClass.id == 'done') {
+      yield StaffMember();
+    }
+
+    var teacher = await SchoolRepository()
+        .getTeacherByTeacherId(schoolClass.teacherId ?? '');
 
     yield teacher;
   }
@@ -130,7 +152,7 @@ class StudentRepository {
   Stream<Class> get nextClassStream async* {
     var upcomingClass = Class();
     var upcomingBlock = await nextBlock;
-    upcomingClass = upcomingBlock.period != null
+    upcomingClass = ![0, null].contains(upcomingBlock.period)
         ? await getClassByBlock(upcomingBlock.period!)
         : Class();
     yield upcomingClass;
@@ -141,7 +163,7 @@ class StudentRepository {
     var upcomingBlock = await nextBlock;
     upcomingClass = upcomingBlock.period != null
         ? await getClassByBlock(upcomingBlock.period!)
-        : Class();
+        : Class(id: 'done');
     return upcomingClass;
   }
 
