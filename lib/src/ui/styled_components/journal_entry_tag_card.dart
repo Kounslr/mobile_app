@@ -77,12 +77,13 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
 
   Future<void> _showTagRenameBottomSheet() async {
     return showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        elevation: 0,
-        useRootNavigator: true,
-        builder: (context) {
-          return Consumer(builder: (context, watch, child) {
+      context: context,
+      isScrollControlled: true,
+      elevation: 0,
+      useRootNavigator: true,
+      builder: (context) {
+        return Consumer(
+          builder: (context, watch, child) {
             var _tagRenameController = TextEditingController();
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 27),
@@ -108,7 +109,8 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
                     SizedBox(height: 20),
                     CantonTextInput(
                       formatters: [
-                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"))
+                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
+                        LengthLimitingTextInputFormatter(10),
                       ],
                       isTextFormField: true,
                       obscureText: false,
@@ -137,7 +139,9 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
                 ),
               ),
             );
-          });
-        });
+          },
+        );
+      },
+    );
   }
 }
