@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/config/constants.dart';
 import 'package:kounslr/src/services/authentication/authentication_wrapper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +17,7 @@ Future<void> main() async {
   /// Lock screen orientation to vertical
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
-    runApp(ProviderScope(child: MyApp()));
+    runApp(Phoenix(child: ProviderScope(child: MyApp())));
   });
 }
 
