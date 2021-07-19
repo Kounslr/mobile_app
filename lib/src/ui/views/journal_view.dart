@@ -136,7 +136,7 @@ class _JournalViewState extends State<JournalView> {
               Spacer(),
               IconlyIcon(
                 IconlyBold.ArrowRight1,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.secondaryVariant,
               ),
             ],
           ),
