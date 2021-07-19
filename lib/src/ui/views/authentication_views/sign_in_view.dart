@@ -17,11 +17,8 @@ class SignInView extends ConsumerWidget {
     );
   }
 
-  Widget _content(
-    BuildContext context,
-    TextEditingController _emailController,
-    TextEditingController _passwordController,
-  ) {
+  Widget _content(BuildContext context, TextEditingController _emailController,
+      TextEditingController _passwordController) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -74,6 +71,7 @@ class SignInView extends ConsumerWidget {
       isTextFormField: true,
       obscureText: false,
       controller: _emailController,
+      textInputType: TextInputType.emailAddress,
       prefixIcon: IconlyIcon(
         IconlyBold.Message,
         color: Theme.of(context).colorScheme.secondaryVariant,
@@ -90,6 +88,7 @@ class SignInView extends ConsumerWidget {
       isTextFormField: true,
       obscureText: true,
       controller: _passwordController,
+      textInputType: TextInputType.visiblePassword,
       prefixIcon: IconlyIcon(
         IconlyBold.Lock,
         color: Theme.of(context).colorScheme.secondaryVariant,
