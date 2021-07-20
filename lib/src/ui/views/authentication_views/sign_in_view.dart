@@ -2,12 +2,22 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
-class SignInView extends ConsumerWidget {
+class SignInView extends StatefulWidget {
   final Function? toggleView;
   const SignInView({this.toggleView});
+
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
+  _SignInViewState createState() => _SignInViewState();
+}
+
+class _SignInViewState extends State<SignInView> {
+  String _errorMessage = '';
+  bool _hasError = false;
+
+  @override
+  Widget build(BuildContext context) {
     final _emailController = TextEditingController();
     final _passwordController = TextEditingController();
 
@@ -38,7 +48,9 @@ class SignInView extends ConsumerWidget {
               ),
         ),
         SizedBox(height: 15),
-        _signInWithGoogleButton(context, _emailController, _passwordController)
+        _signInWithGoogleButton(context, _emailController, _passwordController),
+        _hasError ? SizedBox(height: 15) : Container(),
+        _hasError ? _errorText(context, _errorMessage) : Container(),
       ],
     );
   }
@@ -113,7 +125,16 @@ class SignInView extends ConsumerWidget {
             .signInWithEmailAndPassword(
               email: _emailController.text.trim(),
               password: _passwordController.text.trim(),
-            );
+            )
+            .then((value) {
+          if (value != 'success')
+            setState(() {
+              _hasError = true;
+              _errorMessage = value;
+            });
+          else
+            Phoenix.rebirth(context);
+        });
       },
     );
   }
@@ -127,8 +148,10 @@ class SignInView extends ConsumerWidget {
       alignment: MainAxisAlignment.center,
       containerColor: Theme.of(context).canvasColor,
       radius: BorderRadius.circular(37),
-      border:
-          BorderSide(color: Theme.of(context).colorScheme.secondary, width: 2),
+      border: BorderSide(
+        color: Theme.of(context).colorScheme.secondary,
+        width: 2,
+      ),
       textColor: Theme.of(context).colorScheme.secondaryVariant,
       prefixIcon: Container(
         margin: EdgeInsets.all(10),
@@ -138,12 +161,22 @@ class SignInView extends ConsumerWidget {
         ),
       ),
       onPressed: () async {
-        await context.read(authenticationServiceProvider).signInWithGoogle();
+        await context
+            .read(authenticationServiceProvider)
+            .signInWithGoogle()
+            .then((value) {
+          if (value != 'success')
+            setState(() {
+              _hasError = true;
+              _errorMessage = value;
+            });
+          else
+            Phoenix.rebirth(context);
+        });
       },
     );
   }
 
-  // ignore: unused_element
   Widget _signInAndSignUpButtons(
       BuildContext context,
       TextEditingController _emailController,
@@ -155,11 +188,20 @@ class SignInView extends ConsumerWidget {
           containerWidth: MediaQuery.of(context).size.width / 2 - 34,
           containerColor: Theme.of(context).colorScheme.secondary,
           textColor: Theme.of(context).colorScheme.secondaryVariant,
-          onPressed: () => toggleView!(),
+          onPressed: () => widget.toggleView!(),
         ),
         Spacer(),
         _signInButton(context, _emailController, _passwordController),
       ],
+    );
+  }
+
+  Widget _errorText(BuildContext context, String error) {
+    return Text(
+      error,
+      style: Theme.of(context).textTheme.bodyText1?.copyWith(
+            color: Theme.of(context).errorColor,
+          ),
     );
   }
 }
