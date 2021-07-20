@@ -42,35 +42,39 @@ class ProfileView extends ConsumerWidget {
   }
 
   Widget _body(BuildContext context, Student student) {
-    return Consumer(builder: (context, watch, child) {
-      final schoolRepo = watch(schoolFutureProvider);
-      return schoolRepo.when(
-        loading: () => Loading(),
-        error: (e, s) {
-          return SomethingWentWrong();
-        },
-        data: (school) {
-          return Column(
-            children: [
-              _profileCard(context, student, school),
-              SizedBox(height: 10),
-              _studentIDCard(context, student, school),
-              SizedBox(height: 10),
-              CantonPrimaryButton(
-                buttonText: 'Sign out',
-                textColor: CantonColors.white,
-                containerColor: Theme.of(context).primaryColor,
-                containerWidth: MediaQuery.of(context).size.width / 2 - 34,
-                onPressed: () {
-                  context.read(authenticationServiceProvider).signOut(context);
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          );
-        },
-      );
-    });
+    return Consumer(
+      builder: (context, watch, child) {
+        final schoolRepo = watch(schoolFutureProvider);
+        return schoolRepo.when(
+          loading: () => Loading(),
+          error: (e, s) {
+            return SomethingWentWrong();
+          },
+          data: (school) {
+            return Column(
+              children: [
+                _profileCard(context, student, school),
+                SizedBox(height: 10),
+                _studentIDCard(context, student, school),
+                SizedBox(height: 10),
+                CantonPrimaryButton(
+                  buttonText: 'Sign out',
+                  textColor: CantonColors.white,
+                  containerColor: Theme.of(context).primaryColor,
+                  containerWidth: MediaQuery.of(context).size.width / 2 - 34,
+                  onPressed: () {
+                    context
+                        .read(authenticationServiceProvider)
+                        .signOut(context);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
   }
 
   Widget _studentIDCard(BuildContext context, Student student, School school) {
