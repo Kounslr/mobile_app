@@ -58,18 +58,18 @@ class _JournalViewState extends State<JournalView> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  // _graphJournalStatistics(
-                  //   context,
-                  //   context
-                  //       .read(studentRepositoryProvider)
-                  //       .getTopThreeMostUsedTags(snapshot.data!.docs),
-                  // ),
-                  _horizontalBarChart(
-                    context,
-                    context
-                        .read(studentRepositoryProvider)
-                        .getTopThreeMostUsedTags(snapshot.data!.docs),
-                  ),
+                  ![null, 0].contains(snapshot.data!.docs.length)
+                      ? _horizontalBarChart(
+                          context,
+                          context
+                              .read(studentRepositoryProvider)
+                              .getTopThreeMostUsedTags(snapshot.data!.docs),
+                        )
+                      : Text(
+                          'Click the "+" button to create your first journal entry',
+                          style: Theme.of(context).textTheme.headline5,
+                          textAlign: TextAlign.center,
+                        ),
                   SizedBox(height: 20),
                   snapshot.data!.docs.length != 0
                       ? _viewCard(
