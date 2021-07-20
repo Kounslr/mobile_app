@@ -2,6 +2,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kounslr/src/config/authentication_exceptions.dart';
 import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/services/repositories/studentvue_repository.dart';
 
@@ -22,26 +23,39 @@ class AuthenticationService {
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<void> signOut(BuildContext context) async {
-    await _firebaseAuth.signOut();
+  Future<String> signOut(BuildContext context) async {
+    try {
+      await _firebaseAuth.signOut();
+      return 'success';
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        return AuthenticationExceptions.fromFirebaseAuthError(e).toString();
+      }
+      return 'failed';
+    }
   }
 
-  Future<void> signInWithEmailAndPassword(
+  Future<String> signInWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (e) {
-      throw e.message!;
+
+      return 'success';
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        return AuthenticationExceptions.fromFirebaseAuthError(e).toString();
+      }
+      return 'failed';
     }
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<String> signInWithGoogle() async {
     try {
       var googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return;
+      if (googleUser == null) return 'failed';
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
@@ -52,8 +66,12 @@ class AuthenticationService {
       );
 
       await FirebaseAuth.instance.signInWithCredential(credential);
-    } on FirebaseAuthException catch (e) {
-      throw e.message!;
+      return 'success';
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        return AuthenticationExceptions.fromFirebaseAuthError(e).toString();
+      }
+      return 'failed';
     }
   }
 
