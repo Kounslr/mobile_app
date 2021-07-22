@@ -1,54 +1,24 @@
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
-import 'package:kounslr/src/ui/providers/school_repository_provider.dart';
+import 'package:kounslr/src/models/staff_member.dart';
 
 class ClassCard extends StatefulWidget {
-  const ClassCard({this.schoolClass});
+  const ClassCard(
+      {required this.schoolClass, required this.block, required this.teacher});
 
-  @required
-  final Class? schoolClass;
+  final Class schoolClass;
+  final Block block;
+  final StaffMember teacher;
 
   @override
   _ClassCardState createState() => _ClassCardState();
 }
 
 class _ClassCardState extends State<ClassCard> {
-  String teacherName = '';
-  Block currentBlock = Block();
-
-  @override
-  void initState() {
-    super.initState();
-    _getDatabaseInfo(
-        context: context,
-        teacherId: widget.schoolClass!.teacherId!,
-        period: widget.schoolClass!.block);
-  }
-
-  void _getDatabaseInfo({
-    BuildContext? context,
-    String? teacherId,
-    int? period,
-  }) async {
-    var teacher = await context!
-        .read(schoolRepositoryProvider)
-        .getTeacherByTeacherId(teacherId!);
-    var block =
-        await context.read(schoolRepositoryProvider).getBlockByPeriod(period!);
-
-    setState(() {
-      teacherName = teacher.name!;
-      currentBlock = block;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (teacherName == '' || currentBlock.period == null) {
-      return Loading();
-    }
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -58,7 +28,7 @@ class _ClassCardState extends State<ClassCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.schoolClass?.name ?? 'CLASS',
+                  widget.schoolClass.name ?? 'CLASS',
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 const SizedBox(height: 10),
@@ -71,7 +41,7 @@ class _ClassCardState extends State<ClassCard> {
                     ),
                     const SizedBox(width: 7),
                     Text(
-                      widget.schoolClass?.roomNumber ?? 'LOCATION',
+                      widget.schoolClass.roomNumber ?? 'LOCATION',
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                             color:
                                 Theme.of(context).colorScheme.secondaryVariant,
@@ -89,7 +59,7 @@ class _ClassCardState extends State<ClassCard> {
                     ),
                     const SizedBox(width: 7),
                     Text(
-                      teacherName,
+                      widget.teacher.name!,
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
                             color:
                                 Theme.of(context).colorScheme.secondaryVariant,
@@ -101,7 +71,7 @@ class _ClassCardState extends State<ClassCard> {
             ),
             Spacer(),
             Text(
-              _nextClassTime(currentBlock.time.toString()),
+              _nextClassTime(widget.block.time!),
               style: Theme.of(context).textTheme.headline6,
             ),
           ],
@@ -110,13 +80,7 @@ class _ClassCardState extends State<ClassCard> {
     );
   }
 
-  String _nextClassTime(String string) {
-    String time =
-        string.substring(string.indexOf(' '), string.lastIndexOf(':')).trim();
-    if (time.startsWith('0')) {
-      time = time.substring(1);
-    }
-
-    return time;
+  String _nextClassTime(DateTime date) {
+    return DateFormat("h:mm a").format(date).toString();
   }
 }
