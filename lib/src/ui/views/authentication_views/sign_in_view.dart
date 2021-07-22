@@ -51,6 +51,30 @@ class _SignInViewState extends State<SignInView> {
         _signInWithGoogleButton(context, _emailController, _passwordController),
         _hasError ? SizedBox(height: 15) : Container(),
         _hasError ? _errorText(context, _errorMessage) : Container(),
+        SizedBox(height: 15),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Don\'t have an account? ',
+              style: Theme.of(context).textTheme.headline6?.copyWith(
+                    color: Theme.of(context).colorScheme.secondaryVariant,
+                  ),
+            ),
+            GestureDetector(
+              onTap: () => widget.toggleView!(),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Sign up',
+                  style: Theme.of(context).textTheme.headline6?.copyWith(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -88,8 +112,6 @@ class _SignInViewState extends State<SignInView> {
         IconlyBold.Message,
         color: Theme.of(context).colorScheme.secondaryVariant,
       ),
-      border: BorderSide.none,
-      radius: BorderRadius.circular(45),
     );
   }
 
@@ -105,8 +127,6 @@ class _SignInViewState extends State<SignInView> {
         IconlyBold.Lock,
         color: Theme.of(context).colorScheme.secondaryVariant,
       ),
-      border: BorderSide.none,
-      radius: BorderRadius.all(Radius.circular(45)),
     );
   }
 
@@ -127,13 +147,21 @@ class _SignInViewState extends State<SignInView> {
               password: _passwordController.text.trim(),
             )
             .then((value) {
-          if (value != 'success')
-            setState(() {
-              _hasError = true;
-              _errorMessage = value;
-            });
-          else
-            Phoenix.rebirth(context);
+          if (!['success', 'new', null].contains(value)) {
+            print('q');
+
+            // setState(() {
+            //   _hasError = true;
+            //   _errorMessage = value;
+            // });
+          } else if (value == 'success') {
+            print('m');
+
+            // Phoenix.rebirth(context);
+          } else {
+            print('n');
+            DoNothingAction();
+          }
         });
       },
     );
@@ -150,7 +178,7 @@ class _SignInViewState extends State<SignInView> {
       radius: BorderRadius.circular(37),
       border: BorderSide(
         color: Theme.of(context).colorScheme.secondary,
-        width: 2,
+        width: 1.7,
       ),
       textColor: Theme.of(context).colorScheme.secondaryVariant,
       prefixIcon: Container(
@@ -165,34 +193,16 @@ class _SignInViewState extends State<SignInView> {
             .read(authenticationServiceProvider)
             .signInWithGoogle()
             .then((value) {
-          if (value != 'success')
+          if (value == 'failed') {
             setState(() {
               _hasError = true;
               _errorMessage = value;
             });
-          else
+          } else if (value == 'success') {
             Phoenix.rebirth(context);
+          }
         });
       },
-    );
-  }
-
-  Widget _signInAndSignUpButtons(
-      BuildContext context,
-      TextEditingController _emailController,
-      TextEditingController _passwordController) {
-    return Row(
-      children: [
-        CantonPrimaryButton(
-          buttonText: 'Sign Up',
-          containerWidth: MediaQuery.of(context).size.width / 2 - 34,
-          containerColor: Theme.of(context).colorScheme.secondary,
-          textColor: Theme.of(context).colorScheme.secondaryVariant,
-          onPressed: () => widget.toggleView!(),
-        ),
-        Spacer(),
-        _signInButton(context, _emailController, _passwordController),
-      ],
     );
   }
 
