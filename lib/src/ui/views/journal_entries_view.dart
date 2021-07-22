@@ -1,6 +1,4 @@
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/ui/providers/journal_entries_stream_provider.dart';
