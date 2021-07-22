@@ -1,11 +1,11 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kounslr/src/models/journal_entry.dart';
+import 'package:kounslr/src/ui/providers/journal_entries_stream_provider.dart';
 import 'package:kounslr/src/ui/providers/student_repository_provider.dart';
+import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/journal_entries_view.dart';
 import 'package:kounslr/src/ui/views/journal_entry_view.dart';
 
@@ -23,66 +23,70 @@ class _JournalViewState extends State<JournalView> {
   Widget _content(BuildContext context) {
     return Consumer(
       builder: (context, watch, child) {
-        User user = FirebaseAuth.instance.currentUser!;
+        final entryRepo = watch(journalEntriesStreamProvider);
 
-        var _stream = FirebaseFirestore.instance
-            .collection('customers')
-            .doc('lcps')
-            .collection('schools')
-            .doc('independence')
-            .collection('students')
-            .doc(user.uid)
-            .collection('journal entries')
-            .snapshots();
-
-        return StreamBuilder<QuerySnapshot>(
-          stream: _stream,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ViewHeaderOne(
-                    title: 'Journal',
-                    button: CantonHeaderButton(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      icon: Icon(
-                        FeatherIcons.plus,
-                        color: CantonColors.white,
-                        size: 24,
-                      ),
-                      onPressed: () => CantonMethods.viewTransition(
+        return entryRepo.when(
+          loading: () => Loading(),
+          error: (e, s) {
+            return SomethingWentWrong();
+          },
+          data: (data) {
+            List<JournalEntry> entries = [];
+            data.docs.forEach((element) {
+              entries.add(JournalEntry.fromDocumentSnapshot(element));
+            });
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _header(context),
+                SizedBox(height: 20),
+                entries.length > 0
+                    ? _horizontalBarChart(
                         context,
-                        JournalEntryView(new JournalEntry()),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  ![null, 0].contains(snapshot.data!.docs.length)
-                      ? _horizontalBarChart(
-                          context,
-                          context
-                              .read(studentRepositoryProvider)
-                              .getTopThreeMostUsedTags(snapshot.data!.docs),
-                        )
-                      : Text(
-                          'Click the "+" button to create your first journal entry',
-                          style: Theme.of(context).textTheme.headline5,
-                          textAlign: TextAlign.center,
+                        context
+                            .read(studentRepositoryProvider)
+                            .getTopThreeMostUsedTags(entries),
+                      )
+                    : Expanded(
+                        child: Center(
+                          child: Text(
+                            'Click the "+" button to create your first journal entry',
+                            style: Theme.of(context).textTheme.headline5,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                  SizedBox(height: 20),
-                  snapshot.data!.docs.length != 0
-                      ? _viewCard(
-                          context, 'View all entries', JournalEntriesView())
-                      : Container(),
-                ],
-              );
-            } else {
-              return Loading();
-            }
+                      ),
+                SizedBox(height: 20),
+                entries.length > 0
+                    ? _viewCard(
+                        context,
+                        'View all entries',
+                        JournalEntriesView(),
+                      )
+                    : Container(),
+              ],
+            );
           },
         );
       },
+    );
+  }
+
+  Widget _header(BuildContext context) {
+    return ViewHeaderOne(
+      title: 'Journal',
+      button: CantonHeaderButton(
+        isClear: true,
+        icon: Icon(
+          FeatherIcons.plus,
+          color: Theme.of(context).primaryColor,
+          size: 27,
+        ),
+        onPressed: () => CantonMethods.viewTransition(
+          context,
+          JournalEntryView(new JournalEntry()),
+        ),
+      ),
     );
   }
 
