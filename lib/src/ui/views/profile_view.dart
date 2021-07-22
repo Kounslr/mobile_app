@@ -91,13 +91,13 @@ class ProfileView extends ConsumerWidget {
               Text(
                 'ID Card',
                 style: Theme.of(context).textTheme.headline6!.copyWith(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.secondaryVariant,
                     ),
               ),
               Spacer(),
               IconlyIcon(
                 IconlyBold.Wallet,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.secondaryVariant,
               ),
             ],
           ),
