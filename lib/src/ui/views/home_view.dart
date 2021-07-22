@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+
 import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
@@ -23,17 +25,14 @@ import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/profile_view.dart';
 import 'package:kounslr/src/ui/views/schedule_view.dart';
 import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class HomeView extends StatefulWidget {
   @override
   _HomeViewState createState() => _HomeViewState();
 }
 
-// Fix Next Class Card
-
 class _HomeViewState extends State<HomeView> {
-  final CollectionReference user = FirebaseFirestore.instance
+  final user = FirebaseFirestore.instance
       .collection('customers')
       .doc('lcps')
       .collection('schools')
@@ -42,17 +41,19 @@ class _HomeViewState extends State<HomeView> {
 
   bool studentHasData = true;
 
-  Future<void> _checkIfStudentHasData() async {
+  Future<void> _checkIfStudentIsSignedIntoStudentVue() async {
     var student = await user.doc(FirebaseAuth.instance.currentUser!.uid).get();
     setState(() {
-      studentHasData = student.exists;
+      if (student.data() == null || student.data()!['studentId'] == null) {
+        studentHasData = false;
+      }
     });
   }
 
   @override
   void initState() {
     super.initState();
-    _checkIfStudentHasData();
+    _checkIfStudentIsSignedIntoStudentVue();
   }
 
   @override
@@ -333,8 +334,8 @@ class _HomeViewState extends State<HomeView> {
             ),
             Text(
               _studentNameInHeader(student),
-              style: Theme.of(context).textTheme.headline1!.copyWith(
-                    fontWeight: FontWeight.w600,
+              style: Theme.of(context).textTheme.headline2!.copyWith(
+                    fontWeight: FontWeight.w700,
                   ),
             ),
           ],
@@ -363,7 +364,7 @@ class _HomeViewState extends State<HomeView> {
                     EdgeInsets.symmetric(horizontal: 7.5 * 2.5, vertical: 7.5),
                 decoration: ShapeDecoration(
                   color: Theme.of(context).primaryColor,
-                  shape: SquircleBorder(radius: BorderRadius.circular(30)),
+                  shape: SquircleBorder(radius: BorderRadius.circular(37)),
                 ),
                 child: Column(
                   children: [
@@ -408,21 +409,26 @@ class _HomeViewState extends State<HomeView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('Enjoy your weekend!',
-                  style: Theme.of(context).textTheme.headline4),
+              Text(
+                'Enjoy your weekend!',
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ],
           ),
         ),
       );
     } else if ((schoolClass.id == 'done') || (block.period == 0)) {
       return Card(
+        margin: EdgeInsets.only(top: 12),
         child: Padding(
           padding: EdgeInsets.all(15),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('No more classes for today! 😃',
-                  style: Theme.of(context).textTheme.headline4),
+              Text(
+                'No more classes for today! 😃',
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ],
           ),
         ),
@@ -629,28 +635,30 @@ class _HomeViewState extends State<HomeView> {
                         SizedBox(height: 15),
                         CantonPrimaryButton(
                           onPressed: () async {
-                            String res =
-                                await watch(authenticationServiceProvider)
-                                    .studentVueSignIn(
+                            await watch(authenticationServiceProvider)
+                                .studentVueSignIn(
                               email: _emailController.text,
                               password: _passwordController.text,
-                            );
+                            )
+                                .then((value) {
+                              if (value != 'success') {
+                                setState(() {
+                                  hasResult = false;
+                                });
+                              } else {
+                                hasResult = true;
+                              }
 
-                            if (res == 'failed') {
-                              setState(() {
-                                hasResult = false;
-                              });
-                            } else {
-                              hasResult = true;
-                            }
-
-                            if (hasResult) {
-                              Phoenix.rebirth(context);
-                            }
+                              if (hasResult) {
+                                Phoenix.rebirth(context);
+                              }
+                            });
                           },
                           buttonText: 'Sign in',
                           textColor: CantonColors.white,
                           containerWidth: MediaQuery.of(context).size.width / 4,
+                          containerHeight: 47,
+                          radius: BorderRadius.circular(37),
                           containerPadding: EdgeInsets.all(10),
                         ),
                         SizedBox(height: 20),
