@@ -12,13 +12,10 @@ import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/services/repositories/school_repository.dart';
-import 'package:uuid/uuid.dart';
 
 class StudentRepository {
   var ref = FirebaseFirestore.instance
-      .collection('customers')
-      .doc('lcps')
-      .collection('schools')
+      .collection('customers/lcps/schools')
       .doc('independence');
 
   var uid = FirebaseAuth.instance.currentUser?.uid;
@@ -50,7 +47,7 @@ class StudentRepository {
 
   Future<Class> getClassByBlock(int block) async {
     try {
-      Class schoolClass = Class(id: 'done');
+      var schoolClass = Class();
       List<Assignment> assignments = [];
       var classesRef = await ref
           .collection('classes')
@@ -59,11 +56,12 @@ class StudentRepository {
           .get();
 
       if (classesRef.docs.isEmpty) {
+        schoolClass.id = 'done';
         return schoolClass;
       }
 
       var assignmentsRef =
-          await classesRef.docs[0].reference.collection('assignments').get();
+          await classesRef.docs.first.reference.collection('assignments').get();
 
       assignmentsRef.docs.forEach((element) {
         assignments.add(Assignment.fromDocumentSnapshot(element));
@@ -77,7 +75,8 @@ class StudentRepository {
 
       assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
 
-      schoolClass = Class.fromDocumentSnapshot(classesRef.docs[0], assignments);
+      schoolClass =
+          Class.fromDocumentSnapshot(classesRef.docs.first, assignments);
 
       return schoolClass;
     } catch (e) {
@@ -113,7 +112,7 @@ class StudentRepository {
 
   Future<Block> get nextBlock async {
     var school = await SchoolRepository().school;
-    var nextBlock = Block();
+    var block = Block();
     var now = DateTime.now();
 
     List<Block> blocks = school.currentDay!.blocks!;
@@ -131,10 +130,9 @@ class StudentRepository {
     var closestTime = timesAfterNow.reduce(
         (a, b) => a.difference(now).abs() < b.difference(now).abs() ? a : b);
 
-    nextBlock =
-        blocks.where((element) => element.time == closestTime).toList()[0];
+    block = blocks.where((element) => element.time == closestTime).toList()[0];
 
-    return nextBlock;
+    return block;
   }
 
   Stream<StaffMember> get nextClassTeacher async* {
@@ -154,14 +152,14 @@ class StudentRepository {
     var upcomingBlock = await nextBlock;
     upcomingClass = ![0, null].contains(upcomingBlock.period)
         ? await getClassByBlock(upcomingBlock.period!)
-        : Class();
+        : Class(id: 'done');
     yield upcomingClass;
   }
 
   Future<Class> get nextClass async {
     var upcomingClass = Class();
     var upcomingBlock = await nextBlock;
-    upcomingClass = upcomingBlock.period != null
+    upcomingClass = ![0, null].contains(upcomingBlock.period)
         ? await getClassByBlock(upcomingBlock.period!)
         : Class(id: 'done');
     return upcomingClass;
@@ -235,22 +233,28 @@ class StudentRepository {
     }
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> get journalEntries {
+    try {
+      var entries = ref.collection('students/$uid/journal_entries').snapshots();
+
+      return entries;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> addJournalEntry(JournalEntry entry) async {
-    String id = Uuid().v4();
+    String id = ref.collection('students/$uid/journal_entries').doc().id;
 
     await ref
-        .collection('students')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('journal entries')
+        .collection('students/$uid/journal_entries')
         .doc(id)
         .set(entry.copyWith(id: id).toMap());
   }
 
   Future<void> deleteJournalEntry(JournalEntry entry) async {
     await ref
-        .collection('students')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('journal entries')
+        .collection('students/$uid/journal_entries')
         .doc(entry.id)
         .delete();
   }
@@ -260,12 +264,8 @@ class StudentRepository {
       String? title,
       String? summary,
       List<Tag>? tags}) async {
-    await ref
-        .collection('students')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('journal entries')
-        .doc(entry.id)
-        .update(entry
+    await ref.collection('students/$uid/journal_entries').doc(entry.id).update(
+        entry
             .copyWith(
                 title: title,
                 summary: summary,
@@ -300,22 +300,13 @@ class StudentRepository {
     }
   }
 
-  Map<String?, int?> getTopThreeMostUsedTags(
-    List<QueryDocumentSnapshot> entries,
-  ) {
+  Map<String?, int?> getTopThreeMostUsedTags(List<JournalEntry> entries) {
     /// Variables
-    List<JournalEntry> _entries = [];
     List<Tag> _tags = [];
     var map = <dynamic, dynamic>{};
 
-    /// Convert firebase data to [Journal Entry]
-    entries.forEach((element) {
-      _entries
-          .add(JournalEntry.fromMap(element.data() as Map<String, dynamic>));
-    });
-
     /// Adds [Tag] (s) from [JournalEntry] to a list
-    _entries.forEach((element) {
+    entries.forEach((element) {
       element.tags!.forEach((element) {
         _tags.add(element);
       });
