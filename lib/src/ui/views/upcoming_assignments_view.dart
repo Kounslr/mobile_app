@@ -65,6 +65,7 @@ class UpcomingAssignmentView extends StatelessWidget {
       child: ListView.builder(
         itemCount: assignments.length,
         itemBuilder: (context, index) {
+          assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
           return AssignmentCard(
             classes
                 .where((element) => element.id == assignments[index].classId)
