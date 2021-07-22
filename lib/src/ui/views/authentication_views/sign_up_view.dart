@@ -59,7 +59,6 @@ class SignUpView extends ConsumerWidget {
           border: BorderSide.none,
           radius: BorderRadius.all(Radius.circular(45)),
         ),
-        // TextField(),
         SizedBox(height: 15),
         Row(
           children: [
