@@ -1,5 +1,8 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kounslr/src/models/block.dart';
+import 'package:kounslr/src/models/staff_member.dart';
+import 'package:kounslr/src/ui/providers/school_repository_provider.dart';
 import 'package:kounslr/src/ui/providers/student_classes_stream_provider.dart';
 import 'package:kounslr/src/ui/styled_components/class_card.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
@@ -36,23 +39,47 @@ class ScheduleView extends StatelessWidget {
     return Consumer(
       builder: (context, watch, child) {
         final studentClassesRepo = watch(studentClassesFutureProvider);
+        var futuresAreDone = false;
 
         return studentClassesRepo.when(
+          loading: () => Loading(),
+          error: (e, s) {
+            return SomethingWentWrong();
+          },
           data: (classes) {
             return Expanded(
               child: ListView.builder(
                 itemCount: classes.length,
                 itemBuilder: (context, index) {
-                  return ClassCard(
-                    schoolClass: classes[index],
+                  return FutureBuilder<Block>(
+                    future: context
+                        .read(schoolRepositoryProvider)
+                        .getBlockByPeriod(classes[index].block!),
+                    builder: (context, blockSnapshot) {
+                      return FutureBuilder<StaffMember>(
+                        future: context
+                            .read(schoolRepositoryProvider)
+                            .getTeacherByTeacherId(classes[index].teacherId!),
+                        builder: (context, teacherSnapshot) {
+                          futuresAreDone = blockSnapshot.data != null &&
+                              teacherSnapshot.data != null;
+                          if (!futuresAreDone && index == 0) {
+                            return Loading();
+                          } else if (!futuresAreDone && index != 0) {
+                            return Container();
+                          }
+                          return ClassCard(
+                            schoolClass: classes[index],
+                            block: blockSnapshot.data!,
+                            teacher: teacherSnapshot.data!,
+                          );
+                        },
+                      );
+                    },
                   );
                 },
               ),
             );
-          },
-          loading: () => Loading(),
-          error: (e, s) {
-            return SomethingWentWrong();
           },
         );
       },
