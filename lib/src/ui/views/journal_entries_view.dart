@@ -1,8 +1,11 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
+import 'package:kounslr/src/ui/providers/journal_entries_stream_provider.dart';
 import 'package:kounslr/src/ui/styled_components/journal_entry_tag_card.dart';
+import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 
 class JournalEntriesView extends StatefulWidget {
   const JournalEntriesView();
@@ -36,61 +39,55 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   }
 
   Widget _journalEntriesListView(BuildContext context) {
-    User user = FirebaseAuth.instance.currentUser!;
-
-    var _stream = FirebaseFirestore.instance
-        .collection('customers')
-        .doc('lcps')
-        .collection('schools')
-        .doc('independence')
-        .collection('students')
-        .doc(user.uid)
-        .collection('journal entries')
-        .snapshots();
-
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: _stream,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          _listOfEntries(snapshot);
-          return Expanded(
-            child: _tagList.length != 0
-                ? ListView.builder(
-                    itemCount: _tagList.length,
-                    itemBuilder: (context, index) {
-                      return JournalEntryTagCard(
-                          _listOfEntries(snapshot)
-                              .where((element) =>
-                                  element.tags!.contains(_tagList[index]))
-                              .toList(),
-                          _tagList[index]);
-                    },
-                  )
-                : Center(
-                    child: Text(
-                      'No entries',
-                      style: Theme.of(context).textTheme.headline4?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.secondaryVariant,
-                          ),
+    return Consumer(
+      builder: (context, watch, child) {
+        final entryRepo = watch(journalEntriesStreamProvider);
+        return entryRepo.when(
+          error: (e, s) {
+            return SomethingWentWrong();
+          },
+          loading: () => Loading(),
+          data: (data) {
+            List<JournalEntry> entries = [];
+            data.docs.forEach((element) {
+              entries.add(JournalEntry.fromDocumentSnapshot(element));
+            });
+            _listOfEntries(entries);
+            return Expanded(
+              child: _tagList.length != 0
+                  ? ListView.builder(
+                      itemCount: _tagList.length,
+                      itemBuilder: (context, index) {
+                        return JournalEntryTagCard(
+                            _listOfEntries(entries)
+                                .where((element) =>
+                                    element.tags!.contains(_tagList[index]))
+                                .toList(),
+                            _tagList[index]);
+                      },
+                    )
+                  : Center(
+                      child: Text(
+                        'No entries',
+                        style: Theme.of(context).textTheme.headline4?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryVariant,
+                            ),
+                      ),
                     ),
-                  ),
-          );
-        } else {
-          return Center(child: Loading());
-        }
+            );
+          },
+        );
       },
     );
   }
 
-  List<JournalEntry> _listOfEntries(
-    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
-  ) {
-    var entries = snapshot.data!.docs;
+  List<JournalEntry> _listOfEntries(List<JournalEntry> entries) {
     List<JournalEntry> e = [];
     List<Tag> _tags = [];
     for (var item in entries) {
-      e.add(JournalEntry.fromMap(item.data()));
+      e.add(item);
     }
     for (var entry in e) {
       for (var tag in entry.tags!) if (!_tags.contains(tag)) _tags.add(tag);
