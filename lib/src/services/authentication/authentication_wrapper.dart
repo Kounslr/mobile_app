@@ -33,9 +33,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
               ),
             );
           },
-          loading: () {
-            return Loading();
-          },
+          loading: () => Loading(),
           data: (user) {
             if (user == null) {
               if (showSignIn) {
