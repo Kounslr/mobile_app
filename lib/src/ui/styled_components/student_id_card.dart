@@ -13,7 +13,7 @@ class StudentIDCard extends StatelessWidget {
       shape: SquircleBorder(radius: BorderRadius.circular(65)),
       color: Theme.of(context).primaryColor,
       child: Padding(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         child: Column(
           children: [
             Row(
