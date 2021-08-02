@@ -24,7 +24,7 @@ class SomethingWentWrong extends StatelessWidget {
             containerColor: Theme.of(context).primaryColor,
             containerWidth: MediaQuery.of(context).size.width / 2 - 34,
             onPressed: () {
-              context.read(authenticationServiceProvider).signOut(context);
+              context.read(authenticationServiceProvider).signOut();
             },
           ),
         ],
