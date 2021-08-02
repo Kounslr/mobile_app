@@ -15,7 +15,7 @@ class AssignmentCard extends StatelessWidget {
         Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               decoration: ShapeDecoration(
                 color: Theme.of(context).colorScheme.secondary,
                 shape: SquircleBorder(radius: BorderRadius.circular(30)),
@@ -37,8 +37,8 @@ class AssignmentCard extends StatelessWidget {
         SizedBox(width: 10),
         Flexible(
           child: Card(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
               child: Row(
                 children: [
                   Column(
