@@ -82,19 +82,11 @@ class AuthenticationService {
       if (!userDataRef.exists || credential.additionalUserInfo!.isNewUser) {
         await _createUserInDatabase(credential.user!);
         String id = user!.uid;
-        String firstName = toBeginningOfSentenceCase(user.displayName!
-            .substring(0, user.displayName!.indexOf(' '))
-            .toLowerCase())!;
-        String lastName = toBeginningOfSentenceCase(user.displayName!
-            .substring(user.displayName!.lastIndexOf(' ') + 1)
-            .toLowerCase())!;
         String imageUrl = user.photoURL!;
 
         await FirebaseChatCore.instance.createUserInFirestore(
           types.User(
             id: id,
-            firstName: firstName,
-            lastName: lastName,
             imageUrl: imageUrl,
           ),
         );
@@ -141,9 +133,18 @@ class AuthenticationService {
     required String password,
   }) async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
+      var user = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
+      );
+
+      _createUserInDatabase(user.user!);
+
+      await FirebaseChatCore.instance.createUserInFirestore(
+        types.User(
+          id: user.user!.uid,
+          imageUrl: '',
+        ),
       );
     } on FirebaseAuthException catch (e) {
       throw e.message!;
