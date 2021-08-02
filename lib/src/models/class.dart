@@ -12,13 +12,15 @@ class Class {
   String? roomNumber;
   String? teacherId;
   int? block;
-  List<Student>? students;
+  int? markingPeriod;
+  List<StudentInClass>? students;
   List<Assignment>? assignments;
 
   Class({
     this.id,
     this.name,
     this.block,
+    this.markingPeriod,
     this.roomNumber,
     this.teacherId,
     this.students,
@@ -31,13 +33,15 @@ class Class {
     String? roomNumber,
     String? teacherId,
     int? block,
-    List<Student>? students,
+    int? markingPeriod,
+    List<StudentInClass>? students,
     List<Assignment>? assignments,
   }) {
     return Class(
       id: id ?? this.id,
       name: name ?? this.name,
       block: block ?? this.block,
+      markingPeriod: markingPeriod ?? this.markingPeriod,
       roomNumber: roomNumber ?? this.roomNumber,
       teacherId: teacherId ?? this.teacherId,
       students: students ?? this.students,
@@ -50,9 +54,10 @@ class Class {
       'id': id,
       'name': name,
       'block': block,
+      'markingPeriod': markingPeriod,
       'roomNumber': roomNumber,
       'teacherId': teacherId,
-      'students': students?.map((x) => x.toMapId()).toList(),
+      'students': students?.map((x) => x.toMap()).toList(),
       'assignments': assignments?.map((x) => x.toMap()).toList(),
     };
   }
@@ -62,10 +67,11 @@ class Class {
       id: map['id'],
       name: map['name'],
       block: map['block'],
+      markingPeriod: map['markingPeriod'],
       roomNumber: map['roomNumber'],
       teacherId: map['teacherId'],
-      students:
-          List<Student>.from(map['students']?.map((x) => Student.fromMap(x))),
+      students: List<StudentInClass>.from(
+          map['students']?.map((x) => StudentInClass.fromMap(x))),
       assignments: List<Assignment>.from(
           map['assignments']?.map((x) => Assignment.fromMap(x))),
     );
@@ -79,11 +85,12 @@ class Class {
       id: doc['id'],
       name: doc['name'],
       block: doc['block'],
+      markingPeriod: doc['markingPeriod'],
       roomNumber: doc['roomNumber'],
       teacherId: doc['teacherId'],
-      students:
-          List<Student>.from(doc['students']?.map((x) => Student.fromMapId(x))),
       assignments: assignments,
+      students: List<StudentInClass>.from(
+          doc['students']?.map((x) => StudentInClass.fromMap(x))),
     );
   }
 
@@ -93,7 +100,7 @@ class Class {
 
   @override
   String toString() {
-    return 'Class(id: $id, name: $name, block: $block, roomNumber: $roomNumber, teacherId: $teacherId, students: $students, assignments: $assignments)';
+    return 'Class(id: $id, name: $name, block: $block, markingPeriod: $markingPeriod, roomNumber: $roomNumber, teacherId: $teacherId, students: $students, assignments: $assignments)';
   }
 
   @override
@@ -104,6 +111,7 @@ class Class {
         other.id == id &&
         other.name == name &&
         other.block == block &&
+        other.markingPeriod == markingPeriod &&
         other.roomNumber == roomNumber &&
         other.teacherId == teacherId &&
         listEquals(other.students, students) &&
@@ -115,6 +123,7 @@ class Class {
     return id.hashCode ^
         name.hashCode ^
         block.hashCode ^
+        markingPeriod.hashCode ^
         roomNumber.hashCode ^
         teacherId.hashCode ^
         students.hashCode ^
