@@ -138,9 +138,7 @@ class FirebaseChatCore {
   Future<void> createUserInFirestore(types.User user) async {
     await ref.collection('students').doc(user.id).update({
       'createdAt': FieldValue.serverTimestamp(),
-      'firstName': user.firstName,
       'imageUrl': user.imageUrl,
-      'lastName': user.lastName,
       'lastSeen': user.lastSeen,
       'metadata': user.metadata,
       'role': user.role?.toShortString(),
