@@ -62,7 +62,7 @@ class JournalEntryCard extends ConsumerWidget {
 
   Widget _deleteEntryAction(BuildContext context, JournalEntry entry) {
     return Container(
-      margin: EdgeInsets.only(top: 5, bottom: 5, left: 5),
+      margin: const EdgeInsets.only(top: 5, bottom: 5, left: 5),
       child: Material(
         color: Theme.of(context).colorScheme.onError,
         shape: SquircleBorder(
