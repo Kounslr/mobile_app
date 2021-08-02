@@ -1,6 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_stream_provider.dart';
+import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/authentication_views/sign_in_view.dart';
 import 'package:kounslr/src/ui/views/authentication_views/sign_up_view.dart';
 import 'package:kounslr/src/ui/views/current_view.dart';
@@ -24,14 +25,10 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     return Consumer(
       builder: (context, watch, child) {
         final _authState = watch(authenticationStreamProvider);
+
         return _authState.when(
           error: (e, s) {
-            return Center(
-              child: Text(
-                'Something went wrong',
-                style: Theme.of(context).textTheme.headline5,
-              ),
-            );
+            return SomethingWentWrong();
           },
           loading: () => Loading(),
           data: (user) {
