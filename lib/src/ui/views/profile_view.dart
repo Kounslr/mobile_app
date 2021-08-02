@@ -1,11 +1,14 @@
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:kounslr/src/ui/providers/school_future_provider.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
+import 'package:kounslr/src/ui/views/schedule_view.dart';
 import 'package:kounslr/src/ui/views/student_id_card_view.dart';
+import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
 
 class ProfileView extends ConsumerWidget {
   final Student student;
@@ -48,6 +51,7 @@ class ProfileView extends ConsumerWidget {
         return schoolRepo.when(
           loading: () => Loading(),
           error: (e, s) {
+            if (e is FirebaseException) {}
             return SomethingWentWrong();
           },
           data: (school) {
@@ -57,52 +61,30 @@ class ProfileView extends ConsumerWidget {
                 SizedBox(height: 10),
                 _studentIDCard(context, student, school),
                 SizedBox(height: 10),
-                CantonPrimaryButton(
-                  buttonText: 'Sign out',
-                  textColor: CantonColors.white,
-                  containerColor: Theme.of(context).primaryColor,
-                  containerWidth: MediaQuery.of(context).size.width / 2 - 34,
-                  onPressed: () {
-                    context
-                        .read(authenticationServiceProvider)
-                        .signOut(context);
-                    Navigator.pop(context);
+                _studentScheduleCard(context),
+                SizedBox(height: 10),
+                _studentUpcomingAssignmentsCard(context),
+                SizedBox(height: 70),
+                GestureDetector(
+                  onTap: () {
+                    context.read(authenticationServiceProvider).signOut();
+                    Navigator.of(context).pop();
                   },
-                ),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Sign Out',
+                      style: Theme.of(context).textTheme.headline6?.copyWith(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                    ),
+                  ),
+                )
               ],
             );
           },
         );
       },
-    );
-  }
-
-  Widget _studentIDCard(BuildContext context, Student student, School school) {
-    return GestureDetector(
-      onTap: () {
-        CantonMethods.viewTransition(
-            context, StudentIDCardView(student, school));
-      },
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.all(15),
-          child: Row(
-            children: [
-              Text(
-                'ID Card',
-                style: Theme.of(context).textTheme.headline6!.copyWith(
-                      color: Theme.of(context).colorScheme.secondaryVariant,
-                    ),
-              ),
-              Spacer(),
-              IconlyIcon(
-                IconlyBold.Wallet,
-                color: Theme.of(context).colorScheme.secondaryVariant,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
@@ -136,6 +118,85 @@ class ProfileView extends ConsumerWidget {
               color: Theme.of(context).colorScheme.secondaryVariant,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _studentIDCard(BuildContext context, Student student, School school) {
+    return GestureDetector(
+      onTap: () {
+        CantonMethods.viewTransition(
+            context, StudentIDCardView(student, school));
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Row(
+            children: [
+              Text(
+                'ID Card',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Spacer(),
+              IconlyIcon(
+                IconlyBold.Wallet,
+                color: Theme.of(context).colorScheme.secondaryVariant,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _studentScheduleCard(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        CantonMethods.viewTransition(context, ScheduleView());
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Row(
+            children: [
+              Text(
+                'Schedule',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Spacer(),
+              IconlyIcon(
+                IconlyBold.Calendar,
+                color: Theme.of(context).colorScheme.secondaryVariant,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _studentUpcomingAssignmentsCard(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        CantonMethods.viewTransition(context, UpcomingAssignmentView());
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Row(
+            children: [
+              Text(
+                'Upcoming Assignments',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Spacer(),
+              IconlyIcon(
+                IconlyBold.Paper,
+                color: Theme.of(context).colorScheme.secondaryVariant,
+              ),
+            ],
+          ),
         ),
       ),
     );
