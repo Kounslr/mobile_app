@@ -18,6 +18,7 @@ class _SignUpViewState extends State<SignUpView> {
 
     return CantonScaffold(
       resizeToAvoidBottomInset: true,
+      padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 34),
       body: _content(
         context,
         _emailController,
@@ -34,48 +35,45 @@ class _SignUpViewState extends State<SignUpView> {
     return SingleChildScrollView(
       child: Column(
         children: [
+          SizedBox(height: 75),
           _header(context),
           SizedBox(height: 50),
-          CantonTextInput(
-            hintText: 'Email',
-            isTextFormField: true,
-            obscureText: false,
-            controller: _emailController,
-            textInputType: TextInputType.emailAddress,
-            border: BorderSide.none,
-            radius: BorderRadius.all(Radius.circular(45)),
-          ),
+          _emailTextInput(context, _emailController),
           SizedBox(height: 15),
-          CantonTextInput(
-            hintText: 'Password',
-            isTextFormField: true,
-            obscureText: true,
-            controller: _passwordController,
-            border: BorderSide.none,
-            radius: BorderRadius.all(Radius.circular(45)),
+          _passwordTextInput(context, _passwordController),
+          SizedBox(height: 15),
+          CantonPrimaryButton(
+            buttonText: 'Sign Up',
+            containerColor: Theme.of(context).primaryColor,
+            textColor: CantonColors.white,
+            onPressed: () async {
+              await context.read(authenticationServiceProvider).signUp(
+                    email: _emailController.text.trim(),
+                    password: _passwordController.text.trim(),
+                  );
+            },
           ),
           SizedBox(height: 15),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CantonPrimaryButton(
-                buttonText: 'Sign In',
-                containerWidth: MediaQuery.of(context).size.width / 2 - 34,
-                containerColor: Theme.of(context).colorScheme.secondary,
-                textColor: Theme.of(context).colorScheme.secondaryVariant,
-                onPressed: () => widget.toggleView!(),
+              Text(
+                'Or Sign In ',
+                style: Theme.of(context).textTheme.headline6?.copyWith(
+                      color: Theme.of(context).colorScheme.secondaryVariant,
+                    ),
               ),
-              Spacer(),
-              CantonPrimaryButton(
-                buttonText: 'Sign Up',
-                containerWidth: MediaQuery.of(context).size.width / 2 - 34,
-                containerColor: Theme.of(context).primaryColor,
-                textColor: CantonColors.white,
-                onPressed: () async {
-                  await context.read(authenticationServiceProvider).signUp(
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
-                },
+              GestureDetector(
+                onTap: () => widget.toggleView!(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Here',
+                    style: Theme.of(context).textTheme.headline6?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -84,12 +82,42 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
+  Widget _emailTextInput(
+      BuildContext context, TextEditingController controller) {
+    return CantonTextInput(
+      hintText: 'Email',
+      isTextFormField: true,
+      obscureText: false,
+      controller: controller,
+      textInputType: TextInputType.emailAddress,
+      prefixIcon: IconlyIcon(
+        IconlyBold.Message,
+        color: Theme.of(context).colorScheme.secondaryVariant,
+      ),
+    );
+  }
+
+  Widget _passwordTextInput(
+      BuildContext context, TextEditingController controller) {
+    return CantonTextInput(
+      hintText: 'Password',
+      isTextFormField: true,
+      obscureText: true,
+      controller: controller,
+      prefixIcon: IconlyIcon(
+        IconlyBold.Lock,
+        color: Theme.of(context).colorScheme.secondaryVariant,
+      ),
+    );
+  }
+
   Widget _header(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           'Sign Up',
-          style: Theme.of(context).textTheme.headline5!.copyWith(
+          style: Theme.of(context).textTheme.headline4!.copyWith(
                 color: Theme.of(context).primaryColor,
               ),
         ),
