@@ -24,6 +24,7 @@ class SchoolRepository {
   }
 
   List<Assignment> _assignments = [];
+
   Future<Class> getClass({String? id}) async {
     var _class = await ref.collection('classes').doc(id).get();
     var assignmentsRef =
