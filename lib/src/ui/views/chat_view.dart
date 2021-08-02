@@ -56,6 +56,7 @@ class _ChatViewState extends State<ChatView> {
               color: Theme.of(context).primaryColor,
               size: 27,
             ),
+            onPressed: () => _showCreateChatBottomSheet(),
           ),
         ),
         _searchBar(context, rooms),
@@ -127,7 +128,6 @@ class _ChatViewState extends State<ChatView> {
   // ignore: unused_element
   Future<void> _showCreateChatBottomSheet() async {
     var _searchController = TextEditingController();
-    var hasResult = true;
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -139,7 +139,8 @@ class _ChatViewState extends State<ChatView> {
             return Consumer(
               builder: (context, watch, child) {
                 return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 27),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 17),
                   child: FractionallySizedBox(
                     heightFactor: 0.95,
                     child: Column(
@@ -154,12 +155,49 @@ class _ChatViewState extends State<ChatView> {
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
-                        SizedBox(height: 15),
-                        Text(
-                          'Search for students',
-                          style: Theme.of(context).textTheme.headline5,
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Cancel',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondaryVariant,
+                                      ),
+                                ),
+                              ),
+                            ),
+                            Text(
+                              'New Message',
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Chat',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      ?.copyWith(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 10),
                         CantonTextInput(
                           isTextFormField: true,
                           obscureText: false,
@@ -167,30 +205,7 @@ class _ChatViewState extends State<ChatView> {
                           textInputType: TextInputType.emailAddress,
                           controller: _searchController,
                         ),
-                        SizedBox(height: 15),
                         // Add switch teachers, Individual gcs and other
-                        CantonPrimaryButton(
-                          onPressed: () async {},
-                          buttonText: 'Sign in',
-                          textColor: CantonColors.white,
-                          containerWidth: MediaQuery.of(context).size.width / 4,
-                          containerHeight: 47,
-                          radius: BorderRadius.circular(37),
-                          containerPadding: EdgeInsets.all(10),
-                        ),
-                        SizedBox(height: 20),
-                        hasResult == false
-                            ? Text(
-                                'Incorrect email or password',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    ?.copyWith(
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                    ),
-                              )
-                            : Container(),
                       ],
                     ),
                   ),
