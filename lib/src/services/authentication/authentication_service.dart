@@ -1,4 +1,3 @@
-import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -31,9 +30,10 @@ class AuthenticationService {
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  Future<String> signOut(BuildContext context) async {
+  Future<String> signOut() async {
     try {
       await _firebaseAuth.signOut();
+
       return 'success';
     } catch (e) {
       if (e is FirebaseAuthException) {
@@ -62,8 +62,8 @@ class AuthenticationService {
 
   Future<String> signInWithGoogle() async {
     try {
-      var googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) return 'failed';
+      final googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) return '';
 
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
@@ -78,9 +78,9 @@ class AuthenticationService {
 
       var user = FirebaseAuth.instance.currentUser;
       var userDataRef = await userRef.doc(credential.user!.uid).get();
-      var userData = userDataRef.data();
 
-      if (credential.additionalUserInfo!.isNewUser || userData == null) {
+      if (!userDataRef.exists || credential.additionalUserInfo!.isNewUser) {
+        await _createUserInDatabase(credential.user!);
         String id = user!.uid;
         String firstName = toBeginningOfSentenceCase(user.displayName!
             .substring(0, user.displayName!.indexOf(' '))
@@ -89,7 +89,6 @@ class AuthenticationService {
             .substring(user.displayName!.lastIndexOf(' ') + 1)
             .toLowerCase())!;
         String imageUrl = user.photoURL!;
-        await _createUserInDatabase(credential.user!);
 
         await FirebaseChatCore.instance.createUserInFirestore(
           types.User(
@@ -105,9 +104,10 @@ class AuthenticationService {
 
       return 'success';
     } catch (e) {
-      print(e);
       if (e is FirebaseAuthException) {
         return AuthenticationExceptions.fromFirebaseAuthError(e).toString();
+      } else if (e is RangeError) {
+        return '';
       }
       return 'failed';
     }
@@ -139,7 +139,6 @@ class AuthenticationService {
   Future<void> signUp({
     required String email,
     required String password,
-    String? domain,
   }) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
