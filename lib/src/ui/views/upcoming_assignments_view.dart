@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/ui/providers/student_assignments_provider.dart';
-import 'package:kounslr/src/ui/providers/student_classes_stream_provider.dart';
+import 'package:kounslr/src/ui/providers/student_classes_future_provider.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 
@@ -21,8 +21,8 @@ class UpcomingAssignmentView extends StatelessWidget {
     return Consumer(
       builder: (context, watch, child) {
         final upcomingAssignmentsRepo =
-            watch(upcomingAssignmentsFutureProvider);
-        final classesRepo = watch(studentClassesFutureProvider);
+            watch(upcomingAssignmentsStreamProvider);
+        final classesRepo = watch(studentClassesStreamProvider);
 
         return classesRepo.when(
           error: (e, s) {
@@ -61,6 +61,17 @@ class UpcomingAssignmentView extends StatelessWidget {
 
   Widget _body(
       BuildContext context, List<Class> classes, List<Assignment> assignments) {
+    if (assignments.length == 0 || classes.length == 0) {
+      return Expanded(
+        child: Text(
+          'No Upcoming Assignments',
+          style: Theme.of(context).textTheme.headline4?.copyWith(
+                color: Theme.of(context).colorScheme.secondaryVariant,
+              ),
+        ),
+      );
+    }
+
     return Expanded(
       child: ListView.builder(
         itemCount: assignments.length,
