@@ -2,7 +2,6 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class SignInView extends StatefulWidget {
   final Function? toggleView;
@@ -15,67 +14,69 @@ class SignInView extends StatefulWidget {
 class _SignInViewState extends State<SignInView> {
   String _errorMessage = '';
   bool _hasError = false;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final _emailController = TextEditingController();
-    final _passwordController = TextEditingController();
-
     return CantonScaffold(
-      padding: EdgeInsets.symmetric(vertical: 17, horizontal: 34),
+      resizeToAvoidBottomInset: true,
+      padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 34),
       body: _content(context, _emailController, _passwordController),
     );
   }
 
   Widget _content(BuildContext context, TextEditingController _emailController,
       TextEditingController _passwordController) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(height: 75),
-        _header(context),
-        SizedBox(height: 40),
-        _emailTextInput(context, _emailController),
-        SizedBox(height: 15),
-        _passwordTextInput(context, _passwordController),
-        SizedBox(height: 50),
-        _signInButton(context, _emailController, _passwordController),
-        SizedBox(height: 15),
-        Text(
-          'Or continue with',
-          style: Theme.of(context).textTheme.headline6?.copyWith(
-                color: Theme.of(context).colorScheme.secondaryVariant,
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 75),
+          _header(context),
+          SizedBox(height: 40),
+          _emailTextInput(context, _emailController),
+          SizedBox(height: 15),
+          _passwordTextInput(context, _passwordController),
+          SizedBox(height: 30),
+          _signInButton(context, _emailController, _passwordController),
+          SizedBox(height: 15),
+          Text(
+            'Or continue with',
+            style: Theme.of(context).textTheme.headline6?.copyWith(
+                  color: Theme.of(context).colorScheme.secondaryVariant,
+                ),
+          ),
+          SizedBox(height: 15),
+          _signInWithGoogleButton(context),
+          _hasError ? SizedBox(height: 15) : Container(),
+          _hasError ? _errorText(context, _errorMessage) : Container(),
+          SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Don\'t have an account? ',
+                style: Theme.of(context).textTheme.headline6?.copyWith(
+                      color: Theme.of(context).colorScheme.secondaryVariant,
+                    ),
               ),
-        ),
-        SizedBox(height: 15),
-        _signInWithGoogleButton(context, _emailController, _passwordController),
-        _hasError ? SizedBox(height: 15) : Container(),
-        _hasError ? _errorText(context, _errorMessage) : Container(),
-        SizedBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Don\'t have an account? ',
-              style: Theme.of(context).textTheme.headline6?.copyWith(
-                    color: Theme.of(context).colorScheme.secondaryVariant,
+              GestureDetector(
+                onTap: () => widget.toggleView!(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Sign up',
+                    style: Theme.of(context).textTheme.headline6?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                        ),
                   ),
-            ),
-            GestureDetector(
-              onTap: () => widget.toggleView!(),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Sign up',
-                  style: Theme.of(context).textTheme.headline6?.copyWith(
-                        color: Theme.of(context).primaryColor,
-                      ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -140,37 +141,24 @@ class _SignInViewState extends State<SignInView> {
       containerColor: Theme.of(context).primaryColor,
       textColor: CantonColors.white,
       onPressed: () async {
-        await context
+        var res = await context
             .read(authenticationServiceProvider)
             .signInWithEmailAndPassword(
               email: _emailController.text.trim(),
               password: _passwordController.text.trim(),
-            )
-            .then((value) {
-          if (!['success', 'new', null].contains(value)) {
-            print('q');
+            );
 
-            // setState(() {
-            //   _hasError = true;
-            //   _errorMessage = value;
-            // });
-          } else if (value == 'success') {
-            print('m');
-
-            // Phoenix.rebirth(context);
-          } else {
-            print('n');
-            DoNothingAction();
-          }
-        });
+        if (res == 'failed') {
+          setState(() {
+            _hasError = true;
+            _errorMessage = res;
+          });
+        }
       },
     );
   }
 
-  Widget _signInWithGoogleButton(
-      BuildContext context,
-      TextEditingController _emailController,
-      TextEditingController _passwordController) {
+  Widget _signInWithGoogleButton(BuildContext context) {
     return CantonPrimaryButton(
       buttonText: 'Google',
       alignment: MainAxisAlignment.center,
@@ -182,26 +170,23 @@ class _SignInViewState extends State<SignInView> {
       ),
       textColor: Theme.of(context).colorScheme.secondaryVariant,
       prefixIcon: Container(
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         child: FaIcon(
           FontAwesomeIcons.google,
           color: Theme.of(context).primaryColor,
         ),
       ),
       onPressed: () async {
-        await context
+        var res = await context
             .read(authenticationServiceProvider)
-            .signInWithGoogle()
-            .then((value) {
-          if (value == 'failed') {
-            setState(() {
-              _hasError = true;
-              _errorMessage = value;
-            });
-          } else if (value == 'success') {
-            Phoenix.rebirth(context);
-          }
-        });
+            .signInWithGoogle();
+
+        if (res == 'failed') {
+          setState(() {
+            _hasError = true;
+            _errorMessage = res;
+          });
+        }
       },
     );
   }
