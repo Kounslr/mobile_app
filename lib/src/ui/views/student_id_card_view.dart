@@ -53,7 +53,7 @@ class StudentIDCardView extends StatelessWidget {
         StudentIDCard(student, school),
         SizedBox(height: 20),
         QrImage(
-          data: 'https://portal.lcps.org',
+          data: 'https://www.kounslr.com',
           version: QrVersions.auto,
           size: 100,
         ),
