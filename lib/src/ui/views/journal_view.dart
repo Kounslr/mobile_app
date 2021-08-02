@@ -92,6 +92,7 @@ class _JournalViewState extends State<JournalView> {
 
   Widget _horizontalBarChart(BuildContext context, Map<String?, int?> tags) {
     var data = tags.entries.toList();
+
     charts.Color? seriesColor = charts.Color(
       r: Theme.of(context).primaryColor.red,
       g: Theme.of(context).primaryColor.green,
@@ -128,14 +129,12 @@ class _JournalViewState extends State<JournalView> {
       onTap: () => CantonMethods.viewTransition(context, view),
       child: Card(
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Row(
             children: [
               Text(
                 text,
-                style: Theme.of(context).textTheme.headline6!.copyWith(
-                    //color: Theme.of(context).primaryColor,
-                    ),
+                style: Theme.of(context).textTheme.headline6!.copyWith(),
               ),
               Spacer(),
               IconlyIcon(
