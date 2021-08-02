@@ -57,7 +57,7 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
     BuildContext context,
   ) {
     return Container(
-      margin: EdgeInsets.only(top: 5, bottom: 5, left: 5),
+      margin: const EdgeInsets.only(top: 5, bottom: 5, left: 5),
       child: Material(
         color: Theme.of(context).colorScheme.secondary,
         shape: SquircleBorder(
@@ -86,7 +86,7 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
           builder: (context, watch, child) {
             var _tagRenameController = TextEditingController();
             return Padding(
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 27),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 27),
               child: FractionallySizedBox(
                 heightFactor: 0.45,
                 child: Column(
