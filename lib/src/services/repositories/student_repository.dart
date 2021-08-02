@@ -12,6 +12,7 @@ import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/services/repositories/school_repository.dart';
+import 'package:uuid/uuid.dart';
 
 class StudentRepository {
   var ref = FirebaseFirestore.instance
@@ -165,22 +166,26 @@ class StudentRepository {
     return upcomingClass;
   }
 
-  Future<List<Class>> get studentClasses async {
+  Stream<List<Class>> get studentClasses async* {
     try {
       List<Class> classes = [];
+
       var classesRef = await ref
           .collection('classes')
           .where('students', arrayContains: {'id': uid}).get();
 
-      classesRef.docs.forEach((element) async {
+      for (var item in classesRef.docs) {
         List<Assignment> ass = [];
+
         var assignmentsRef =
-            await element.reference.collection('assignments').get();
+            await item.reference.collection('assignments').get();
+
         assignmentsRef.docs.forEach((element) {
           ass.add(Assignment.fromDocumentSnapshot(element));
         });
-        classes.add(Class.fromDocumentSnapshot(element, ass));
-      });
+
+        classes.add(Class.fromDocumentSnapshot(item, ass));
+      }
 
       /// Fixes glitch where duplicate Classes are returned in list
       Map<String, Class> mapFilter = {};
@@ -191,31 +196,35 @@ class StudentRepository {
 
       classes.sort((a, b) => a.block!.compareTo(b.block!));
 
-      return classes;
+      yield classes;
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<List<Assignment>> get upcomingAssignments async {
+  Stream<List<Assignment>> get upcomingAssignments async* {
     try {
-      List<Assignment> ass = [];
+      List<Assignment>? ass;
       var classesRef = await ref
           .collection('classes')
           .where('students', arrayContains: {'id': uid}).get();
+      ass = [];
 
-      classesRef.docs.forEach((element) async {
+      for (var item in classesRef.docs) {
         var assignmentRef =
-            await element.reference.collection('assignments').get();
-        assignmentRef.docs.forEach((element) {
-          ass.add(Assignment.fromDocumentSnapshot(element));
-        });
-      });
+            await item.reference.collection('assignments').get();
 
-      for (var item in ass) {
-        if (item.dueDate!.isBefore(DateTime.now())) {
-          ass.remove(item);
-        }
+        assignmentRef.docs.forEach((element) {
+          var item = Assignment.fromDocumentSnapshot(element);
+
+          if (item.dueDate!.isAfter(DateTime.now()) &&
+              !item
+                  .students![item.students!.indexWhere((element) =>
+                      element.id == FirebaseAuth.instance.currentUser!.uid)]
+                  .completed!) {
+            ass!.add(item);
+          }
+        });
       }
 
       /// Fixes glitch where duplicate Assignments are returned in list
@@ -227,7 +236,7 @@ class StudentRepository {
 
       ass.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
 
-      return ass;
+      yield ass;
     } catch (e) {
       rethrow;
     }
@@ -244,12 +253,10 @@ class StudentRepository {
   }
 
   Future<void> addJournalEntry(JournalEntry entry) async {
-    String id = ref.collection('students/$uid/journal_entries').doc().id;
-
     await ref
         .collection('students/$uid/journal_entries')
-        .doc(id)
-        .set(entry.copyWith(id: id).toMap());
+        .doc(entry.id)
+        .set(entry.toDocumentSnapshot());
   }
 
   Future<void> deleteJournalEntry(JournalEntry entry) async {
@@ -264,14 +271,17 @@ class StudentRepository {
       String? title,
       String? summary,
       List<Tag>? tags}) async {
-    await ref.collection('students/$uid/journal_entries').doc(entry.id).update(
-        entry
+    await ref
+        .collection('students/$uid/journal_entries')
+        .doc(entry.id)
+        .update(entry
             .copyWith(
-                title: title,
-                summary: summary,
-                tags: tags,
-                lastEditDate: DateTime.now())
-            .toMap());
+              title: title,
+              summary: summary,
+              tags: tags,
+              lastEditDate: DateTime.now(),
+            )
+            .toDocumentSnapshot());
   }
 
   Future<void> completeJournalEntry(
@@ -282,13 +292,16 @@ class StudentRepository {
     if (!([null, ''].contains(title) || [null, ''].contains(summary)) ||
         [[], null].contains(tags)) {
       if (entry!.id == null) {
-        await addJournalEntry(JournalEntry(
-          creationDate: DateTime.now(),
-          lastEditDate: DateTime.now(),
-          title: title,
-          summary: summary,
-          tags: tags,
-        ));
+        await addJournalEntry(
+          JournalEntry(
+            id: Uuid().v4(),
+            creationDate: DateTime.now(),
+            lastEditDate: DateTime.now(),
+            title: title,
+            summary: summary,
+            tags: tags,
+          ),
+        );
       } else {
         await updateJournalEntry(
           entry: entry,
@@ -318,14 +331,16 @@ class StudentRepository {
     var sortedKeys = map.keys.toList()
       ..sort((k1, k2) => map[k2].compareTo(map[k1]));
 
+    var newList = [];
+
     for (int i = 0; i < sortedKeys.length; i++) {
-      if (i >= 3) {
-        sortedKeys.removeAt(i);
+      if (i < 3) {
+        newList.add(sortedKeys[i]);
       }
     }
 
     var sortedMap = Map<String?, int?>.fromIterable(
-      sortedKeys,
+      newList,
       key: (k) => k,
       value: (k) => map[k],
     );
