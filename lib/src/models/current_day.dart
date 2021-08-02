@@ -9,7 +9,7 @@ import 'package:kounslr/src/models/event.dart';
 class CurrentDay {
   String? id;
   String? dayType; // Could be A-Day, B-Day etc.
-  String? markingPeriod;
+  int? markingPeriod;
   DateTime? date;
   DateTime? startingTime; // When the school day starts
   DateTime? endingTime; // When the school day ends
@@ -30,7 +30,7 @@ class CurrentDay {
   CurrentDay copyWith({
     String? id,
     String? dayType,
-    String? markingPeriod,
+    int? markingPeriod,
     DateTime? date,
     DateTime? startingTime,
     DateTime? endingTime,
