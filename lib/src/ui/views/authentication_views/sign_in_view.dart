@@ -137,7 +137,6 @@ class _SignInViewState extends State<SignInView> {
       TextEditingController _passwordController) {
     return CantonPrimaryButton(
       buttonText: 'Sign In',
-      radius: BorderRadius.circular(37),
       containerColor: Theme.of(context).primaryColor,
       textColor: CantonColors.white,
       onPressed: () async {
@@ -163,7 +162,6 @@ class _SignInViewState extends State<SignInView> {
       buttonText: 'Google',
       alignment: MainAxisAlignment.center,
       containerColor: Theme.of(context).canvasColor,
-      radius: BorderRadius.circular(37),
       border: BorderSide(
         color: Theme.of(context).colorScheme.secondary,
         width: 1.7,
