@@ -10,6 +10,7 @@ class Assignment {
   String? classId;
   String? name;
   String? type;
+  int? markingPeriod;
   double? possiblePoints;
   DateTime? creationDate;
   DateTime? dueDate;
@@ -20,6 +21,7 @@ class Assignment {
     this.classId,
     this.name,
     this.type,
+    this.markingPeriod,
     this.possiblePoints,
     this.creationDate,
     this.dueDate,
@@ -31,6 +33,7 @@ class Assignment {
     String? classId,
     String? name,
     String? type,
+    int? markingPeriod,
     double? possiblePoints,
     DateTime? creationDate,
     DateTime? dueDate,
@@ -41,6 +44,7 @@ class Assignment {
       classId: classId ?? this.classId,
       name: name ?? this.name,
       type: type ?? this.type,
+      markingPeriod: markingPeriod ?? this.markingPeriod,
       possiblePoints: possiblePoints ?? this.possiblePoints,
       creationDate: creationDate ?? this.creationDate,
       dueDate: dueDate ?? this.dueDate,
@@ -54,6 +58,7 @@ class Assignment {
       'classId': classId,
       'name': name,
       'type': type,
+      'markingPeriod': markingPeriod,
       'possiblePoints': possiblePoints,
       'creationDate': creationDate?.millisecondsSinceEpoch,
       'dueDate': dueDate?.millisecondsSinceEpoch,
@@ -67,6 +72,7 @@ class Assignment {
       'classId': classId,
       'name': name,
       'type': type,
+      'markingPeriod': markingPeriod,
       'possiblePoints': possiblePoints,
       'creationDate': Timestamp.fromDate(creationDate!),
       'dueDate': Timestamp.fromDate(dueDate!),
@@ -80,6 +86,7 @@ class Assignment {
       classId: map['classId'],
       name: map['name'],
       type: map['type'],
+      markingPeriod: map['markingPeriod'],
       possiblePoints: map['possiblePoints'].toDouble(),
       creationDate: DateTime.fromMillisecondsSinceEpoch(map['creationDate']),
       dueDate: DateTime.fromMillisecondsSinceEpoch(map['dueDate']),
@@ -94,6 +101,7 @@ class Assignment {
       classId: doc['classId'],
       name: doc['name'],
       type: doc['type'],
+      markingPeriod: doc['markingPeriod'],
       possiblePoints: doc['possiblePoints'].toDouble(),
       creationDate: (doc['creationDate'] as Timestamp).toDate(),
       dueDate: (doc['dueDate'] as Timestamp).toDate(),
@@ -109,7 +117,7 @@ class Assignment {
 
   @override
   String toString() {
-    return 'Assignment(id: $id, classId: $classId, name: $name, type: $type, possiblePoints: $possiblePoints, creationDate: $creationDate, dueDate: $dueDate, students: $students)';
+    return 'Assignment(id: $id, classId: $classId, name: $name, type: $type, markingPeriod: $markingPeriod, possiblePoints: $possiblePoints, creationDate: $creationDate, dueDate: $dueDate, students: $students)';
   }
 
   @override
@@ -121,6 +129,7 @@ class Assignment {
         other.classId == classId &&
         other.name == name &&
         other.type == type &&
+        other.markingPeriod == markingPeriod &&
         other.possiblePoints == possiblePoints &&
         other.creationDate == creationDate &&
         other.dueDate == dueDate &&
@@ -133,6 +142,7 @@ class Assignment {
         classId.hashCode ^
         name.hashCode ^
         type.hashCode ^
+        markingPeriod.hashCode ^
         possiblePoints.hashCode ^
         creationDate.hashCode ^
         dueDate.hashCode ^
