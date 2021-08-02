@@ -57,13 +57,7 @@ class _JournalEntryViewState extends State<JournalEntryView> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CantonBackButton(
-              isClear: true,
-              onPressed: () {
-                _completeJournalEntry();
-                Navigator.of(context).pop();
-              },
-            ),
+            CantonBackButton(isClear: true),
             Text(
               DateFormat.yMMMMd().format(
                 DateTime.now(),
@@ -156,7 +150,7 @@ class _JournalEntryViewState extends State<JournalEntryView> {
 
     return CantonTagTextInput(
       initialTags: initTags,
-      maxCharactersPerTag: 10,
+      maxCharactersPerTag: 13,
       maxTags: 3,
       textFieldStyler: TagTextInputStyler(
         cursorColor: Theme.of(context).primaryColor,
