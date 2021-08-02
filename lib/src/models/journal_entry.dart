@@ -49,6 +49,17 @@ class JournalEntry {
     };
   }
 
+  Map<String, dynamic> toDocumentSnapshot() {
+    return {
+      'id': id,
+      'title': title,
+      'summary': summary,
+      'creationDate': Timestamp.fromDate(creationDate!),
+      'lastEditDate': Timestamp.fromDate(lastEditDate!),
+      'tags': tags?.map((x) => x.toMap()).toList(),
+    };
+  }
+
   factory JournalEntry.fromMap(Map<String, dynamic> map) {
     return JournalEntry(
       id: map['id'],
@@ -65,8 +76,8 @@ class JournalEntry {
       id: doc['id'],
       title: doc['title'],
       summary: doc['summary'],
-      creationDate: DateTime.fromMillisecondsSinceEpoch(doc['creationDate']),
-      lastEditDate: DateTime.fromMillisecondsSinceEpoch(doc['lastEditDate']),
+      creationDate: doc['creationDate'].toDate(),
+      lastEditDate: doc['lastEditDate'].toDate(),
       tags: List<Tag>.from(doc['tags']?.map((x) => Tag.fromMap(x))),
     );
   }
