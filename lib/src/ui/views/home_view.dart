@@ -412,6 +412,18 @@ class _HomeViewState extends State<HomeView> {
 
   Widget _classCard(
       Class schoolClass, StaffMember teacher, Block currentBlock) {
+    String _className(String? string) {
+      if (string == null) {
+        return 'Class Name';
+      }
+
+      if (string.length > 21) {
+        return string.substring(0, 21) + '...';
+      }
+
+      return string;
+    }
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -421,7 +433,7 @@ class _HomeViewState extends State<HomeView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  schoolClass.name ?? 'CLASS',
+                  _className(schoolClass.name),
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 const SizedBox(height: 10),
