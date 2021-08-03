@@ -8,16 +8,15 @@ import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/services/repositories/chat_repository.dart';
 import 'package:kounslr/src/services/repositories/studentvue_repository.dart';
 
-class AuthenticationService {
+class AuthenticationRepository {
   final FirebaseAuth _firebaseAuth;
-  AuthenticationService(this._firebaseAuth);
+  AuthenticationRepository(this._firebaseAuth);
 
   final CollectionReference userRef = FirebaseFirestore.instance
-      .collection('customers')
-      .doc('lcps')
-      .collection('schools')
-      .doc('independence')
-      .collection('students');
+      .collection('customers/lcps/schools/independence/students');
+
+  final CollectionReference classesRef = FirebaseFirestore.instance
+      .collection('customers/lcps/schools/independence/classes');
 
   Future<void> _createUserInDatabase(User user) async {
     await userRef.doc(user.uid).set({'id': user.uid, 'email': user.email});
@@ -25,6 +24,33 @@ class AuthenticationService {
 
   Future<void> _createStudentInDatabase(Student student) async {
     await userRef.doc(student.id).update(student.toMap());
+
+    var allClasses = await classesRef.get();
+
+    for (int i = 0; i < allClasses.docs.length; i++) {
+      await classesRef.doc(allClasses.docs[i].id).update({
+        'students': [
+          ...allClasses.docs[i]['students'],
+          student.idOnly().toMap(),
+        ],
+      });
+
+      await userRef
+          .doc('${student.id}/classes/${allClasses.docs[i].id}')
+          .set(student.toStudentInClass().toMap());
+
+      var assignmentsRef =
+          await allClasses.docs[i].reference.collection('assignments').get();
+
+      for (var item in assignmentsRef.docs) {
+        await item.reference.update({
+          'students': [
+            ...item['students'],
+            student.toStudentInAssignment().toMap(),
+          ],
+        });
+      }
+    }
   }
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
@@ -64,8 +90,7 @@ class AuthenticationService {
       final googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) return '';
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final googleAuth = await googleUser.authentication;
 
       final googleCredential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -119,7 +144,7 @@ class AuthenticationService {
 
       if (student.studentId == null) return 'failed';
 
-      _createStudentInDatabase(student);
+      await _createStudentInDatabase(student);
 
       return 'success';
     } catch (e) {
