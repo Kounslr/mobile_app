@@ -1,7 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/staff_member.dart';
+import 'package:kounslr/src/ui/providers/school_blocks_future_provider.dart';
 import 'package:kounslr/src/ui/providers/school_repository_provider.dart';
 import 'package:kounslr/src/ui/providers/student_classes_future_provider.dart';
 import 'package:kounslr/src/ui/styled_components/class_card.dart';
@@ -39,7 +39,8 @@ class ScheduleView extends StatelessWidget {
     return Consumer(
       builder: (context, watch, child) {
         final studentClassesRepo = watch(studentClassesStreamProvider);
-        var futuresAreDone = false;
+        final schoolBlocksRepo = watch(schoolBlocksFutureProvider);
+        var futureIsDone = false;
 
         return studentClassesRepo.when(
           loading: () => Loading(),
@@ -47,7 +48,7 @@ class ScheduleView extends StatelessWidget {
             return SomethingWentWrong();
           },
           data: (classes) {
-            if (classes.length == 0) {
+            if (classes.length <= 0) {
               return Expanded(
                 child: Text(
                   'No Classes',
@@ -58,29 +59,31 @@ class ScheduleView extends StatelessWidget {
               );
             }
 
-            return Expanded(
-              child: ListView.builder(
-                itemCount: classes.length,
-                itemBuilder: (context, index) {
-                  return FutureBuilder<Block>(
-                    future: context
-                        .read(schoolRepositoryProvider)
-                        .getBlockByPeriod(classes[index].block!),
-                    builder: (context, blockSnapshot) {
+            return schoolBlocksRepo.when(
+              loading: () => Loading(),
+              error: (e, s) {
+                return SomethingWentWrong();
+              },
+              data: (blocks) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: blocks.length,
+                    itemBuilder: (context, index) {
                       return FutureBuilder<StaffMember>(
                         future: context
                             .read(schoolRepositoryProvider)
-                            .getTeacherByTeacherId(classes[index].teacherId!),
+                            .getTeacherByTeacherId(
+                              classes[blocks[index].period! - 1].teacherId!,
+                            ),
                         builder: (context, teacherSnapshot) {
-                          futuresAreDone = blockSnapshot.data != null &&
-                              teacherSnapshot.data != null;
-                          if (!futuresAreDone && index == 0) {
+                          futureIsDone = teacherSnapshot.data != null;
+                          if (!futureIsDone && index == 0) {
                             return Loading();
-                          } else if (!futuresAreDone && index != 0) {
+                          } else if (!futureIsDone && index != 0) {
                             return Container();
-                          } else if (futuresAreDone &&
+                          } else if (futureIsDone &&
                               index == 0 &&
-                              classes.length < 1) {
+                              classes.length <= 0) {
                             return Center(
                               child: Text(
                                 'No Classes',
@@ -95,17 +98,18 @@ class ScheduleView extends StatelessWidget {
                               ),
                             );
                           }
+
                           return ClassCard(
-                            schoolClass: classes[index],
-                            block: blockSnapshot.data!,
+                            schoolClass: classes[blocks[index].period! - 1],
+                            block: blocks[index],
                             teacher: teacherSnapshot.data!,
                           );
                         },
                       );
                     },
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             );
           },
         );
