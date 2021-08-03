@@ -208,6 +208,7 @@ class StudentRepository {
       var classesRef = await ref
           .collection('classes')
           .where('students', arrayContains: {'id': uid}).get();
+      var schoolRef = await ref.get();
       ass = [];
 
       for (var item in classesRef.docs) {
@@ -221,7 +222,8 @@ class StudentRepository {
               !item
                   .students![item.students!.indexWhere((element) =>
                       element.id == FirebaseAuth.instance.currentUser!.uid)]
-                  .completed!) {
+                  .completed! &&
+              item.markingPeriod == schoolRef['currentDay']['markingPeriod']) {
             ass!.add(item);
           }
         });
