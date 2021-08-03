@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:kounslr/src/models/assignment.dart';
+import 'package:kounslr/src/models/grade.dart';
 import 'package:kounslr/src/models/student.dart';
 
 class Class {
@@ -13,7 +14,7 @@ class Class {
   String? teacherId;
   int? block;
   int? markingPeriod;
-  List<StudentInClass>? students;
+  List<StudentID>? students;
   List<Assignment>? assignments;
 
   Class({
@@ -34,7 +35,7 @@ class Class {
     String? teacherId,
     int? block,
     int? markingPeriod,
-    List<StudentInClass>? students,
+    List<StudentID>? students,
     List<Assignment>? assignments,
   }) {
     return Class(
@@ -70,8 +71,8 @@ class Class {
       markingPeriod: map['markingPeriod'],
       roomNumber: map['roomNumber'],
       teacherId: map['teacherId'],
-      students: List<StudentInClass>.from(
-          map['students']?.map((x) => StudentInClass.fromMap(x))),
+      students: List<StudentID>.from(
+          map['students']?.map((x) => StudentID.fromMap(x))),
       assignments: List<Assignment>.from(
           map['assignments']?.map((x) => Assignment.fromMap(x))),
     );
@@ -89,8 +90,8 @@ class Class {
       roomNumber: doc['roomNumber'],
       teacherId: doc['teacherId'],
       assignments: assignments,
-      students: List<StudentInClass>.from(
-          doc['students']?.map((x) => StudentInClass.fromMap(x))),
+      students: List<StudentID>.from(
+          doc['students']?.map((x) => StudentID.fromMap(x))),
     );
   }
 
@@ -129,4 +130,56 @@ class Class {
         students.hashCode ^
         assignments.hashCode;
   }
+}
+
+class StudentInClass {
+  List<Grade>? grades;
+
+  StudentInClass({
+    this.grades,
+  });
+
+  StudentInClass copyWith({
+    List<Grade>? grades,
+  }) {
+    return StudentInClass(
+      grades: grades ?? this.grades,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'grades': grades?.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  factory StudentInClass.fromMap(Map<String, dynamic> map) {
+    return StudentInClass(
+      grades: List<Grade>.from(map['grades']?.map((x) => Grade.fromMap(x))),
+    );
+  }
+
+  factory StudentInClass.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return StudentInClass(
+      grades: List<Grade>.from(doc['grades']?.map((x) => Grade.fromMap(x))),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory StudentInClass.fromJson(String source) =>
+      StudentInClass.fromMap(json.decode(source));
+
+  @override
+  String toString() => 'StudentInClass(grades: $grades)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is StudentInClass && listEquals(other.grades, grades);
+  }
+
+  @override
+  int get hashCode => grades.hashCode;
 }
