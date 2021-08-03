@@ -28,7 +28,7 @@ class _ClassCardState extends State<ClassCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.schoolClass.name ?? 'CLASS',
+                  _className(widget.schoolClass.name!),
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 const SizedBox(height: 10),
@@ -71,7 +71,7 @@ class _ClassCardState extends State<ClassCard> {
             ),
             Spacer(),
             Text(
-              _nextClassTime(widget.block.time!),
+              _classTime(widget.block.time!),
               style: Theme.of(context).textTheme.headline6,
             ),
           ],
@@ -80,7 +80,19 @@ class _ClassCardState extends State<ClassCard> {
     );
   }
 
-  String _nextClassTime(DateTime date) {
+  String _classTime(DateTime date) {
     return DateFormat("h:mm a").format(date).toString();
+  }
+
+  String _className(String? string) {
+    if (string == null) {
+      return 'Class Name';
+    }
+
+    if (string.length > 21) {
+      return string.substring(0, 21) + '...';
+    }
+
+    return string;
   }
 }
