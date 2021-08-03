@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-
-import 'package:kounslr/src/models/grade.dart';
+import 'package:kounslr/src/models/class.dart';
 
 class Student {
   String? id;
@@ -30,10 +28,6 @@ class Student {
     this.email,
     this.phone,
     this.photo,
-  });
-
-  Student.id({
-    this.id,
   });
 
   Student copyWith({
@@ -112,6 +106,26 @@ class Student {
     );
   }
 
+  StudentID idOnly() {
+    return StudentID(
+      id: id,
+    );
+  }
+
+  StudentInClass toStudentInClass() {
+    return StudentInClass(
+      grades: [],
+    );
+  }
+
+  StudentInAssignment toStudentInAssignment() {
+    return StudentInAssignment(
+      id: id,
+      completed: false,
+      earnedPoints: 0.0,
+    );
+  }
+
   Map<String, dynamic> toMapId() {
     return {
       'id': id,
@@ -119,7 +133,7 @@ class Student {
   }
 
   factory Student.fromMapId(Map<String, dynamic> map) {
-    return Student.id(
+    return Student(
       id: map['id'],
     );
   }
@@ -168,66 +182,56 @@ class Student {
   }
 }
 
-class StudentInClass {
+class StudentID {
   String? id;
-  List<Grade>? grades;
 
-  StudentInClass({
+  StudentID({
     this.id,
-    this.grades,
   });
 
-  StudentInClass copyWith({
+  StudentID copyWith({
     String? id,
-    List<Grade>? grades,
   }) {
-    return StudentInClass(
+    return StudentID(
       id: id ?? this.id,
-      grades: grades ?? this.grades,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'grades': grades?.map((x) => x.toMap()).toList(),
     };
   }
 
-  factory StudentInClass.fromMap(Map<String, dynamic> map) {
-    return StudentInClass(
+  factory StudentID.fromMap(Map<String, dynamic> map) {
+    return StudentID(
       id: map['id'],
-      grades:
-          List<Grade>.from((map['grades'] ?? [])?.map((x) => Grade.fromMap(x))),
     );
   }
 
-  factory StudentInClass.fromDocumentSnapshot(DocumentSnapshot doc) {
-    return StudentInClass(
+  factory StudentID.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return StudentID(
       id: doc['id'],
-      grades: List<Grade>.from(doc['grades']?.map((x) => Grade.fromMap(x))),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory StudentInClass.fromJson(String source) =>
-      StudentInClass.fromMap(json.decode(source));
+  factory StudentID.fromJson(String source) =>
+      StudentID.fromMap(json.decode(source));
 
   @override
-  String toString() => 'StudentInClass(id: $id, grades: $grades)';
+  String toString() => 'StudentInClass(id: $id)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is StudentInClass &&
-        other.id == id &&
-        listEquals(other.grades, grades);
+    return other is StudentID && other.id == id;
   }
 
   @override
-  int get hashCode => id.hashCode ^ grades.hashCode;
+  int get hashCode => id.hashCode;
 }
 
 class StudentInAssignment {
