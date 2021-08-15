@@ -39,38 +39,37 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
       secondaryActions: <Widget>[
         _changeTagNameAction(context),
       ],
-      child: Card(
-        child: CantonExpansionTile(
-          childrenPadding: const EdgeInsets.all(8.0),
-          iconColor: Theme.of(context).primaryColor,
-          title: Text(
-            widget.tag.name!,
-            style: Theme.of(context).textTheme.headline6,
+      child: Column(
+        children: [
+          Divider(),
+          CantonExpansionTile(
+            childrenPadding: const EdgeInsets.all(8.0),
+            iconColor: Theme.of(context).primaryColor,
+            title: Text(
+              widget.tag.name!,
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            children: children,
           ),
-          children: children,
-        ),
+        ],
       ),
     );
   }
 
-  Widget _changeTagNameAction(
-    BuildContext context,
-  ) {
+  Widget _changeTagNameAction(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 5, bottom: 5, left: 5),
-      child: Material(
-        color: Theme.of(context).colorScheme.secondary,
-        shape: SquircleBorder(
-          radius: BorderRadius.circular(35),
+      color: Theme.of(context).colorScheme.secondary,
+      // shape: SquircleBorder(
+      //   radius: BorderRadius.circular(35),
+      // ),
+      child: SlideAction(
+        child: IconlyIcon(
+          IconlyBold.EditSquare,
+          size: 27,
+          color: Theme.of(context).colorScheme.secondaryVariant,
         ),
-        child: SlideAction(
-          child: IconlyIcon(
-            IconlyBold.EditSquare,
-            size: 27,
-            color: Theme.of(context).colorScheme.secondaryVariant,
-          ),
-          onTap: () => _showTagRenameBottomSheet(),
-        ),
+        onTap: () => _showTagRenameBottomSheet(),
       ),
     );
   }

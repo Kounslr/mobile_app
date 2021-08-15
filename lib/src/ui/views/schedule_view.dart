@@ -13,6 +13,7 @@ class ScheduleView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CantonScaffold(
+      padding: EdgeInsets.zero,
       body: _content(context),
     );
   }
@@ -28,10 +29,13 @@ class ScheduleView extends StatelessWidget {
   }
 
   Widget _header(BuildContext context) {
-    return ViewHeaderTwo(
-      title: 'Schedule',
-      backButton: true,
-      isBackButtonClear: true,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 17),
+      child: ViewHeaderTwo(
+        title: 'Schedule',
+        backButton: true,
+        isBackButtonClear: true,
+      ),
     );
   }
 
@@ -99,10 +103,15 @@ class ScheduleView extends StatelessWidget {
                             );
                           }
 
-                          return ClassCard(
-                            schoolClass: classes[blocks[index].period! - 1],
-                            block: blocks[index],
-                            teacher: teacherSnapshot.data!,
+                          return Column(
+                            children: [
+                              ClassCard(
+                                schoolClass: classes[blocks[index].period! - 1],
+                                block: blocks[index],
+                                teacher: teacherSnapshot.data!,
+                              ),
+                              if (index == blocks.length - 1) Divider(),
+                            ],
                           );
                         },
                       );

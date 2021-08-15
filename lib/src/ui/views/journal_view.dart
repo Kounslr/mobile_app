@@ -128,6 +128,7 @@ class _JournalViewState extends State<JournalView> {
     return GestureDetector(
       onTap: () => CantonMethods.viewTransition(context, view),
       child: Card(
+        margin: EdgeInsets.zero,
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(

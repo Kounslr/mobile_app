@@ -58,6 +58,9 @@ class _CurrentViewState extends State<CurrentView> {
     }
 
     return CantonScaffold(
+      padding: _currentIndex == 0
+          ? EdgeInsets.zero
+          : const EdgeInsets.only(top: 17, left: 17, right: 17),
       bottomNavBar:
           studentHasData ? BottomNavBar(_currentIndex, onTabTapped) : null,
       body: studentHasData ? _views[_currentIndex] : NoStudentDataView(),

@@ -16,6 +16,7 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   @override
   Widget build(BuildContext context) {
     return CantonScaffold(
+      padding: const EdgeInsets.all(0),
       body: _content(context),
     );
   }
@@ -30,9 +31,12 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   }
 
   Widget _header() {
-    return ViewHeaderTwo(
-      title: 'Journal Entries',
-      backButton: true,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 17),
+      child: ViewHeaderTwo(
+        title: 'Journal Entries',
+        backButton: true,
+      ),
     );
   }
 
@@ -52,16 +56,22 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
             });
             _listOfEntries(entries);
             return Expanded(
-              child: _tagList.length != 0
+              child: _tagList.length > 0
                   ? ListView.builder(
                       itemCount: _tagList.length,
                       itemBuilder: (context, index) {
-                        return JournalEntryTagCard(
-                            _listOfEntries(entries)
-                                .where((element) =>
-                                    element.tags!.contains(_tagList[index]))
-                                .toList(),
-                            _tagList[index]);
+                        return Column(
+                          children: [
+                            JournalEntryTagCard(
+                              _listOfEntries(entries)
+                                  .where((element) =>
+                                      element.tags!.contains(_tagList[index]))
+                                  .toList(),
+                              _tagList[index],
+                            ),
+                            if (index == _tagList.length - 1) Divider(),
+                          ],
+                        );
                       },
                     )
                   : Center(

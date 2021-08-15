@@ -158,52 +158,54 @@ class _HomeViewState extends State<HomeView> {
       const SizedBox(height: 10),
       _dateCard(context, school),
       _nextClassCard(context, nextClass, nextBlock, teacher),
-
-      // ListView controls
     ];
 
     if (assignments.length > 0) {
       children.add(
-        Row(
-          children: [
-            Text(
-              'Upcoming Assignments',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            Spacer(),
-            TextButton(
-              style: ButtonStyle(
-                alignment: Alignment.centerRight,
-                animationDuration: Duration.zero,
-                elevation: MaterialStateProperty.all<double>(0),
-                overlayColor: MaterialStateProperty.all<Color>(
-                  CantonColors.transparent,
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 17),
+          child: Row(
+            children: [
+              Text(
+                'Upcoming Assignments',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Spacer(),
+              TextButton(
+                style: ButtonStyle(
+                  alignment: Alignment.centerRight,
+                  animationDuration: Duration.zero,
+                  elevation: MaterialStateProperty.all<double>(0),
+                  overlayColor: MaterialStateProperty.all<Color>(
+                    CantonColors.transparent,
+                  ),
+                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                    EdgeInsets.zero,
+                  ),
                 ),
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                  EdgeInsets.zero,
+                child: Text(
+                  'View All',
+                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).primaryColor,
+                      ),
                 ),
+                onPressed: () => CantonMethods.viewTransition(
+                    context, UpcomingAssignmentView()),
               ),
-              child: Text(
-                'View All',
-                style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: Theme.of(context).primaryColor,
-                    ),
+              CantonActionButton(
+                icon: IconlyIcon(
+                  IconlyLine.ArrowRight2,
+                  color: Theme.of(context).primaryColor,
+                ),
+                onPressed: () => CantonMethods.viewTransition(
+                    context, UpcomingAssignmentView()),
               ),
-              onPressed: () => CantonMethods.viewTransition(
-                  context, UpcomingAssignmentView()),
-            ),
-            CantonActionButton(
-              icon: IconlyIcon(
-                IconlyBold.ArrowRight2,
-                color: Theme.of(context).primaryColor,
-              ),
-              onPressed: () => CantonMethods.viewTransition(
-                  context, UpcomingAssignmentView()),
-            ),
-          ],
+            ],
+          ),
         ),
       );
+
       for (var i = 0;
           i < ((assignments.length < 7) ? assignments.length : 7);
           i++) {
@@ -216,6 +218,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         );
       }
+      children.add(Divider());
     } else {
       children.add(
         Padding(
@@ -236,27 +239,29 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _header(BuildContext context, Student student) {
-    return Row(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hey,',
-              style: Theme.of(context).textTheme.headline6!.copyWith(
-                    color: Theme.of(context).colorScheme.secondaryVariant,
-                  ),
-            ),
-            Text(
-              _studentNameInHeader(student),
-              style: Theme.of(context).textTheme.headline2!.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-            ),
-          ],
-        ),
-        Spacer(),
-        CantonHeaderButton(
+    return Container(
+      padding: const EdgeInsets.only(left: 17, right: 17, top: 17),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hey,',
+                style: Theme.of(context).textTheme.headline6!.copyWith(
+                      color: Theme.of(context).colorScheme.secondaryVariant,
+                    ),
+              ),
+              Text(
+                _studentNameInHeader(student),
+                style: Theme.of(context).textTheme.headline2!.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+            ],
+          ),
+          Spacer(),
+          CantonHeaderButton(
             icon: IconlyIcon(
               IconlyBold.Profile,
               color: Theme.of(context).colorScheme.secondaryVariant,
@@ -266,70 +271,78 @@ class _HomeViewState extends State<HomeView> {
                 context,
                 ProfileView(student),
               );
-            }),
-      ],
+            },
+          ),
+        ],
+      ),
     );
   }
 
   Widget _dateCard(BuildContext context, School school) {
-    return Row(
-      children: [
-        ![6, 7].contains(DateTime.now().weekday)
-            ? Container(
-                padding:
-                    EdgeInsets.symmetric(horizontal: 7.5 * 2.5, vertical: 7.5),
-                decoration: ShapeDecoration(
-                  color: Theme.of(context).primaryColor,
-                  shape: SquircleBorder(radius: BorderRadius.circular(37)),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 17),
+      child: Row(
+        children: [
+          ![6, 7].contains(DateTime.now().weekday)
+              ? Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 7.5 * 2.5, vertical: 7.5),
+                  decoration: ShapeDecoration(
+                    color: Theme.of(context).primaryColor,
+                    shape: SquircleBorder(radius: BorderRadius.circular(37)),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        school.currentDay?.dayType ?? 'M',
+                        style: Theme.of(context).textTheme.headline4!.copyWith(
+                              color: CantonColors.white,
+                            ),
+                      ),
+                      Text(
+                        'Day',
+                        style: Theme.of(context).textTheme.caption!.copyWith(
+                              color: CantonColors.white,
+                            ),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(
+                  padding: const EdgeInsets.symmetric(vertical: 7.5),
                 ),
-                child: Column(
-                  children: [
-                    Text(
-                      school.currentDay?.dayType ?? 'M',
-                      style: Theme.of(context).textTheme.headline4!.copyWith(
-                            color: CantonColors.white,
-                          ),
-                    ),
-                    Text(
-                      'Day',
-                      style: Theme.of(context).textTheme.caption!.copyWith(
-                            color: CantonColors.white,
-                          ),
-                    ),
-                  ],
-                ),
-              )
-            : Container(
-                padding: const EdgeInsets.symmetric(vertical: 7.5),
-              ),
-        ![6, 7].contains(DateTime.now().weekday)
-            ? SizedBox(width: 15)
-            : Container(),
-        Text(
-          DateFormat.yMMMMEEEEd().format(
-            DateTime.now(),
+          ![6, 7].contains(DateTime.now().weekday)
+              ? SizedBox(width: 15)
+              : Container(),
+          Text(
+            DateFormat.yMMMMEEEEd().format(
+              DateTime.now(),
+            ),
+            style: Theme.of(context).textTheme.headline6,
           ),
-          style: Theme.of(context).textTheme.headline6,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _nextClassCard(BuildContext context, Class schoolClass, Block block,
       StaffMember teacher) {
     if ([DateTime.saturday, DateTime.sunday].contains(DateTime.now().weekday)) {
-      return Card(
-        margin: const EdgeInsets.only(top: 15),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Enjoy your weekend!',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ],
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 17),
+        child: Card(
+          margin: const EdgeInsets.only(top: 15),
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Enjoy your weekend!',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+              ],
+            ),
           ),
         ),
       );

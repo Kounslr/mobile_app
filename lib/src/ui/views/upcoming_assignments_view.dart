@@ -13,6 +13,7 @@ class UpcomingAssignmentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CantonScaffold(
+      padding: const EdgeInsets.all(0),
       body: _content(context),
     );
   }
@@ -39,7 +40,6 @@ class UpcomingAssignmentView extends StatelessWidget {
                 return Column(
                   children: [
                     _header(context),
-                    SizedBox(height: 10),
                     _body(context, classes, assignments),
                   ],
                 );
@@ -52,10 +52,13 @@ class UpcomingAssignmentView extends StatelessWidget {
   }
 
   Widget _header(BuildContext context) {
-    return ViewHeaderTwo(
-      title: 'Upcoming Assignments',
-      backButton: true,
-      isBackButtonClear: true,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 17),
+      child: ViewHeaderTwo(
+        title: 'Upcoming Assignments',
+        backButton: true,
+        isBackButtonClear: true,
+      ),
     );
   }
 
@@ -77,11 +80,17 @@ class UpcomingAssignmentView extends StatelessWidget {
         itemCount: assignments.length,
         itemBuilder: (context, index) {
           assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
-          return AssignmentCard(
-            classes
-                .where((element) => element.id == assignments[index].classId)
-                .toList()[0],
-            assignments[index],
+          return Column(
+            children: [
+              AssignmentCard(
+                classes
+                    .where(
+                        (element) => element.id == assignments[index].classId)
+                    .toList()[0],
+                assignments[index],
+              ),
+              if (index == assignments.length - 1) Divider(),
+            ],
           );
         },
       ),
