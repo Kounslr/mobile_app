@@ -24,40 +24,91 @@ class _BottomNavBarState extends State<BottomNavBar> {
       child: BottomNavigationBar(
         currentIndex: widget.currentIndex,
         onTap: widget.onTabTapped,
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
+        selectedFontSize: 1,
+        unselectedFontSize: 1,
         type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        showSelectedLabels: true,
         selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Theme.of(context).colorScheme.secondaryVariant,
         items: [
           BottomNavigationBarItem(
+            label: '',
             tooltip: '',
-            label: 'Home',
-            icon: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: IconlyIcon(
-                IconlyBold.Home,
-                size: 24,
-                color: widget.currentIndex == 0
-                    ? Theme.of(context).primaryColor
-                    : Theme.of(context).colorScheme.secondaryVariant,
-              ),
+            icon: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: IconlyIcon(
+                    IconlyBold.Home,
+                    size: 24,
+                    color: widget.currentIndex == 0
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).colorScheme.secondaryVariant,
+                  ),
+                ),
+                Text(
+                  'Home',
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        color: widget.currentIndex == 0
+                            ? Theme.of(context).primaryColor
+                            : Theme.of(context).colorScheme.secondaryVariant,
+                      ),
+                ),
+              ],
             ),
           ),
           BottomNavigationBarItem(
+            label: '',
             tooltip: '',
-            label: 'Journal',
-            icon: Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: IconlyIcon(
-                IconlyBold.Edit,
-                size: 24,
-                color: widget.currentIndex == 1
-                    ? Theme.of(context).primaryColor
-                    : Theme.of(context).colorScheme.secondaryVariant,
-              ),
+            icon: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: IconlyIcon(
+                    IconlyBold.Chat,
+                    size: 24,
+                    color: widget.currentIndex == 1
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).colorScheme.secondaryVariant,
+                  ),
+                ),
+                Text(
+                  'Chat',
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        color: widget.currentIndex == 1
+                            ? Theme.of(context).primaryColor
+                            : Theme.of(context).colorScheme.secondaryVariant,
+                      ),
+                ),
+              ],
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: '',
+            tooltip: '',
+            icon: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: IconlyIcon(
+                    IconlyBold.Edit,
+                    size: 24,
+                    color: widget.currentIndex == 2
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).colorScheme.secondaryVariant,
+                  ),
+                ),
+                Text(
+                  'Journal',
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        color: widget.currentIndex == 2
+                            ? Theme.of(context).primaryColor
+                            : Theme.of(context).colorScheme.secondaryVariant,
+                      ),
+                ),
+              ],
             ),
           ),
         ],
