@@ -22,16 +22,10 @@ class ProfileView extends ConsumerWidget {
 
   Widget _content(BuildContext context, ScopedReader watch) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // mainAxisAlignment: MainAxisAlignment.se,
       children: [
         _header(context),
         _body(context, student),
-
-        // Invisible widget so UI will format properly
-        CantonHeaderButton(
-          onPressed: () {},
-          backgroundColor: CantonColors.transparent,
-        ),
       ],
     );
   }
@@ -51,20 +45,17 @@ class ProfileView extends ConsumerWidget {
         return schoolRepo.when(
           loading: () => Loading(),
           error: (e, s) {
-            if (e is FirebaseException) {}
             return SomethingWentWrong();
           },
           data: (school) {
             return Column(
               children: [
                 _profileCard(context, student, school),
-                SizedBox(height: 10),
+                SizedBox(height: 30),
                 _studentIDCard(context, student, school),
-                SizedBox(height: 10),
                 _studentScheduleCard(context),
-                SizedBox(height: 10),
                 _studentUpcomingAssignmentsCard(context),
-                SizedBox(height: 70),
+                SizedBox(height: 30),
                 GestureDetector(
                   onTap: () {
                     context.read(authenticationServiceProvider).signOut();
@@ -130,6 +121,16 @@ class ProfileView extends ConsumerWidget {
             context, StudentIDCardView(student, school));
       },
       child: Card(
+        margin: EdgeInsets.zero,
+        shape: SquircleBorder(
+          radius: BorderRadius.vertical(
+            top: Radius.circular(37),
+          ),
+          side: BorderSide(
+            width: 1.5,
+            color: Theme.of(context).colorScheme.onSecondary,
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(
@@ -156,6 +157,17 @@ class ProfileView extends ConsumerWidget {
         CantonMethods.viewTransition(context, ScheduleView());
       },
       child: Card(
+        margin: EdgeInsets.zero,
+        shape: Border(
+          left: BorderSide(
+            width: 1.5,
+            color: Theme.of(context).colorScheme.onSecondary,
+          ),
+          right: BorderSide(
+            width: 1.5,
+            color: Theme.of(context).colorScheme.onSecondary,
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Row(
@@ -182,7 +194,17 @@ class ProfileView extends ConsumerWidget {
         CantonMethods.viewTransition(context, UpcomingAssignmentView());
       },
       child: Card(
-        child: Padding(
+        margin: EdgeInsets.zero,
+        shape: SquircleBorder(
+          radius: BorderRadius.vertical(
+            bottom: Radius.circular(37),
+          ),
+          side: BorderSide(
+            width: 1.5,
+            color: Theme.of(context).colorScheme.onSecondary,
+          ),
+        ),
+        child: Container(
           padding: const EdgeInsets.all(15),
           child: Row(
             children: [
