@@ -34,8 +34,8 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: c69e5eeb61764155ef71ddb379251cf071e22e1d
-      url: "git://github.com/31Carlton7/canton_design_system.git"
+      resolved-ref: "1c0790359116163d8a5184630436615bc96e5d12"
+      url: "https://github.com/31Carlton7/canton_design_system.git"
     source: git
     version: "0.0.1"
   characters:
