@@ -1,4 +1,5 @@
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr/src/ui/views/add_users_to_chat_view.dart';
 
 class ChatView extends StatefulWidget {
   const ChatView();
@@ -31,6 +32,9 @@ class _ChatViewState extends State<ChatView> {
             color: Theme.of(context).primaryColor,
             size: 27,
           ),
+          onPressed: () {
+            CantonMethods.viewTransition(context, AddUsersToChatView());
+          },
         ),
       ),
     );
