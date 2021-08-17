@@ -1,5 +1,4 @@
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/student.dart';
@@ -22,7 +21,6 @@ class ProfileView extends ConsumerWidget {
 
   Widget _content(BuildContext context, ScopedReader watch) {
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.se,
       children: [
         _header(context),
         _body(context, student),
