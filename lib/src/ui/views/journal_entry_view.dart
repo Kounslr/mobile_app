@@ -62,28 +62,19 @@ class _JournalEntryViewState extends State<JournalEntryView> {
               DateFormat.yMMMMd().format(
                 DateTime.now(),
               ),
-              style: Theme.of(context).textTheme.headline5!.copyWith(
-                    color: Theme.of(context).primaryColor,
-                  ),
+              style: Theme.of(context).textTheme.headline5,
             ),
-            Material(
-              color: Theme.of(context).primaryColor,
-              shape: SquircleBorder(
-                radius: BorderRadius.circular(30),
-              ),
-              child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    CantonColors.transparent,
-                  ),
-                  alignment: Alignment.center,
-                  animationDuration: Duration.zero,
-                  elevation: MaterialStateProperty.all<double>(0),
-                  overlayColor: MaterialStateProperty.all<Color>(
-                    CantonColors.transparent,
-                  ),
-                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                    EdgeInsets.zero,
+            GestureDetector(
+              onTap: () {
+                _completeJournalEntry();
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: ShapeDecoration(
+                  color: Theme.of(context).primaryColor,
+                  shape: SquircleBorder(
+                    radius: BorderRadius.circular(30),
                   ),
                 ),
                 child: Text(
@@ -91,10 +82,6 @@ class _JournalEntryViewState extends State<JournalEntryView> {
                   style: Theme.of(context).textTheme.headline6!.copyWith(
                       fontWeight: FontWeight.w500, color: CantonColors.white),
                 ),
-                onPressed: () {
-                  _completeJournalEntry();
-                  Navigator.of(context).pop();
-                },
               ),
             ),
           ],
