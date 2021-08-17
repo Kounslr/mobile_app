@@ -347,78 +347,88 @@ class _HomeViewState extends State<HomeView> {
         ),
       );
     } else if ((schoolClass.id == 'done') || (block.period == 0)) {
-      return Card(
-        margin: const EdgeInsets.only(top: 12),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'No more classes for today! 😃',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ],
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 17),
+        child: Card(
+          margin: const EdgeInsets.only(top: 12),
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'No more classes for today! 😃',
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+              ],
+            ),
           ),
         ),
       );
     } else if (schoolClass.id == null) {
-      return Card(
-        margin: const EdgeInsets.only(top: 15),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Sorry! We couldn\'t figure out your next class',
-                  style: Theme.of(context).textTheme.headline6),
-            ],
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 17),
+        child: Card(
+          margin: const EdgeInsets.only(top: 15),
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Sorry! We couldn\'t figure out your next class',
+                    style: Theme.of(context).textTheme.headline6),
+              ],
+            ),
           ),
         ),
       );
     } else {
-      return Column(
-        children: [
-          Row(
-            children: [
-              Text('Next Class', style: Theme.of(context).textTheme.headline6),
-              const Spacer(),
-              TextButton(
-                style: ButtonStyle(
-                  alignment: Alignment.centerRight,
-                  animationDuration: Duration.zero,
-                  elevation: MaterialStateProperty.all<double>(0),
-                  overlayColor: MaterialStateProperty.all<Color>(
-                    CantonColors.transparent,
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 17),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text('Next Class',
+                    style: Theme.of(context).textTheme.headline6),
+                const Spacer(),
+                TextButton(
+                  style: ButtonStyle(
+                    alignment: Alignment.centerRight,
+                    animationDuration: Duration.zero,
+                    elevation: MaterialStateProperty.all<double>(0),
+                    overlayColor: MaterialStateProperty.all<Color>(
+                      CantonColors.transparent,
+                    ),
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                      EdgeInsets.zero,
+                    ),
                   ),
-                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                    EdgeInsets.zero,
+                  child: Text(
+                    'View Full Schedule',
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).primaryColor,
+                        ),
                   ),
+                  onPressed: () {
+                    CantonMethods.viewTransition(context, ScheduleView());
+                  },
                 ),
-                child: Text(
-                  'View Full Schedule',
-                  style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                CantonActionButton(
+                  icon: IconlyIcon(
+                    IconlyBold.ArrowRight2,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () {
+                    CantonMethods.viewTransition(context, ScheduleView());
+                  },
                 ),
-                onPressed: () {
-                  CantonMethods.viewTransition(context, ScheduleView());
-                },
-              ),
-              CantonActionButton(
-                icon: IconlyIcon(
-                  IconlyBold.ArrowRight2,
-                  color: Theme.of(context).primaryColor,
-                ),
-                onPressed: () {
-                  CantonMethods.viewTransition(context, ScheduleView());
-                },
-              ),
-            ],
-          ),
-          _classCard(schoolClass, teacher, block)
-        ],
+              ],
+            ),
+            _classCard(schoolClass, teacher, block)
+          ],
+        ),
       );
     }
   }
