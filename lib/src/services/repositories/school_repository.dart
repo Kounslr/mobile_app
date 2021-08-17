@@ -4,6 +4,7 @@ import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/staff_member.dart';
+import 'package:kounslr/src/models/student.dart';
 
 class SchoolRepository {
   var ref = FirebaseFirestore.instance
@@ -16,6 +17,20 @@ class SchoolRepository {
       var school = School.fromDocumentSnapshot(_school);
 
       return school;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Student>> get allStudents async {
+    try {
+      var _students = await ref.collection('students').get();
+      List<Student> students = [];
+      for (var item in _students.docs) {
+        students.add(Student.fromDocumentSnapshot(item));
+      }
+
+      return students;
     } catch (e) {
       rethrow;
     }
