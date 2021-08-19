@@ -35,7 +35,7 @@ packages:
       path: "."
       ref: master
       resolved-ref: "8d66869b1079535236631663be97eee2a8071a7a"
-      url: "https://github.com/Kounslr/design_system"
+      url: "https://github.com/31Carlton7/canton_design_system"
     source: git
     version: "0.0.1"
   characters:
