@@ -15,11 +15,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).canvasColor,
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.secondaryVariant,
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).colorScheme.secondary,
+            width: 0.75,
           ),
-        ],
+        ),
       ),
       child: BottomNavigationBar(
         currentIndex: widget.currentIndex,
