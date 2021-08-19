@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kounslr/src/config/bottom_navigation_bar.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
-import 'package:kounslr/src/ui/views/chat_view.dart';
-import 'package:kounslr/src/ui/views/home_view.dart';
-import 'package:kounslr/src/ui/views/journal_view.dart';
+import 'package:kounslr/src/ui/views/chat_view/chat_list_view.dart';
+import 'package:kounslr/src/ui/views/home_view/home_view.dart';
+import 'package:kounslr/src/ui/views/journal_view/journal_view.dart';
 import 'package:kounslr/src/ui/views/no_student_data_view.dart';
 
 class CurrentView extends StatefulWidget {
@@ -41,7 +41,7 @@ class _CurrentViewState extends State<CurrentView> {
   int _currentIndex = 0;
   final List<Widget> _views = [
     HomeView(),
-    ChatView(),
+    ChatListView(),
     JournalView(),
   ];
 
@@ -60,7 +60,7 @@ class _CurrentViewState extends State<CurrentView> {
     }
 
     return CantonScaffold(
-      padding: _currentIndex == 0
+      padding: ([0, 1].contains(_currentIndex))
           ? EdgeInsets.zero
           : const EdgeInsets.only(top: 17, left: 17, right: 17),
       bottomNavBar:
