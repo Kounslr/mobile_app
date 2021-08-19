@@ -22,6 +22,17 @@ class SchoolRepository {
     }
   }
 
+  Future<Student> getStudent(String id) async {
+    try {
+      var _student = await ref.collection('students').doc(id).get();
+      var student = Student.fromDocumentSnapshot(_student);
+
+      return student;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<List<Student>> get allStudents async {
     try {
       var _students = await ref.collection('students').get();
