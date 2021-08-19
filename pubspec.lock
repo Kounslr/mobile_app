@@ -34,7 +34,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "03d7ab628b813a960fe1debaef17aba99d034d01"
+      resolved-ref: "8d66869b1079535236631663be97eee2a8071a7a"
       url: "https://github.com/Kounslr/design_system"
     source: git
     version: "0.0.1"
