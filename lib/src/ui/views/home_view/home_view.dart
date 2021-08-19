@@ -2,7 +2,6 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_performance/firebase_performance.dart';
-import 'package:intl/intl.dart';
 
 import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/models/block.dart';
@@ -19,8 +18,8 @@ import 'package:kounslr/src/ui/providers/student_classes_future_provider.dart';
 import 'package:kounslr/src/ui/providers/student_stream_provider.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
-import 'package:kounslr/src/ui/views/profile_view.dart';
-import 'package:kounslr/src/ui/views/schedule_view.dart';
+import 'package:kounslr/src/ui/views/home_view/components/home_view_components.dart';
+import 'package:kounslr/src/ui/views/profile_view/profile_view.dart';
 import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
 
 class HomeView extends StatefulWidget {
@@ -156,8 +155,8 @@ class _HomeViewState extends State<HomeView> {
     List<Widget> children = [
       _header(context, student),
       const SizedBox(height: 10),
-      _dateCard(context, school),
-      _nextClassCard(context, nextClass, nextBlock, teacher),
+      DateCard(school: school),
+      NextClassCard(schoolClass: nextClass, block: nextBlock, teacher: teacher),
     ];
 
     if (assignments.length > 0) {
@@ -276,251 +275,6 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
     );
-  }
-
-  Widget _dateCard(BuildContext context, School school) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 17),
-      child: Row(
-        children: [
-          ![6, 7].contains(DateTime.now().weekday)
-              ? Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 7.5 * 2.5, vertical: 7.5),
-                  decoration: ShapeDecoration(
-                    color: Theme.of(context).primaryColor,
-                    shape: SquircleBorder(radius: BorderRadius.circular(37)),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        school.currentDay?.dayType ?? 'M',
-                        style: Theme.of(context).textTheme.headline4!.copyWith(
-                              color: CantonColors.white,
-                            ),
-                      ),
-                      Text(
-                        'Day',
-                        style: Theme.of(context).textTheme.caption!.copyWith(
-                              color: CantonColors.white,
-                            ),
-                      ),
-                    ],
-                  ),
-                )
-              : Container(
-                  padding: const EdgeInsets.symmetric(vertical: 7.5),
-                ),
-          ![6, 7].contains(DateTime.now().weekday)
-              ? SizedBox(width: 15)
-              : Container(),
-          Text(
-            DateFormat.yMMMMEEEEd().format(
-              DateTime.now(),
-            ),
-            style: Theme.of(context).textTheme.headline6,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _nextClassCard(BuildContext context, Class schoolClass, Block block,
-      StaffMember teacher) {
-    if ([DateTime.saturday, DateTime.sunday].contains(DateTime.now().weekday)) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 17),
-        child: Card(
-          margin: const EdgeInsets.only(top: 15),
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Enjoy your weekend!',
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    } else if ((schoolClass.id == 'done') || (block.period == 0)) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 17),
-        child: Card(
-          margin: const EdgeInsets.only(top: 12),
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'No more classes for today! 😃',
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    } else if (schoolClass.id == null) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 17),
-        child: Card(
-          margin: const EdgeInsets.only(top: 15),
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Sorry! We couldn\'t figure out your next class',
-                    style: Theme.of(context).textTheme.headline6),
-              ],
-            ),
-          ),
-        ),
-      );
-    } else {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 17),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text('Next Class',
-                    style: Theme.of(context).textTheme.headline6),
-                const Spacer(),
-                TextButton(
-                  style: ButtonStyle(
-                    alignment: Alignment.centerRight,
-                    animationDuration: Duration.zero,
-                    elevation: MaterialStateProperty.all<double>(0),
-                    overlayColor: MaterialStateProperty.all<Color>(
-                      CantonColors.transparent,
-                    ),
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      EdgeInsets.zero,
-                    ),
-                  ),
-                  child: Text(
-                    'View Full Schedule',
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                  ),
-                  onPressed: () {
-                    CantonMethods.viewTransition(context, ScheduleView());
-                  },
-                ),
-                CantonActionButton(
-                  icon: IconlyIcon(
-                    IconlyBold.ArrowRight2,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  onPressed: () {
-                    CantonMethods.viewTransition(context, ScheduleView());
-                  },
-                ),
-              ],
-            ),
-            _classCard(schoolClass, teacher, block)
-          ],
-        ),
-      );
-    }
-  }
-
-  Widget _classCard(
-      Class schoolClass, StaffMember teacher, Block currentBlock) {
-    String _className(String? string) {
-      if (string == null) {
-        return 'Class Name';
-      }
-
-      if (string.length > 21) {
-        return string.substring(0, 21) + '...';
-      }
-
-      return string;
-    }
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _className(schoolClass.name),
-                  style: Theme.of(context).textTheme.headline4,
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    IconlyIcon(
-                      IconlyBold.Location,
-                      color: Theme.of(context).colorScheme.secondaryVariant,
-                      size: 17,
-                    ),
-                    const SizedBox(width: 7),
-                    Text(
-                      schoolClass.roomNumber ?? 'LOCATION',
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.secondaryVariant,
-                          ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    IconlyIcon(
-                      IconlyBold.Profile,
-                      color: Theme.of(context).colorScheme.secondaryVariant,
-                      size: 17,
-                    ),
-                    const SizedBox(width: 7),
-                    Text(
-                      _teacherName(teacher),
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.secondaryVariant,
-                          ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Spacer(),
-            Text(
-              _nextClassTime(currentBlock.time!.toLocal()),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  ?.copyWith(fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _teacherName(StaffMember teacher) {
-    String string = teacher.name!.substring(teacher.name!.indexOf(' '));
-    if (teacher.gender == 'Male') {
-      return 'Mr.' + string;
-    }
-    return 'Ms.' + string;
-  }
-
-  String _nextClassTime(DateTime date) {
-    return DateFormat("h:mm a").format(date).toString();
   }
 
   String _studentNameInHeader(Student student) {

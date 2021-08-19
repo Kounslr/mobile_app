@@ -6,7 +6,7 @@ import 'package:kounslr/src/ui/providers/authentication_providers/authentication
 import 'package:kounslr/src/ui/providers/school_future_provider.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/schedule_view.dart';
-import 'package:kounslr/src/ui/views/student_id_card_view.dart';
+import 'package:kounslr/src/ui/views/profile_view/student_id_card_view.dart';
 import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
 
 class ProfileView extends ConsumerWidget {
