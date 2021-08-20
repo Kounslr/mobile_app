@@ -20,7 +20,7 @@ class TagTextField extends StatelessWidget {
       textFieldStyler: TagTextInputStyler(
         cursorColor: Theme.of(context).primaryColor,
         hintText: 'Tags',
-        textFieldFilledColor: Theme.of(context).colorScheme.onSecondary,
+        // textFieldFilledColor: Theme.of(context).colorScheme.onSecondary,
         textFieldFilled: true,
         textFieldEnabledBorder: SquircleInputBorder(
           radius: BorderRadius.all(Radius.circular(35)),
