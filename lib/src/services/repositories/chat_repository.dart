@@ -1,11 +1,9 @@
-import 'dart:convert';
-
+import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:kounslr/src/models/room.dart';
+import 'package:uuid/uuid.dart';
 
 /// Provides access to Firebase chat data. Singleton, use
 /// FirebaseChatCore.instance to aceess methods.
@@ -33,7 +31,7 @@ class FirebaseChatCore {
   /// added to the group. [name] is required and will be used as
   /// a group name. Add an optional [imageUrl] that will be a group avatar
   /// and [metadata] for any additional custom data.
-  Future<types.Room> createGroupRoom({
+  Future<Room> createGroupRoom({
     String? imageUrl,
     Map<String, dynamic>? metadata,
     required String name,
@@ -47,7 +45,7 @@ class FirebaseChatCore {
   }) async {
     if (firebaseUser == null) return Future.error('User does not exist');
 
-    final currentUser = await fetchUser(firebaseUser!.uid);
+    final currentUser = await fetchStudent(firebaseUser!.uid);
     final roomUsers = [currentUser, ...users];
 
     final room = await ref.collection('chat_rooms').add({
@@ -67,7 +65,7 @@ class FirebaseChatCore {
       ),
     });
 
-    return types.Room(
+    return Room(
       id: room.id,
       imageUrl: imageUrl,
       metadata: metadata,
@@ -79,15 +77,14 @@ class FirebaseChatCore {
 
   /// Creates a direct chat for 2 people. Add [metadata] for any additional
   /// custom data.
-  Future<types.Room> createRoom(
+  Future<Room> createRoom(
     types.User otherUser, {
-    Map<String, dynamic>? metadata,
 
     /// Could be classId or clubId
-    required String groupType,
+    String? groupType,
 
     /// Class or Club
-    required String id,
+    String? groupId,
   }) async {
     if (firebaseUser == null) return Future.error('User does not exist');
 
@@ -109,15 +106,15 @@ class FirebaseChatCore {
     } catch (e) {
       // Do nothing if room does not exist
       // Create a new room instead
+      DoNothingAction();
     }
 
-    final currentUser = await fetchUser(firebaseUser!.uid);
+    final currentUser = await fetchStudent(firebaseUser!.uid);
     final users = [currentUser, otherUser];
 
     final room = await ref.collection('chat_rooms').add({
       'createdAt': FieldValue.serverTimestamp(),
       'imageUrl': null,
-      'metadata': metadata,
       'name': null,
       'type': types.RoomType.direct.toShortString(),
       'updatedAt': FieldValue.serverTimestamp(),
@@ -125,9 +122,8 @@ class FirebaseChatCore {
       'userRoles': null,
     });
 
-    return types.Room(
+    return Room(
       id: room.id,
-      metadata: metadata,
       type: types.RoomType.direct,
       users: users,
     );
@@ -152,8 +148,8 @@ class FirebaseChatCore {
   }
 
   /// Returns a stream of messages from Firebase for a given room
-  Stream<List<types.Message>> messages(types.Room room,
-      {required String groupType, required String id}) {
+  Stream<List<types.Message>> messages(Room room,
+      {String? groupType, String? id}) {
     return ref
         .collection('chat_rooms/${room.id}/messages')
         .orderBy('createdAt', descending: true)
@@ -186,7 +182,7 @@ class FirebaseChatCore {
   }
 
   /// Returns a stream of changes in a room from Firebase
-  Stream<types.Room> room(String roomId) {
+  Stream<Room> room(String roomId) {
     if (firebaseUser == null) return const Stream.empty();
 
     return ref
@@ -206,7 +202,7 @@ class FirebaseChatCore {
   /// 3) Create an Index (Firestore Database -> Indexes tab) where collection ID
   /// is `rooms`, field indexed are `userIds` (type Arrays) and `updatedAt`
   /// (type Descending), query scope is `Collection`
-  Stream<List<types.Room>> rooms({bool orderByUpdatedAt = false}) {
+  Stream<List<Room>> rooms({bool orderByUpdatedAt = false}) {
     if (firebaseUser == null) return const Stream.empty();
 
     final collection = orderByUpdatedAt
@@ -228,6 +224,8 @@ class FirebaseChatCore {
   /// does nothing.
   void sendMessage(dynamic partialMessage, String roomId) async {
     if (firebaseUser == null) return;
+
+    final messageId = Uuid().v4();
 
     types.Message? message;
 
@@ -258,7 +256,10 @@ class FirebaseChatCore {
       messageMap['createdAt'] = FieldValue.serverTimestamp();
       messageMap['updatedAt'] = FieldValue.serverTimestamp();
 
-      await ref.collection('chat_rooms/$roomId/messages').add(messageMap);
+      await ref
+          .collection('chat_rooms/$roomId/messages')
+          .doc(messageId)
+          .set(messageMap);
     }
   }
 
@@ -313,16 +314,19 @@ class FirebaseChatCore {
 }
 
 /// Fetches user from Firebase and returns a promise
-Future<types.User> fetchUser(String userId, {types.Role? role}) async {
-  final doc =
-      await FirebaseFirestore.instance.collection('users').doc(userId).get();
+Future<types.User> fetchStudent(String id, {types.Role? role}) async {
+  final ref = FirebaseFirestore.instance
+      .collection('customers/lcps/schools')
+      .doc('independence');
+
+  final doc = await ref.collection('students').doc(id).get();
 
   return processUserDocument(doc, role: role);
 }
 
-/// Returns a list of [types.Room] created from Firebase query.
+/// Returns a list of [Room] created from Firebase query.
 /// If room has 2 participants, sets correct room name and image.
-Future<List<types.Room>> processRoomsQuery(
+Future<List<Room>> processRoomsQuery(
   User firebaseUser,
   QuerySnapshot<Map<String, dynamic>> query,
 ) async {
@@ -333,8 +337,8 @@ Future<List<types.Room>> processRoomsQuery(
   return await Future.wait(futures);
 }
 
-/// Returns a [types.Room] created from Firebase document
-Future<types.Room> processRoomDocument(
+/// Returns a [Room] created from Firebase document
+Future<Room> processRoomDocument(
   DocumentSnapshot<Map<String, dynamic>> doc,
   User firebaseUser,
 ) async {
@@ -349,7 +353,7 @@ Future<types.Room> processRoomDocument(
 
   final users = await Future.wait(
     userIds.map(
-      (userId) => fetchUser(
+      (userId) => fetchStudent(
         userId as String,
         role: types.getRoleFromString(userRoles?[userId] as String?),
       ),
@@ -370,7 +374,7 @@ Future<types.Room> processRoomDocument(
     }
   }
 
-  final room = types.Room(
+  final room = Room(
     createdAt: createdAt?.millisecondsSinceEpoch,
     id: doc.id,
     imageUrl: imageUrl,
@@ -411,168 +415,4 @@ types.User processUserDocument(
   );
 
   return user;
-}
-
-/// A class that represents a room where 2 or more participants can chat
-@immutable
-class Room extends Equatable {
-  /// Creates a [Room]
-  const Room({
-    this.createdAt,
-    required this.id,
-    this.imageUrl,
-    this.lastMessages,
-    this.metadata,
-    this.name,
-    required this.type,
-    this.updatedAt,
-    required this.users,
-    this.groupType,
-    this.groupId,
-  });
-
-  factory Room.fromMap(Map<String, dynamic> map) {
-    return Room(
-      id: map['id'],
-      createdAt: map['createdAt'],
-      imageUrl: map['imageUrl'],
-      lastMessages:
-          (map['lastMessages']).map((e) => types.Message.fromJson(e)).toList(),
-      metadata: map['metadata'],
-      name: map['name'],
-      type: types.getRoomTypeFromString(map['type']),
-      updatedAt: map['updatedAt'],
-      users: (map['users']).map((e) => types.User.fromJson(e)).toList(),
-      groupType: map['groupType'],
-      groupId: map['groupId'],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'createdAt': createdAt,
-      'id': id,
-      'imageUrl': imageUrl,
-      'lastMessages': lastMessages?.map((e) => e.toJson()).toList(),
-      'metadata': metadata,
-      'name': name,
-      'type': type.toShortString(),
-      'updatedAt': updatedAt,
-      'users': users.map((e) => e.toJson()).toList(),
-    };
-  }
-
-  factory Room.fromJson(String source) {
-    return Room.fromMap(json.decode(source));
-  }
-
-  /// Converts room to the map representation, encodable to JSON.
-  String toJson() => json.encode(toMap());
-
-  /// Creates a copy of the room with an updated data.
-  /// [imageUrl], [name] and [updatedAt] with null values will nullify existing values
-  /// [metadata] with null value will nullify existing metadata, otherwise
-  /// both metadatas will be merged into one Map, where keys from a passed
-  /// metadata will overwite keys from the previous one.
-  /// [type] and [users] with null values will be overwritten by previous values.
-  Room copyWith({
-    String? imageUrl,
-    Map<String, dynamic>? metadata,
-    String? name,
-    types.RoomType? type,
-    int? updatedAt,
-    List<types.User>? users,
-  }) {
-    return Room(
-      id: id,
-      imageUrl: imageUrl,
-      lastMessages: lastMessages,
-      metadata: metadata == null
-          ? null
-          : {
-              ...this.metadata ?? {},
-              ...metadata,
-            },
-      name: name,
-      type: type ?? this.type,
-      updatedAt: updatedAt,
-      users: users ?? this.users,
-    );
-  }
-
-  /// Equatable props
-  @override
-  List<Object?> get props => [
-        createdAt,
-        id,
-        imageUrl,
-        lastMessages,
-        metadata,
-        name,
-        type,
-        updatedAt,
-        users
-      ];
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Room &&
-        other.id == id &&
-        other.createdAt == createdAt &&
-        other.name == name &&
-        other.type == type &&
-        other.imageUrl == imageUrl &&
-        other.metadata == metadata &&
-        other.updatedAt == updatedAt &&
-        listEquals(other.users, users) &&
-        listEquals(other.lastMessages, lastMessages);
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        createdAt.hashCode ^
-        name.hashCode ^
-        type.hashCode ^
-        imageUrl.hashCode ^
-        metadata.hashCode ^
-        updatedAt.hashCode ^
-        users.hashCode ^
-        lastMessages.hashCode;
-  }
-
-  /// Created room timestamp, in ms
-  final int? createdAt;
-
-  /// Room's unique ID
-  final String id;
-
-  /// Room's image. In case of the [RoomType.direct] - avatar of the second person,
-  /// otherwise a custom image [RoomType.group].
-  final String? imageUrl;
-
-  /// List of last messages this room has received
-  final List<types.Message>? lastMessages;
-
-  /// [RoomType]
-  final types.RoomType type;
-
-  /// Additional custom metadata or attributes related to the room
-  final Map<String, dynamic>? metadata;
-
-  /// Room's name. In case of the [RoomType.direct] - name of the second person,
-  /// otherwise a custom name [RoomType.group].
-  final String? name;
-
-  /// Updated room timestamp, in ms
-  final int? updatedAt;
-
-  /// List of users which are in the room
-  final List<types.User> users;
-
-  final String? groupType;
-
-  final String? groupId;
 }

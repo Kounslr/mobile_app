@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/ui/providers/student_repository_provider.dart';
-import 'package:kounslr/src/ui/views/journal_entry_view.dart';
+import 'package:kounslr/src/ui/views/journal_view/journal_entry_view.dart';
 
 class JournalEntryCard extends ConsumerWidget {
   final JournalEntry journalEntry;

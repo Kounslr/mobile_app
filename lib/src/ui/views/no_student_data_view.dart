@@ -10,13 +10,16 @@ class NoStudentDataView extends StatelessWidget {
   }
 
   Widget _content(BuildContext context) {
-    return Column(
-      children: [
-        _header(context),
-        Expanded(
-          child: SignInWithStudentVueCard(),
-        )
-      ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 17),
+      child: Column(
+        children: [
+          _header(context),
+          Expanded(
+            child: SignInWithStudentVueCard(),
+          )
+        ],
+      ),
     );
   }
 
