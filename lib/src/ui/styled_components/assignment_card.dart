@@ -10,47 +10,46 @@ class AssignmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      shape: Border(
-        top: BorderSide(
-          color: Theme.of(context).colorScheme.onSecondary,
-          width: 1.5,
-        ),
-      ),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 7),
-        child: Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      children: [
+        Divider(),
+        Card(
+          margin: EdgeInsets.zero,
+          shape: const SquircleBorder(),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 7),
+            child: Row(
               children: [
-                Text(
-                  schoolClass?.name ?? 'CLASS NAME',
-                  style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                        color: Theme.of(context).primaryColor,
-                      ),
-                ),
-                SizedBox(height: 7),
-                Text(
-                  _assignmentName(assignment?.name),
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-                SizedBox(height: 7),
-                Text(
-                  _assignmentDate(assignment?.dueDate) +
-                      ' • ' +
-                      _assignmentTime(
-                          DateFormat.jm().format(assignment!.dueDate!)),
-                  style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                        color: Theme.of(context).colorScheme.secondaryVariant,
-                      ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _assignmentName(assignment?.name),
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    const SizedBox(height: 8.5),
+                    Text(
+                      schoolClass?.name ?? 'CLASS NAME',
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                    const SizedBox(height: 8.5),
+                    Text(
+                      _assignmentDate(assignment?.dueDate) +
+                          ' • ' +
+                          _assignmentTime(
+                              DateFormat.jm().format(assignment!.dueDate!)),
+                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.secondaryVariant,
+                          ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
