@@ -47,12 +47,16 @@ class _JournalViewState extends State<JournalView> {
                 children: [
                   JournalViewHeader(),
                   SizedBox(height: 20),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        'Click the "+" button to create your first journal entry',
-                        style: Theme.of(context).textTheme.headline5,
-                        textAlign: TextAlign.center,
+                  Container(
+                    padding:
+                        const EdgeInsets.only(top: 17, left: 17, right: 17),
+                    child: Expanded(
+                      child: Center(
+                        child: Text(
+                          'Click the "+" button to create your first journal entry',
+                          style: Theme.of(context).textTheme.headline5,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),
@@ -64,9 +68,9 @@ class _JournalViewState extends State<JournalView> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 JournalViewHeader(),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 HorizontalBarChart(tags: tags),
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 ViewCard(view: JournalEntriesView(), text: 'View all entries'),
               ],
             );
