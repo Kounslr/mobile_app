@@ -39,8 +39,10 @@ class ClassCard extends StatelessWidget {
     }
 
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
+      margin: EdgeInsets.zero,
+      color: Theme.of(context).colorScheme.secondary,
+      child: Container(
+        padding: const EdgeInsets.all(12),
         child: Row(
           children: [
             Column(
