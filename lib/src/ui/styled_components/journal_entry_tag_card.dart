@@ -58,11 +58,8 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
 
   Widget _changeTagNameAction(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 5, bottom: 5, left: 5),
+      margin: const EdgeInsets.only(),
       color: Theme.of(context).colorScheme.secondary,
-      // shape: SquircleBorder(
-      //   radius: BorderRadius.circular(35),
-      // ),
       child: SlideAction(
         child: IconlyIcon(
           IconlyBold.EditSquare,
@@ -75,6 +72,7 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
   }
 
   Future<void> _showTagRenameBottomSheet() async {
+    var _tagRenameController = TextEditingController();
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -83,61 +81,76 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
       builder: (context) {
         return Consumer(
           builder: (context, watch, child) {
-            var _tagRenameController = TextEditingController();
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 27),
-              child: FractionallySizedBox(
-                heightFactor: 0.45,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: 5,
-                      width: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        color: Theme.of(context).colorScheme.secondary,
+            return StatefulBuilder(builder: (context, setState) {
+              return GestureDetector(
+                onTap: () {
+                  CantonMethods.defocusTextfield(context);
+                },
+                child: Container(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: FractionallySizedBox(
+                    heightFactor: 0.45,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            height: 5,
+                            width: 50,
+                            margin: const EdgeInsets.symmetric(vertical: 15),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                          Text(
+                            'Rename Tag',
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                          const SizedBox(height: 20),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 17),
+                            child: CantonTextInput(
+                              formatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp("[a-zA-Z]")),
+                                LengthLimitingTextInputFormatter(10),
+                              ],
+                              textInputType: TextInputType.text,
+                              isTextFormField: true,
+                              obscureText: false,
+                              hintText: 'Name...',
+                              controller: _tagRenameController,
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          GestureDetector(
+                            onTap: () {
+                              watch(studentRepositoryProvider)
+                                  .renameJournalEntryTags(
+                                widget.entries,
+                                widget.tag,
+                                Tag(name: _tagRenameController.text),
+                              );
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              'Done',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  ?.copyWith(
+                                      color: Theme.of(context).primaryColor),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 15),
-                    Text(
-                      'Rename Tag',
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
-                    SizedBox(height: 20),
-                    CantonTextInput(
-                      formatters: [
-                        FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
-                        LengthLimitingTextInputFormatter(10),
-                      ],
-                      isTextFormField: true,
-                      obscureText: false,
-                      hintText: 'Name...',
-                      controller: _tagRenameController,
-                    ),
-                    SizedBox(height: 15),
-                    GestureDetector(
-                      onTap: () {
-                        watch(studentRepositoryProvider).renameJournalEntryTags(
-                          widget.entries,
-                          widget.tag,
-                          Tag(name: _tagRenameController.text),
-                        );
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        'Done',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5
-                            ?.copyWith(color: Theme.of(context).primaryColor),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            );
+              );
+            });
           },
         );
       },
