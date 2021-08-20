@@ -2,6 +2,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/ui/styled_components/student_id_card.dart';
+import 'package:kounslr/src/ui/views/profile_view/components/student_id_card_view_header.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class StudentIDCardView extends StatelessWidget {
@@ -19,7 +20,7 @@ class StudentIDCardView extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _header(context),
+          StudentIdCardViewHeader(),
           _body(context, student),
           Container(height: 70),
         ],
@@ -27,34 +28,15 @@ class StudentIDCardView extends StatelessWidget {
     );
   }
 
-  Widget _header(BuildContext context) {
-    return Row(
-      children: [
-        CantonBackButton(isClear: true),
-        Spacer(),
-        Text(
-          'ID Card',
-          style: Theme.of(context).textTheme.headline5?.copyWith(
-                color: Theme.of(context).primaryColor,
-              ),
-        ),
-        Spacer(),
-        CantonHeaderButton(
-          backgroundColor: CantonColors.transparent,
-          icon: Container(),
-        ),
-      ],
-    );
-  }
-
   Widget _body(BuildContext context, Student student) {
     return Column(
       children: [
         StudentIDCard(student, school),
-        SizedBox(height: 20),
+        const SizedBox(height: 80),
         QrImage(
           data: 'https://www.kounslr.com',
           version: QrVersions.auto,
+          backgroundColor: CantonColors.bgPrimary,
           size: 100,
         ),
       ],
