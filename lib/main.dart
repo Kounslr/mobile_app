@@ -3,6 +3,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -32,10 +33,10 @@ class MyApp extends StatelessWidget {
       builder: (context, watch, child) {
         return CantonApp(
           title: kAppTitle,
-          primaryLightColor: CantonColors.orange,
-          primaryDarkColor: CantonDarkColors.orange,
-          primaryLightVariantColor: CantonColors.orange[400]!,
-          primaryDarkVariantColor: CantonDarkColors.orange[400]!,
+          primaryLightColor: CantonColors.orange[500],
+          primaryDarkColor: CupertinoColors.systemOrange,
+          primaryLightVariantColor: CantonColors.orange[300]!,
+          primaryDarkVariantColor: CantonDarkColors.orange[200]!,
           navigatorObservers: [
             FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
           ],
