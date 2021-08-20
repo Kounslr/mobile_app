@@ -19,6 +19,7 @@ import 'package:kounslr/src/ui/providers/student_stream_provider.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/home_view/components/home_view_components.dart';
+import 'package:kounslr/src/ui/views/home_view/components/home_view_header.dart';
 import 'package:kounslr/src/ui/views/profile_view/profile_view.dart';
 import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
 
@@ -153,9 +154,9 @@ class _HomeViewState extends State<HomeView> {
       Block nextBlock,
       StaffMember teacher) {
     List<Widget> children = [
-      _header(context, student),
       const SizedBox(height: 10),
       DateCard(school: school),
+      HomeViewHeader(student: student),
       NextClassCard(schoolClass: nextClass, block: nextBlock, teacher: teacher),
     ];
 
@@ -193,8 +194,9 @@ class _HomeViewState extends State<HomeView> {
                     context, UpcomingAssignmentView()),
               ),
               CantonActionButton(
-                icon: IconlyIcon(
-                  IconlyLine.ArrowRight2,
+                icon: Icon(
+                  Iconsax.arrow_right_3,
+                  size: 20,
                   color: Theme.of(context).primaryColor,
                 ),
                 onPressed: () => CantonMethods.viewTransition(
@@ -217,6 +219,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         );
       }
+
       children.add(Divider());
     } else {
       children.add(
@@ -235,52 +238,5 @@ class _HomeViewState extends State<HomeView> {
     }
 
     return children;
-  }
-
-  Widget _header(BuildContext context, Student student) {
-    return Container(
-      padding: const EdgeInsets.only(left: 17, right: 17, top: 17),
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Hey,',
-                style: Theme.of(context).textTheme.headline6!.copyWith(
-                      color: Theme.of(context).colorScheme.secondaryVariant,
-                    ),
-              ),
-              Text(
-                _studentNameInHeader(student),
-                style: Theme.of(context).textTheme.headline2!.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-              ),
-            ],
-          ),
-          Spacer(),
-          CantonHeaderButton(
-            icon: IconlyIcon(
-              IconlyBold.Profile,
-              color: Theme.of(context).colorScheme.secondaryVariant,
-            ),
-            onPressed: () {
-              CantonMethods.viewTransition(
-                context,
-                ProfileView(student),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _studentNameInHeader(Student student) {
-    if (![null, ''].contains(student.nickname)) {
-      return student.nickname!;
-    }
-    return student.name!.substring(0, student.name!.indexOf(' '));
   }
 }
