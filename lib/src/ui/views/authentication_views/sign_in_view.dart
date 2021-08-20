@@ -32,26 +32,26 @@ class _SignInViewState extends State<SignInView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 75),
+          const SizedBox(height: 75),
           _header(context),
-          SizedBox(height: 40),
+          const SizedBox(height: 40),
           _emailTextInput(context, _emailController),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           _passwordTextInput(context, _passwordController),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           _signInButton(context, _emailController, _passwordController),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Text(
             'Or continue with',
             style: Theme.of(context).textTheme.headline6?.copyWith(
                   color: Theme.of(context).colorScheme.secondaryVariant,
                 ),
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           _signInWithGoogleButton(context),
-          _hasError ? SizedBox(height: 15) : Container(),
+          _hasError ? const SizedBox(height: 15) : Container(),
           _hasError ? _errorText(context, _errorMessage) : Container(),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -83,7 +83,7 @@ class _SignInViewState extends State<SignInView> {
   Widget _header(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 50),
+        const SizedBox(height: 50),
         Text(
           'Welcome!',
           style: Theme.of(context).textTheme.headline4!.copyWith(
