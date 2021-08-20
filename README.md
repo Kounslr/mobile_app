@@ -21,9 +21,9 @@ Kounslr is a platform for students and teachers alike which helps high school st
 If you have any questions, you can reach us here:
 
 #### Carlton
-- Instagram: 31carlton7
 - Email: carltonaikins7@gmail.com
+- Instagram: [@31Carlton7](https://www.instagram.com/31carlton7)
 
-#### Arihan
-- Instagram: aridixit
+#### Ari
 - Email: arihandixit@gmail.com
+- Instagram: [@aridixit](https://www.instagram.com/aridixit)

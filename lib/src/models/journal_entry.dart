@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:canton_design_system/models/tag.dart';
+import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
