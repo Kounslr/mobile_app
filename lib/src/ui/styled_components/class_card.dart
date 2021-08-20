@@ -23,7 +23,7 @@ class _ClassCardState extends State<ClassCard> {
       children: [
         Divider(),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 7),
+          padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 12),
           child: Row(
             children: [
               Column(
@@ -33,7 +33,7 @@ class _ClassCardState extends State<ClassCard> {
                     _className(widget.schoolClass.name!),
                     style: Theme.of(context).textTheme.headline4,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       IconlyIcon(
@@ -52,7 +52,7 @@ class _ClassCardState extends State<ClassCard> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       IconlyIcon(
