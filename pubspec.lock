@@ -34,7 +34,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "8d66869b1079535236631663be97eee2a8071a7a"
+      resolved-ref: "3c418f02dbf678eff96bc975a3e8b9855d6aef44"
       url: "git://github.com/31Carlton7/canton_design_system.git"
     source: git
     version: "0.0.1"
@@ -459,6 +459,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  iconsax:
+    dependency: transitive
+    description:
+      name: iconsax
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.8"
   image:
     dependency: transitive
     description:
