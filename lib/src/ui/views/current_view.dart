@@ -41,7 +41,7 @@ class _CurrentViewState extends State<CurrentView> {
   int _currentIndex = 0;
   final List<Widget> _views = [
     HomeView(),
-    ChatListView(),
+    // ChatListView(),
     JournalView(),
   ];
 
@@ -60,7 +60,7 @@ class _CurrentViewState extends State<CurrentView> {
     }
 
     return CantonScaffold(
-      padding: ([0, 1].contains(_currentIndex))
+      padding: ([0].contains(_currentIndex))
           ? EdgeInsets.zero
           : const EdgeInsets.only(top: 17, left: 17, right: 17),
       bottomNavBar:

@@ -58,33 +58,33 @@ class _BottomNavBarState extends State<BottomNavBar> {
               ],
             ),
           ),
-          BottomNavigationBarItem(
-            label: '',
-            tooltip: '',
-            icon: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: IconlyIcon(
-                    IconlyBold.Chat,
-                    size: 24,
-                    color: widget.currentIndex == 1
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).colorScheme.secondaryVariant,
-                  ),
-                ),
-                Text(
-                  'Chat',
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        color: widget.currentIndex == 1
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).colorScheme.secondaryVariant,
-                      ),
-                ),
-              ],
-            ),
-          ),
+          // BottomNavigationBarItem(
+          //   label: '',
+          //   tooltip: '',
+          //   icon: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Container(
+          //         padding: const EdgeInsets.only(top: 4.0),
+          //         child: IconlyIcon(
+          //           IconlyBold.Chat,
+          //           size: 24,
+          //           color: widget.currentIndex == 1
+          //               ? Theme.of(context).primaryColor
+          //               : Theme.of(context).colorScheme.secondaryVariant,
+          //         ),
+          //       ),
+          //       Text(
+          //         'Chat',
+          //         style: Theme.of(context).textTheme.bodyText2?.copyWith(
+          //               color: widget.currentIndex == 1
+          //                   ? Theme.of(context).primaryColor
+          //                   : Theme.of(context).colorScheme.secondaryVariant,
+          //             ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           BottomNavigationBarItem(
             label: '',
             tooltip: '',
@@ -96,7 +96,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   child: IconlyIcon(
                     IconlyBold.Edit,
                     size: 24,
-                    color: widget.currentIndex == 2
+                    color: widget.currentIndex == 1
                         ? Theme.of(context).primaryColor
                         : Theme.of(context).colorScheme.secondaryVariant,
                   ),
@@ -104,7 +104,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 Text(
                   'Journal',
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        color: widget.currentIndex == 2
+                        color: widget.currentIndex == 1
                             ? Theme.of(context).primaryColor
                             : Theme.of(context).colorScheme.secondaryVariant,
                       ),
