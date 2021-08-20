@@ -31,7 +31,7 @@ class _AddUsersToChatViewState extends State<AddUsersToChatView> {
     return Column(
       children: [
         AddUsersToChatViewHeader(students: selectedUsers),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         _body(context),
       ],
     );
@@ -61,7 +61,7 @@ class _AddUsersToChatViewState extends State<AddUsersToChatView> {
                         Column(
                           children: [
                             AddStudentsSearchBar(),
-                            SizedBox(height: 12),
+                            const SizedBox(height: 12),
                           ],
                         ),
                       AddStudentCard(
