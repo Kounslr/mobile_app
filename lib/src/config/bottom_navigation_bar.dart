@@ -1,4 +1,5 @@
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:flutter/cupertino.dart';
 
 class BottomNavBar extends StatefulWidget {
   final int currentIndex;
@@ -17,100 +18,46 @@ class _BottomNavBarState extends State<BottomNavBar> {
         color: Theme.of(context).canvasColor,
         border: Border(
           top: BorderSide(
-            color: Theme.of(context).colorScheme.secondary,
-            width: 0.75,
+            color: Theme.of(context).dividerColor,
+            width: 0.5,
           ),
         ),
       ),
       child: BottomNavigationBar(
         currentIndex: widget.currentIndex,
         onTap: widget.onTabTapped,
-        selectedFontSize: 1,
-        unselectedFontSize: 1,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Theme.of(context).colorScheme.secondaryVariant,
+        selectedLabelStyle: Theme.of(context).textTheme.bodyText2,
+        unselectedLabelStyle: Theme.of(context).textTheme.bodyText2,
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
         items: [
           BottomNavigationBarItem(
-            label: '',
+            label: 'Home',
             tooltip: '',
-            icon: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: IconlyIcon(
-                    IconlyBold.Home,
-                    size: 24,
-                    color: widget.currentIndex == 0
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).colorScheme.secondaryVariant,
-                  ),
-                ),
-                Text(
-                  'Home',
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        color: widget.currentIndex == 0
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).colorScheme.secondaryVariant,
-                      ),
-                ),
-              ],
-            ),
+            activeIcon: Icon(Iconsax.home, size: 24),
+            icon: Icon(Iconsax.home, size: 24),
           ),
           // BottomNavigationBarItem(
-          //   label: '',
+          //   label: 'Chat',
           //   tooltip: '',
-          //   icon: Column(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       Container(
-          //         padding: const EdgeInsets.only(top: 4.0),
-          //         child: IconlyIcon(
-          //           IconlyBold.Chat,
-          //           size: 24,
-          //           color: widget.currentIndex == 1
-          //               ? Theme.of(context).primaryColor
-          //               : Theme.of(context).colorScheme.secondaryVariant,
-          //         ),
-          //       ),
-          //       Text(
-          //         'Chat',
-          //         style: Theme.of(context).textTheme.bodyText2?.copyWith(
-          //               color: widget.currentIndex == 1
-          //                   ? Theme.of(context).primaryColor
-          //                   : Theme.of(context).colorScheme.secondaryVariant,
-          //             ),
-          //       ),
-          //     ],
-          //   ),
+          //   activeIcon: Icon(Iconsax.message2, size: 24),
+          //   icon: Icon(Iconsax.message2, size: 24),
           // ),
           BottomNavigationBarItem(
-            label: '',
+            label: 'Journal',
             tooltip: '',
-            icon: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: IconlyIcon(
-                    IconlyBold.Edit,
-                    size: 24,
-                    color: widget.currentIndex == 1
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).colorScheme.secondaryVariant,
-                  ),
-                ),
-                Text(
-                  'Journal',
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        color: widget.currentIndex == 1
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).colorScheme.secondaryVariant,
-                      ),
-                ),
-              ],
-            ),
+            activeIcon: Icon(Iconsax.book, size: 24),
+            icon: Icon(Iconsax.book, size: 24),
+          ),
+
+          BottomNavigationBarItem(
+            label: 'Profile',
+            tooltip: '',
+            activeIcon: Icon(Iconsax.user, size: 24),
+            icon: Icon(Iconsax.user, size: 24),
           ),
         ],
       ),

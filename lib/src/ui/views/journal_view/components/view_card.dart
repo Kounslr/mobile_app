@@ -10,22 +10,27 @@ class ViewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => CantonMethods.viewTransition(context, view),
-      child: Card(
-        margin: EdgeInsets.zero,
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            children: [
-              Text(
-                text,
-                style: Theme.of(context).textTheme.headline6!.copyWith(),
-              ),
-              Spacer(),
-              IconlyIcon(
-                IconlyBold.ArrowRight1,
-                color: Theme.of(context).colorScheme.secondaryVariant,
-              ),
-            ],
+      child: Container(
+        padding: const EdgeInsets.only(top: 17, left: 17, right: 17),
+        child: Card(
+          color: Theme.of(context).colorScheme.secondary,
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              children: [
+                Text(
+                  text,
+                  style: Theme.of(context).textTheme.headline6!.copyWith(),
+                ),
+                Spacer(),
+                Icon(
+                  Iconsax.arrow_right_3,
+                  size: 20,
+                  color: Theme.of(context).colorScheme.secondaryVariant,
+                ),
+              ],
+            ),
           ),
         ),
       ),

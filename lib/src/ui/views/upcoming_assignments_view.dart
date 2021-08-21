@@ -76,12 +76,16 @@ class UpcomingAssignmentView extends StatelessWidget {
     }
 
     return Expanded(
-      child: ListView.builder(
+      child: ListView.separated(
         itemCount: assignments.length,
+        separatorBuilder: (context, index) {
+          return const Divider();
+        },
         itemBuilder: (context, index) {
           assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
           return Column(
             children: [
+              if (index == 0) Divider(),
               AssignmentCard(
                 classes
                     .where(

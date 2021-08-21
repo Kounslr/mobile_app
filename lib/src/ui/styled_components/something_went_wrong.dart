@@ -17,7 +17,7 @@ class SomethingWentWrong extends StatelessWidget {
                   color: Theme.of(context).colorScheme.secondaryVariant,
                 ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           CantonPrimaryButton(
             buttonText: 'Sign out',
             textColor: CantonColors.white,

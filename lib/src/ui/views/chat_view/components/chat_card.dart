@@ -28,7 +28,7 @@ class ChatCard extends StatelessWidget {
                     backgroundColor: Theme.of(context).colorScheme.secondary,
                     radius: 25,
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,

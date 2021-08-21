@@ -26,7 +26,7 @@ class StudentIDCard extends StatelessWidget {
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
-                SizedBox(width: 15),
+                const SizedBox(width: 15),
                 Text(
                   school.name!,
                   style: Theme.of(context)
@@ -36,7 +36,7 @@ class StudentIDCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,

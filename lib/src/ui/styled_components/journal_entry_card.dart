@@ -29,6 +29,7 @@ class JournalEntryCard extends ConsumerWidget {
           _deleteEntryAction(context, journalEntry),
         ],
         child: Card(
+          color: Theme.of(context).colorScheme.secondary,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
             child: Row(
@@ -50,8 +51,6 @@ class JournalEntryCard extends ConsumerWidget {
                     ],
                   ),
                 ),
-                Spacer(),
-                Container(),
               ],
             ),
           ),

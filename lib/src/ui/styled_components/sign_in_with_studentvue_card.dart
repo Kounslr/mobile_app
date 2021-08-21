@@ -36,7 +36,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
           ),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         CantonPrimaryButton(
           buttonText: 'Sign in',
           textColor: CantonColors.white,
@@ -44,7 +44,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
           containerWidth: MediaQuery.of(context).size.width / 2 - 34,
           onPressed: () => _showStudentVueSignInBottomSheet(),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         GestureDetector(
           onTap: () {
             context.read(authenticationServiceProvider).signOut();
@@ -94,12 +94,12 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         Text(
                           'Sign in to StudentVue',
                           style: Theme.of(context).textTheme.headline5,
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         CantonTextInput(
                           isTextFormField: true,
                           obscureText: false,
@@ -107,7 +107,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                           textInputType: TextInputType.emailAddress,
                           controller: _emailController,
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         CantonTextInput(
                           isTextFormField: true,
                           obscureText: true,
@@ -115,7 +115,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                           textInputType: TextInputType.visiblePassword,
                           controller: _passwordController,
                         ),
-                        SizedBox(height: 15),
+                        const SizedBox(height: 15),
                         CantonPrimaryButton(
                           onPressed: () async {
                             await watch(authenticationServiceProvider)
@@ -144,7 +144,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                           radius: BorderRadius.circular(37),
                           containerPadding: const EdgeInsets.all(10),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         hasResult == false
                             ? Text(
                                 'Incorrect email or password',

@@ -2,7 +2,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/models/staff_member.dart';
-import 'package:kounslr/src/ui/styled_components/class_card.dart';
+import 'package:kounslr/src/ui/views/home_view/components/class_card.dart';
 import 'package:kounslr/src/ui/views/schedule_view.dart';
 
 class NextClassCard extends StatelessWidget {
@@ -19,6 +19,7 @@ class NextClassCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 17),
         child: Card(
+          color: Theme.of(context).colorScheme.secondary,
           margin: const EdgeInsets.only(top: 15),
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -38,6 +39,7 @@ class NextClassCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 17),
         child: Card(
+          color: Theme.of(context).colorScheme.secondary,
           margin: const EdgeInsets.only(top: 12),
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -57,6 +59,7 @@ class NextClassCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 17),
         child: Card(
+          color: Theme.of(context).colorScheme.secondary,
           margin: const EdgeInsets.only(top: 15),
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -104,8 +107,9 @@ class NextClassCard extends StatelessWidget {
                   },
                 ),
                 CantonActionButton(
-                  icon: IconlyIcon(
-                    IconlyBold.ArrowRight2,
+                  icon: Icon(
+                    Iconsax.arrow_right_3,
+                    size: 20,
                     color: Theme.of(context).primaryColor,
                   ),
                   onPressed: () {

@@ -22,7 +22,7 @@ class ScheduleView extends StatelessWidget {
     return Column(
       children: [
         _header(context),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         _body(context),
       ],
     );

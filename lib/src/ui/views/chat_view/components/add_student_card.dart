@@ -46,7 +46,7 @@ class _AddStudentCardState extends State<AddStudentCard> {
               CircleAvatar(
                 backgroundColor: Theme.of(context).colorScheme.secondary,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

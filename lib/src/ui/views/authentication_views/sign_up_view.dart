@@ -35,13 +35,13 @@ class _SignUpViewState extends State<SignUpView> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(height: 75),
+          const SizedBox(height: 75),
           _header(context),
-          SizedBox(height: 50),
+          const SizedBox(height: 50),
           _emailTextInput(context, _emailController),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           _passwordTextInput(context, _passwordController),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           CantonPrimaryButton(
             buttonText: 'Sign Up',
             containerColor: Theme.of(context).primaryColor,
@@ -53,7 +53,7 @@ class _SignUpViewState extends State<SignUpView> {
                   );
             },
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
