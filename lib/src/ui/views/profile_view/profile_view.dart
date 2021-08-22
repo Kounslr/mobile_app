@@ -5,7 +5,7 @@ import 'package:kounslr/src/ui/providers/student_stream_provider.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/profile_card.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/profile_view_header.dart';
-import 'package:kounslr/src/ui/views/profile_view/components/sign_out_button.dart';
+import 'package:kounslr/src/ui/styled_components/sign_out_button.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/student_id_card.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/student_schedule_card.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/student_upcoming_assignments_card.dart';

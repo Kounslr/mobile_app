@@ -2,6 +2,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
+import 'package:kounslr/src/ui/styled_components/sign_out_button.dart';
 
 class SignInWithStudentVueCard extends StatefulWidget {
   const SignInWithStudentVueCard({Key? key}) : super(key: key);
@@ -43,20 +44,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
           onPressed: () => _showStudentVueSignInBottomSheet(),
         ),
         const SizedBox(height: 20),
-        GestureDetector(
-          onTap: () {
-            context.read(authenticationServiceProvider).signOut();
-          },
-          child: Container(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'Sign out',
-              style: Theme.of(context).textTheme.headline6?.copyWith(
-                    color: Theme.of(context).primaryColor,
-                  ),
-            ),
-          ),
-        )
+        SignOutButton(),
       ],
     );
   }
@@ -75,86 +63,112 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
           builder: (context, setState) {
             return Consumer(
               builder: (context, watch, child) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 27),
-                  child: FractionallySizedBox(
-                    heightFactor: 0.45,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          height: 5,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        Text(
-                          'Sign in to StudentVue',
-                          style: Theme.of(context).textTheme.headline5,
-                        ),
-                        const SizedBox(height: 20),
-                        CantonTextInput(
-                          isTextFormField: true,
-                          obscureText: false,
-                          hintText: 'Email',
-                          textInputType: TextInputType.emailAddress,
-                          controller: _emailController,
-                        ),
-                        const SizedBox(height: 15),
-                        CantonTextInput(
-                          isTextFormField: true,
-                          obscureText: true,
-                          hintText: 'Password',
-                          textInputType: TextInputType.visiblePassword,
-                          controller: _passwordController,
-                        ),
-                        const SizedBox(height: 15),
-                        CantonPrimaryButton(
-                          onPressed: () async {
-                            await watch(authenticationServiceProvider)
-                                .studentVueSignIn(
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                            )
-                                .then((value) {
-                              if (value != 'success') {
-                                setState(() {
-                                  hasResult = false;
-                                });
-                              } else {
-                                hasResult = true;
-                              }
+                return GestureDetector(
+                  onTap: () {
+                    CantonMethods.defocusTextfield(context);
+                  },
+                  child: Container(
+                    decoration: ShapeDecoration(
+                      color: MediaQuery.of(context).platformBrightness ==
+                              Brightness.dark
+                          ? Theme.of(context).colorScheme.onSecondary
+                          : Theme.of(context).canvasColor,
+                      shape: SquircleBorder(
+                        radius: BorderRadius.circular(50),
+                      ),
+                    ),
+                    padding: MediaQuery.of(context).viewInsets,
+                    child: FractionallySizedBox(
+                      heightFactor: 0.45,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              height: 5,
+                              width: 50,
+                              margin: const EdgeInsets.symmetric(vertical: 15),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                            Text(
+                              'Sign in to StudentVue',
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            const SizedBox(height: 7.5),
+                            const Divider(),
+                            const SizedBox(height: 20),
+                            Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 17),
+                              child: CantonTextInput(
+                                isTextFormField: true,
+                                obscureText: false,
+                                hintText: 'Email',
+                                textInputType: TextInputType.emailAddress,
+                                controller: _emailController,
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 17),
+                              child: CantonTextInput(
+                                isTextFormField: true,
+                                obscureText: true,
+                                hintText: 'Password',
+                                textInputType: TextInputType.visiblePassword,
+                                controller: _passwordController,
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            CantonPrimaryButton(
+                              onPressed: () async {
+                                await watch(authenticationServiceProvider)
+                                    .studentVueSignIn(
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                )
+                                    .then((value) {
+                                  if (value != 'success') {
+                                    setState(() {
+                                      hasResult = false;
+                                    });
+                                  } else {
+                                    hasResult = true;
+                                  }
 
-                              if (hasResult) {
-                                Phoenix.rebirth(context);
-                              }
-                            });
-                          },
-                          buttonText: 'Sign in',
-                          textColor: CantonColors.white,
-                          containerWidth: MediaQuery.of(context).size.width / 4,
-                          containerHeight: 47,
-                          padding: const EdgeInsets.all(10),
+                                  if (hasResult) {
+                                    Phoenix.rebirth(context);
+                                  }
+                                });
+                              },
+                              buttonText: 'Sign in',
+                              containerWidth:
+                                  MediaQuery.of(context).size.width / 4,
+                              containerHeight: 47,
+                              padding: const EdgeInsets.all(10),
+                            ),
+                            const SizedBox(height: 20),
+                            hasResult == false
+                                ? Text(
+                                    'Incorrect email or password',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .error,
+                                        ),
+                                  )
+                                : Container(),
+                          ],
                         ),
-                        const SizedBox(height: 20),
-                        hasResult == false
-                            ? Text(
-                                'Incorrect email or password',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    ?.copyWith(
-                                      color:
-                                          Theme.of(context).colorScheme.error,
-                                    ),
-                              )
-                            : Container(),
-                      ],
+                      ),
                     ),
                   ),
                 );

@@ -20,9 +20,7 @@ class SomethingWentWrong extends StatelessWidget {
           const SizedBox(height: 20),
           CantonPrimaryButton(
             buttonText: 'Sign out',
-            textColor: CantonColors.white,
-            color: Theme.of(context).primaryColor,
-            containerWidth: MediaQuery.of(context).size.width / 2 - 34,
+            containerWidth: MediaQuery.of(context).size.width / 2,
             onPressed: () {
               context.read(authenticationServiceProvider).signOut();
             },

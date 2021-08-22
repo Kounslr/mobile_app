@@ -7,20 +7,15 @@ class SignOutButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+    return CantonPrimaryButton(
+      buttonText: 'Sign Out',
+      textColor: Theme.of(context).primaryColor,
+      color: CantonColors.transparent,
+      alignment: MainAxisAlignment.center,
+      containerWidth: MediaQuery.of(context).size.width / 2 - 5,
+      onPressed: () {
         context.read(authenticationServiceProvider).signOut();
-        Navigator.of(context).pop();
       },
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          'Sign Out',
-          style: Theme.of(context).textTheme.headline6?.copyWith(
-                color: Theme.of(context).primaryColor,
-              ),
-        ),
-      ),
     );
   }
 }
