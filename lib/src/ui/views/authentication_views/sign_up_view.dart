@@ -44,7 +44,7 @@ class _SignUpViewState extends State<SignUpView> {
           const SizedBox(height: 15),
           CantonPrimaryButton(
             buttonText: 'Sign Up',
-            containerColor: Theme.of(context).primaryColor,
+            color: Theme.of(context).primaryColor,
             textColor: CantonColors.white,
             onPressed: () async {
               await context.read(authenticationServiceProvider).signUp(

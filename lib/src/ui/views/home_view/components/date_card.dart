@@ -25,7 +25,7 @@ class DateCard extends StatelessWidget {
           ),
           children: [
             TextSpan(
-              text: ' • ',
+              text: dayType() != '' ? ' • ' : '',
             ),
             TextSpan(
                 text: dayType(),

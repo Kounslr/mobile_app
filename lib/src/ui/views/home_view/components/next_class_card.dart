@@ -27,7 +27,7 @@ class NextClassCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Enjoy your weekend!',
+                  'Enjoy your weekend! 🤗',
                   style: Theme.of(context).textTheme.headline4,
                 ),
               ],

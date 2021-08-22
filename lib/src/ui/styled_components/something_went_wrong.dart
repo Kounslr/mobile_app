@@ -21,7 +21,7 @@ class SomethingWentWrong extends StatelessWidget {
           CantonPrimaryButton(
             buttonText: 'Sign out',
             textColor: CantonColors.white,
-            containerColor: Theme.of(context).primaryColor,
+            color: Theme.of(context).primaryColor,
             containerWidth: MediaQuery.of(context).size.width / 2 - 34,
             onPressed: () {
               context.read(authenticationServiceProvider).signOut();

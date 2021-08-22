@@ -137,7 +137,7 @@ class _SignInViewState extends State<SignInView> {
       TextEditingController _passwordController) {
     return CantonPrimaryButton(
       buttonText: 'Sign In',
-      containerColor: Theme.of(context).primaryColor,
+      color: Theme.of(context).primaryColor,
       textColor: CantonColors.white,
       onPressed: () async {
         var res = await context
@@ -147,7 +147,7 @@ class _SignInViewState extends State<SignInView> {
               password: _passwordController.text.trim(),
             );
 
-        if (res == 'failed') {
+        if (res != 'success') {
           setState(() {
             _hasError = true;
             _errorMessage = res;
@@ -161,14 +161,14 @@ class _SignInViewState extends State<SignInView> {
     return CantonPrimaryButton(
       buttonText: 'Google',
       alignment: MainAxisAlignment.center,
-      containerColor: Theme.of(context).canvasColor,
+      color: Theme.of(context).canvasColor,
       border: BorderSide(
         color: Theme.of(context).colorScheme.secondary,
         width: 1.7,
       ),
       textColor: Theme.of(context).colorScheme.secondaryVariant,
       prefixIcon: Container(
-        margin: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
         child: FaIcon(
           FontAwesomeIcons.google,
           color: Theme.of(context).primaryColor,
@@ -179,7 +179,7 @@ class _SignInViewState extends State<SignInView> {
             .read(authenticationServiceProvider)
             .signInWithGoogle();
 
-        if (res == 'failed') {
+        if (res != 'success') {
           setState(() {
             _hasError = true;
             _errorMessage = res;
