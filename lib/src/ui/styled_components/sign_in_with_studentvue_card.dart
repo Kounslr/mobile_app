@@ -39,8 +39,6 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
         const SizedBox(height: 20),
         CantonPrimaryButton(
           buttonText: 'Sign in',
-          textColor: CantonColors.white,
-          containerColor: Theme.of(context).primaryColor,
           containerWidth: MediaQuery.of(context).size.width / 2 - 34,
           onPressed: () => _showStudentVueSignInBottomSheet(),
         ),
@@ -141,8 +139,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                           textColor: CantonColors.white,
                           containerWidth: MediaQuery.of(context).size.width / 4,
                           containerHeight: 47,
-                          radius: BorderRadius.circular(37),
-                          containerPadding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                         ),
                         const SizedBox(height: 20),
                         hasResult == false

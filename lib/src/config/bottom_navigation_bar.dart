@@ -37,8 +37,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
           BottomNavigationBarItem(
             label: 'Home',
             tooltip: '',
-            activeIcon: Icon(Iconsax.home, size: 24),
-            icon: Icon(Iconsax.home, size: 24),
+            activeIcon: Icon(CupertinoIcons.home, size: 24),
+            icon: Icon(CupertinoIcons.home, size: 24),
           ),
           // BottomNavigationBarItem(
           //   label: 'Chat',
@@ -49,15 +49,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
           BottomNavigationBarItem(
             label: 'Journal',
             tooltip: '',
-            activeIcon: Icon(Iconsax.book, size: 24),
-            icon: Icon(Iconsax.book, size: 24),
+            activeIcon: Icon(CupertinoIcons.book_fill, size: 24),
+            icon: Icon(CupertinoIcons.book_fill, size: 24),
           ),
 
           BottomNavigationBarItem(
             label: 'Profile',
             tooltip: '',
-            activeIcon: Icon(Iconsax.user, size: 24),
-            icon: Icon(Iconsax.user, size: 24),
+            activeIcon: Icon(CupertinoIcons.profile_circled, size: 24),
+            icon: Icon(CupertinoIcons.profile_circled, size: 24),
           ),
         ],
       ),

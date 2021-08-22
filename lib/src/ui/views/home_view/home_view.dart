@@ -20,7 +20,6 @@ import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/home_view/components/home_view_components.dart';
 import 'package:kounslr/src/ui/views/home_view/components/home_view_header.dart';
-import 'package:kounslr/src/ui/views/profile_view/profile_view.dart';
 import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
 
 class HomeView extends StatefulWidget {
