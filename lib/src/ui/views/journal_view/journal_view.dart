@@ -47,11 +47,10 @@ class _JournalViewState extends State<JournalView> {
                 children: [
                   JournalViewHeader(),
                   SizedBox(height: 20),
-                  Container(
-                    padding:
-                        const EdgeInsets.only(top: 17, left: 17, right: 17),
-                    child: Expanded(
-                      child: Center(
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
                         child: Text(
                           'Click the "+" button to create your first journal entry',
                           style: Theme.of(context).textTheme.headline5,
