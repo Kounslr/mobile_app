@@ -138,7 +138,6 @@ class _SignInViewState extends State<SignInView> {
     return CantonPrimaryButton(
       buttonText: 'Sign In',
       color: Theme.of(context).primaryColor,
-      textColor: CantonColors.white,
       onPressed: () async {
         var res = await context
             .read(authenticationServiceProvider)

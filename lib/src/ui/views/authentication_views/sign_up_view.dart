@@ -45,7 +45,6 @@ class _SignUpViewState extends State<SignUpView> {
           CantonPrimaryButton(
             buttonText: 'Sign Up',
             color: Theme.of(context).primaryColor,
-            textColor: CantonColors.white,
             onPressed: () async {
               await context.read(authenticationServiceProvider).signUp(
                     email: _emailController.text.trim(),
