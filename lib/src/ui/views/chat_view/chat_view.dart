@@ -30,41 +30,52 @@ class _ChatViewState extends State<ChatView> {
   void _handleAttachmentPressed() {
     showModalBottomSheet<void>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return SafeArea(
           child: SizedBox(
             height: 144,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _handleImageSelection();
-                  },
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Photo'),
-                  ),
+            child: Container(
+              decoration: ShapeDecoration(
+                color:
+                    MediaQuery.of(context).platformBrightness == Brightness.dark
+                        ? Theme.of(context).colorScheme.onSecondary
+                        : Theme.of(context).canvasColor,
+                shape: SquircleBorder(
+                  radius: BorderRadius.circular(50),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _handleFileSelection();
-                  },
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('File'),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _handleImageSelection();
+                    },
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Photo'),
+                    ),
                   ),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Cancel'),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _handleFileSelection();
+                    },
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('File'),
+                    ),
                   ),
-                ),
-              ],
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Cancel'),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );

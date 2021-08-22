@@ -88,6 +88,15 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
                 },
                 child: Container(
                   padding: MediaQuery.of(context).viewInsets,
+                  decoration: ShapeDecoration(
+                    color: MediaQuery.of(context).platformBrightness ==
+                            Brightness.dark
+                        ? Theme.of(context).colorScheme.onSecondary
+                        : Theme.of(context).canvasColor,
+                    shape: SquircleBorder(
+                      radius: BorderRadius.circular(50),
+                    ),
+                  ),
                   child: FractionallySizedBox(
                     heightFactor: 0.45,
                     child: SingleChildScrollView(
@@ -108,6 +117,8 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
                             'Rename Tag',
                             style: Theme.of(context).textTheme.headline5,
                           ),
+                          const SizedBox(height: 7.5),
+                          const Divider(),
                           const SizedBox(height: 20),
                           Container(
                             margin: const EdgeInsets.symmetric(horizontal: 17),
