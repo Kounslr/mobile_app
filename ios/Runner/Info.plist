@@ -61,5 +61,7 @@
 			<key>NSAllowsLocalNetworking</key>
 			<true/>
 		</dict>
+		<key>UIStatusBarHidden</key>
+		<false/>
 	</dict>
 </plist>
