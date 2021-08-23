@@ -65,6 +65,7 @@ dependencies:
   charts_flutter: ^0.11.0
   font_awesome_flutter: ^9.1.0
   flutter_launcher_icons: ^0.9.1
+  flutter_native_splash: ^1.2.1
   flutter_slidable: ^0.6.0
   flutter_svg: ^0.22.0
 
