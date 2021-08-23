@@ -52,7 +52,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
   Future<void> _showStudentVueSignInBottomSheet() async {
     var _emailController = TextEditingController();
     var _passwordController = TextEditingController();
-    var hasResult = true;
+    var result = '';
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -79,28 +79,35 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                     ),
                     padding: MediaQuery.of(context).viewInsets,
                     child: FractionallySizedBox(
-                      heightFactor: 0.45,
+                      heightFactor: 0.95,
                       child: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Container(
-                              height: 5,
-                              width: 50,
-                              margin: const EdgeInsets.symmetric(vertical: 15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: Theme.of(context).colorScheme.secondary,
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Container(
+                                height: 5,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(25),
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
                               ),
                             ),
-                            Text(
-                              'Sign in to StudentVue',
-                              style: Theme.of(context).textTheme.headline5,
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 27),
+                              child: Text(
+                                'Sign in to StudentVue',
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
                             ),
-                            const SizedBox(height: 7.5),
+                            const SizedBox(height: 7),
                             const Divider(),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 15),
                             Container(
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 17),
@@ -127,24 +134,24 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                             const SizedBox(height: 15),
                             CantonPrimaryButton(
                               onPressed: () async {
-                                await watch(authenticationServiceProvider)
-                                    .studentVueSignIn(
+                                setState(() {
+                                  result = 'Loading...';
+                                });
+
+                                var res =
+                                    await watch(authenticationServiceProvider)
+                                        .studentVueSignIn(
                                   email: _emailController.text,
                                   password: _passwordController.text,
-                                )
-                                    .then((value) {
-                                  if (value != 'success') {
-                                    setState(() {
-                                      hasResult = false;
-                                    });
-                                  } else {
-                                    hasResult = true;
-                                  }
+                                );
 
-                                  if (hasResult) {
-                                    Phoenix.rebirth(context);
-                                  }
+                                setState(() {
+                                  result = res;
                                 });
+
+                                if (result == 'success') {
+                                  Phoenix.rebirth(context);
+                                }
                               },
                               buttonText: 'Sign in',
                               containerWidth:
@@ -153,18 +160,30 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                               padding: const EdgeInsets.all(10),
                             ),
                             const SizedBox(height: 20),
-                            hasResult == false
-                                ? Text(
-                                    'Incorrect email or password',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        ?.copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .error,
-                                        ),
-                                  )
+                            result != ''
+                                ? result == 'failed'
+                                    ? Text(
+                                        'Incorrect email or password',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            ?.copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .error,
+                                            ),
+                                      )
+                                    : Text(
+                                        result,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            ?.copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
+                                            ),
+                                      )
                                 : Container(),
                           ],
                         ),
