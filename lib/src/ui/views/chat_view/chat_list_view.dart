@@ -43,10 +43,13 @@ class _ChatListViewState extends State<ChatListView> {
         if (rooms.length < 1) {
           return Expanded(
             child: Center(
-              child: Text(
-                'Click the "+" button to create a Chat',
-                style: Theme.of(context).textTheme.headline5,
-                textAlign: TextAlign.center,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 17),
+                child: Text(
+                  'Click the "+" button to create a Chat',
+                  style: Theme.of(context).textTheme.headline5,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
           );
