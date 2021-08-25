@@ -148,11 +148,12 @@ class AuthenticationRepository {
 
       return 'success';
     } catch (e) {
+      print(e);
       return 'failed';
     }
   }
 
-  Future<void> signUp({
+  Future<String> signUp({
     required String email,
     required String password,
   }) async {
@@ -170,8 +171,10 @@ class AuthenticationRepository {
           imageUrl: '',
         ),
       );
-    } on FirebaseAuthException catch (e) {
-      throw e.message!;
+
+      return 'success';
+    } catch (e) {
+      return 'failed';
     }
   }
 }

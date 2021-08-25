@@ -2,6 +2,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:kounslr/src/ui/styled_components/error_text.dart';
 
 class SignInView extends StatefulWidget {
   final Function? toggleView;
@@ -50,7 +51,7 @@ class _SignInViewState extends State<SignInView> {
           const SizedBox(height: 15),
           _signInWithGoogleButton(context),
           _hasError ? const SizedBox(height: 15) : Container(),
-          _hasError ? _errorText(context, _errorMessage) : Container(),
+          _hasError ? ErrorText(_errorMessage) : Container(),
           const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -178,22 +179,13 @@ class _SignInViewState extends State<SignInView> {
             .read(authenticationServiceProvider)
             .signInWithGoogle();
 
-        if (res != 'success') {
+        if (res == 'failed') {
           setState(() {
             _hasError = true;
             _errorMessage = res;
           });
         }
       },
-    );
-  }
-
-  Widget _errorText(BuildContext context, String error) {
-    return Text(
-      error,
-      style: Theme.of(context).textTheme.bodyText1?.copyWith(
-            color: Theme.of(context).errorColor,
-          ),
     );
   }
 }

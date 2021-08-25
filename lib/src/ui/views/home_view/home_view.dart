@@ -28,21 +28,12 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  _performanceTrace() async {
-    var trace = FirebasePerformance.instance.newTrace('home_view_performance');
-    trace.start();
-    await Future.delayed(Duration(seconds: 3));
-    trace.stop();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _performanceTrace();
-  }
-
   @override
   Widget build(BuildContext context) {
+    /// Measures how quickly the UI builds initially
+    var trace = FirebasePerformance.instance.newTrace('home_view_performance');
+    trace.start();
+
     return Consumer(
       builder: (context, watch, child) {
         // General Student info variables
@@ -99,6 +90,8 @@ class _HomeViewState extends State<HomeView> {
                                   },
                                   loading: () => Loading(),
                                   data: (nextClassTeacher) {
+                                    trace.stop();
+
                                     return _content(
                                       context,
                                       school,
