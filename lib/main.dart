@@ -21,7 +21,7 @@ Future<void> main() async {
 
   /// Comment this line out in production
   /// or when merging to [master]
-  // await useLocalEmulator();
+  // await _useLocalEmulator();
 
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
@@ -32,7 +32,8 @@ Future<void> main() async {
   });
 }
 
-Future<void> useLocalEmulator() async {
+// ignore: unused_element
+Future<void> _useLocalEmulator() async {
   var host = 'localhost';
   var firestorePort = 8080;
   var authPort = 9099;
