@@ -1,19 +1,28 @@
 import 'dart:io';
 
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:encrypt/encrypt.dart' as enc;
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:kounslr/src/models/room.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:kounslr/src/config/encryption_contract.dart';
+import 'package:kounslr/src/config/themes/chat_theme.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:kounslr/src/services/repositories/chat_repository.dart';
+
+import 'package:kounslr/src/models/room.dart';
+import 'package:kounslr/src/providers/chat_providers/room_messages_stream_provider.dart';
+import 'package:kounslr/src/providers/chat_providers/room_stream_provider.dart';
+import 'package:kounslr/src/services/repositories/chat_repository/chat_encryption_service.dart';
+import 'package:kounslr/src/services/repositories/chat_repository/chat_repository.dart';
+import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/chat_view/components/chat_view_header.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatView extends StatefulWidget {
   const ChatView(this.room);
@@ -27,6 +36,7 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   bool _isAttachmentUploading = false;
 
+  // ignore: unused_element
   void _handleAttachmentPressed() {
     showModalBottomSheet<void>(
       context: context,
@@ -106,11 +116,11 @@ class _ChatViewState extends State<ChatView> {
           uri: uri,
         );
 
-        FirebaseChatCore.instance.sendMessage(message, widget.room.id);
+        ChatRepository.instance.sendMessage(message, widget.room.id);
         _setAttachmentUploading(false);
+        // ignore: unused_catch_clause
       } on FirebaseException catch (e) {
         _setAttachmentUploading(false);
-        print(e);
       }
     }
   }
@@ -143,14 +153,14 @@ class _ChatViewState extends State<ChatView> {
           width: image.width.toDouble(),
         );
 
-        FirebaseChatCore.instance.sendMessage(
+        ChatRepository.instance.sendMessage(
           message,
           widget.room.id,
         );
         _setAttachmentUploading(false);
+        // ignore: unused_catch_clause
       } on FirebaseException catch (e) {
         _setAttachmentUploading(false);
-        print(e);
       }
     }
   }
@@ -180,11 +190,11 @@ class _ChatViewState extends State<ChatView> {
       types.TextMessage message, types.PreviewData previewData) {
     final updatedMessage = message.copyWith(previewData: previewData);
 
-    FirebaseChatCore.instance.updateMessage(updatedMessage, widget.room.id);
+    ChatRepository.instance.updateMessage(updatedMessage, widget.room.id);
   }
 
   void _handleSendPressed(types.PartialText message) {
-    FirebaseChatCore.instance.sendMessage(
+    ChatRepository.instance.sendMessage(
       message,
       widget.room.id,
     );
@@ -207,47 +217,61 @@ class _ChatViewState extends State<ChatView> {
   Widget _content(BuildContext context) {
     return Column(
       children: [
-        ChatViewHeader(room: widget.room),
+        ChatViewHeader(widget.room),
         _body(context),
       ],
     );
   }
 
   Widget _body(BuildContext context) {
-    return StreamBuilder<Room>(
-      initialData: widget.room,
-      stream: FirebaseChatCore.instance.room(widget.room.id),
-      builder: (context, snapshot) {
-        return StreamBuilder<List<types.Message>>(
-            initialData: const [],
-            stream: FirebaseChatCore.instance.messages(snapshot.data!),
-            builder: (context, snapshot) {
-              return Expanded(
-                child: Chat(
-                  isAttachmentUploading: _isAttachmentUploading,
-                  onMessageTap: _handleMessageTap,
-                  onPreviewDataFetched: _handlePreviewDataFetched,
-                  messages: snapshot.data ?? [],
-                  user: types.User(id: FirebaseAuth.instance.currentUser!.uid),
-                  theme: DefaultChatTheme(
-                    primaryColor: Theme.of(context).primaryColor,
-                    inputBackgroundColor: Theme.of(context).canvasColor,
-                    inputTextColor: Theme.of(context).colorScheme.primary,
-                    inputBorderRadius: BorderRadius.circular(35),
-                    messageBorderRadius: 35,
-                    dateDividerTextStyle: const TextStyle(
-                      color: NEUTRAL_2,
-                      fontFamily: 'Inter',
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      height: 1.333,
-                    ),
+    IEncryption textMessageSut;
+    return Consumer(
+      builder: (context, watch, child) {
+        currentChatRoomId = widget.room.id;
+        currentChatRoom = widget.room;
+
+        final encryptor = enc.Encrypter(enc.AES(enc.Key.fromLength(32)));
+        textMessageSut = ChatEncryptionService(encryptor);
+        final chatRoomRepo = watch(roomStreamProvider);
+        final chatRoomMessagesRepo = watch(roomMessagesStreamProvider);
+
+        types.PartialText encryptTextMessage(String message) {
+          return types.PartialText(text: textMessageSut.encrypt(message));
+        }
+
+        return chatRoomRepo.when(
+          error: (e, s) {
+            return SomethingWentWrong();
+          },
+          loading: () => Expanded(child: Loading()),
+          data: (room) {
+            return chatRoomMessagesRepo.when(
+              error: (e, s) {
+                print(e);
+                print(s);
+                return SomethingWentWrong();
+              },
+              loading: () => Expanded(child: Loading()),
+              data: (messages) {
+                return Expanded(
+                  child: Chat(
+                    isAttachmentUploading: _isAttachmentUploading,
+                    onMessageTap: _handleMessageTap,
+                    onPreviewDataFetched: _handlePreviewDataFetched,
+                    messages: messages,
+                    user:
+                        types.User(id: FirebaseAuth.instance.currentUser!.uid),
+                    theme: chatTheme(context),
+                    onSendPressed: (text) {
+                      _handleSendPressed(encryptTextMessage(text.text));
+                    },
+                    // onAttachmentPressed: () => _handleAttachmentPressed(),
                   ),
-                  onSendPressed: (text) => _handleSendPressed(text),
-                  onAttachmentPressed: () => _handleAttachmentPressed(),
-                ),
-              );
-            });
+                );
+              },
+            );
+          },
+        );
       },
     );
   }
