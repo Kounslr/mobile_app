@@ -33,12 +33,14 @@ class SchoolRepository {
     }
   }
 
-  Future<List<Student>> get allStudents async {
+  Future<List<Student>> get getAllStudents async {
     try {
       var _students = await ref.collection('students').get();
       List<Student> students = [];
       for (var item in _students.docs) {
-        students.add(Student.fromDocumentSnapshot(item));
+        if (item.data()['studentId'] != null) {
+          students.add(Student.fromDocumentSnapshot(item));
+        }
       }
 
       return students;
