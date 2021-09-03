@@ -16,7 +16,7 @@ class JournalViewHeader extends StatelessWidget {
           icon: Icon(
             Iconsax.message_edit,
             color: Theme.of(context).primaryColor,
-            size: 24,
+            size: 27,
           ),
           onPressed: () => CantonMethods.viewTransition(
             context,
