@@ -9,13 +9,13 @@ import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
-import 'package:kounslr/src/ui/providers/next_class_providers/next_block_stream_provider.dart';
-import 'package:kounslr/src/ui/providers/next_class_providers/next_class_stream_provider.dart';
-import 'package:kounslr/src/ui/providers/next_class_providers/next_class_teacher_stream_provider.dart';
-import 'package:kounslr/src/ui/providers/school_stream_provider.dart';
-import 'package:kounslr/src/ui/providers/student_assignments_provider.dart';
-import 'package:kounslr/src/ui/providers/student_classes_future_provider.dart';
-import 'package:kounslr/src/ui/providers/student_stream_provider.dart';
+import 'package:kounslr/src/providers/next_class_providers/next_block_stream_provider.dart';
+import 'package:kounslr/src/providers/next_class_providers/next_class_stream_provider.dart';
+import 'package:kounslr/src/providers/next_class_providers/next_class_teacher_stream_provider.dart';
+import 'package:kounslr/src/providers/school_stream_provider.dart';
+import 'package:kounslr/src/providers/student_assignments_provider.dart';
+import 'package:kounslr/src/providers/student_classes_future_provider.dart';
+import 'package:kounslr/src/providers/student_stream_provider.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/home_view/components/home_view_components.dart';
@@ -187,7 +187,7 @@ class _HomeViewState extends State<HomeView> {
               ),
               CantonActionButton(
                 icon: Icon(
-                  Iconsax.arrow_right_3,
+                  Iconsax.arrow_right_2,
                   size: 20,
                   color: Theme.of(context).primaryColor,
                 ),
