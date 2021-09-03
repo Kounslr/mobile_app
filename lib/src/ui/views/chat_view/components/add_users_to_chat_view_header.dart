@@ -1,8 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:kounslr/src/models/room.dart';
 import 'package:kounslr/src/models/student.dart';
-import 'package:kounslr/src/services/repositories/chat_repository.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:kounslr/src/services/repositories/chat_repository/chat_repository.dart';
 import 'package:kounslr/src/ui/views/chat_view/chat_view.dart';
 import 'package:uuid/uuid.dart';
 
@@ -23,9 +22,9 @@ class AddUsersToChatViewHeader extends StatelessWidget {
             buttonTwo: GestureDetector(
               onTap: () async {
                 if (students.length == 1) {
-                  final user = types.User(id: students.first.id!);
+                  final user = Student(id: students.first.id!);
                   final roomId = Uuid().v4();
-                  Room room = await FirebaseChatCore.instance
+                  Room room = await ChatRepository.instance
                       .createRoom(user, groupId: roomId);
 
                   Navigator.pushReplacement(
