@@ -58,9 +58,13 @@ dependencies:
   open_file: ^3.2.1
   path_provider: ^2.0.2
 
-  # Other
+  # Multi-Purpose
   intl: ^0.17.0
   uuid: ^3.0.4
+  encrypt: ^5.0.1
+  pointycastle: ^3.3.3
+
+  # Other
   qr_flutter: ^4.0.0
   charts_flutter: ^0.11.0
   font_awesome_flutter: ^9.1.0

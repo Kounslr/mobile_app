@@ -1,7 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
-import 'package:kounslr/src/ui/providers/student_repository_provider.dart';
+import 'package:kounslr/src/providers/student_repository_provider.dart';
 import 'package:kounslr/src/ui/views/journal_view/components/journal_entry_view_header.dart';
 import 'package:kounslr/src/ui/views/journal_view/components/summary_text_field.dart';
 import 'package:kounslr/src/ui/views/journal_view/components/tag_text_field.dart';

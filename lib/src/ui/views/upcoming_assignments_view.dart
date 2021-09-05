@@ -2,8 +2,8 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/models/class.dart';
-import 'package:kounslr/src/ui/providers/student_assignments_provider.dart';
-import 'package:kounslr/src/ui/providers/student_classes_future_provider.dart';
+import 'package:kounslr/src/providers/student_assignments_provider.dart';
+import 'package:kounslr/src/providers/student_classes_future_provider.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 

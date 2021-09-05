@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:kounslr/src/config/authentication_exceptions.dart';
 import 'package:kounslr/src/models/student.dart';
-import 'package:kounslr/src/services/repositories/chat_repository.dart';
+import 'package:kounslr/src/services/repositories/chat_repository/chat_repository.dart';
 import 'package:kounslr/src/services/repositories/studentvue_repository.dart';
 
 class AuthenticationRepository {
@@ -108,7 +108,7 @@ class AuthenticationRepository {
         String id = user!.uid;
         String imageUrl = user.photoURL!;
 
-        await FirebaseChatCore.instance.createUserInFirestore(
+        await ChatRepository.instance.createUserInFirestore(
           types.User(
             id: id,
             imageUrl: imageUrl,
@@ -148,7 +148,6 @@ class AuthenticationRepository {
 
       return 'success';
     } catch (e) {
-      print(e);
       return 'failed';
     }
   }
@@ -165,7 +164,7 @@ class AuthenticationRepository {
 
       _createUserInDatabase(user.user!);
 
-      await FirebaseChatCore.instance.createUserInFirestore(
+      await ChatRepository.instance.createUserInFirestore(
         types.User(
           id: user.user!.uid,
           imageUrl: '',

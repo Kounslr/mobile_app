@@ -1,7 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
+import 'package:kounslr/src/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:kounslr/src/ui/styled_components/sign_out_button.dart';
 
 class SignInWithStudentVueCard extends StatefulWidget {
