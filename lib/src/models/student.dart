@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kounslr/src/models/class.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class Student {
   String? id;
@@ -73,10 +72,6 @@ class Student {
       'phone': phone,
       'photo': photo,
     };
-  }
-
-  types.User toUser() {
-    return types.User(id: id!, firstName: name, imageUrl: photo);
   }
 
   factory Student.fromMap(Map<String, dynamic> map) {
