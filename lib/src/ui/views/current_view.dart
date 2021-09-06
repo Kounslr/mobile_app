@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kounslr/src/config/bottom_navigation_bar.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
-import 'package:kounslr/src/ui/views/chat_view/chat_list_view.dart';
 import 'package:kounslr/src/ui/views/home_view/home_view.dart';
 import 'package:kounslr/src/ui/views/journal_view/journal_view.dart';
 import 'package:kounslr/src/ui/views/no_student_data_view.dart';
@@ -42,7 +41,6 @@ class _CurrentViewState extends State<CurrentView> {
   int _currentIndex = 0;
   final List<Widget> _views = [
     HomeView(),
-    ChatListView(),
     JournalView(),
     ProfileView(),
   ];

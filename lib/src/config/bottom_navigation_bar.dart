@@ -41,12 +41,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
             icon: Icon(Iconsax.home, size: 24),
           ),
           BottomNavigationBarItem(
-            label: 'Chat',
-            tooltip: '',
-            activeIcon: Icon(Iconsax.message, size: 24),
-            icon: Icon(Iconsax.message, size: 24),
-          ),
-          BottomNavigationBarItem(
             label: 'Journal',
             tooltip: '',
             activeIcon: Icon(Iconsax.book, size: 24),
