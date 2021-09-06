@@ -1,6 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:kounslr/src/models/room.dart';
-import 'package:kounslr/src/services/repositories/chat_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kounslr/src/providers/chat_providers/rooms_stream_provider.dart';
+import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/chat_view/components/chat_card.dart';
 import 'package:kounslr/src/ui/views/chat_view/components/chat_list_view_header.dart';
 
@@ -28,42 +29,45 @@ class _ChatListViewState extends State<ChatListView> {
   }
 
   Widget _body(BuildContext context) {
-    return StreamBuilder<List<Room>>(
-      stream: FirebaseChatCore.instance.rooms(),
-      initialData: const [],
-      builder: (context, snapshot) {
-        if (snapshot.data == null) {
-          return Expanded(
-            child: Loading(),
-          );
-        }
+    return Consumer(
+      builder: (context, watch, child) {
+        final roomsRepo = watch(roomsStreamProvider);
 
-        var rooms = snapshot.data!;
-
-        if (rooms.length < 1) {
-          return Expanded(
-            child: Center(
-              child: Text(
-                'Click the "+" button to create a Chat',
-                style: Theme.of(context).textTheme.headline5,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          );
-        }
-
-        return Expanded(
-          child: ListView.builder(
-            itemCount: rooms.length,
-            itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  ChatCard(rooms[index]),
-                  if (index == rooms.length - 1) Divider(),
-                ],
+        return roomsRepo.when(
+          error: (e, s) {
+            return SomethingWentWrong();
+          },
+          loading: () => Expanded(child: Loading()),
+          data: (rooms) {
+            if (rooms.length < 1) {
+              return Expanded(
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 17),
+                    child: Text(
+                      'Click the "+" button to create a Chat',
+                      style: Theme.of(context).textTheme.headline5,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
               );
-            },
-          ),
+            }
+
+            return Expanded(
+              child: ListView.builder(
+                itemCount: rooms.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      ChatCard(rooms[index]),
+                      if (index == rooms.length - 1) Divider(),
+                    ],
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );

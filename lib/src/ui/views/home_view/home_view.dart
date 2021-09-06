@@ -9,13 +9,13 @@ import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
-import 'package:kounslr/src/ui/providers/next_class_providers/next_block_stream_provider.dart';
-import 'package:kounslr/src/ui/providers/next_class_providers/next_class_stream_provider.dart';
-import 'package:kounslr/src/ui/providers/next_class_providers/next_class_teacher_stream_provider.dart';
-import 'package:kounslr/src/ui/providers/school_stream_provider.dart';
-import 'package:kounslr/src/ui/providers/student_assignments_provider.dart';
-import 'package:kounslr/src/ui/providers/student_classes_future_provider.dart';
-import 'package:kounslr/src/ui/providers/student_stream_provider.dart';
+import 'package:kounslr/src/providers/next_class_providers/next_block_stream_provider.dart';
+import 'package:kounslr/src/providers/next_class_providers/next_class_stream_provider.dart';
+import 'package:kounslr/src/providers/next_class_providers/next_class_teacher_stream_provider.dart';
+import 'package:kounslr/src/providers/school_stream_provider.dart';
+import 'package:kounslr/src/providers/student_assignments_provider.dart';
+import 'package:kounslr/src/providers/student_classes_future_provider.dart';
+import 'package:kounslr/src/providers/student_stream_provider.dart';
 import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/home_view/components/home_view_components.dart';
@@ -28,21 +28,12 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  _performanceTrace() async {
-    var trace = FirebasePerformance.instance.newTrace('home_view_performance');
-    trace.start();
-    await Future.delayed(Duration(seconds: 3));
-    trace.stop();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _performanceTrace();
-  }
-
   @override
   Widget build(BuildContext context) {
+    /// Measures how quickly the UI builds initially
+    var trace = FirebasePerformance.instance.newTrace('home_view_performance');
+    trace.start();
+
     return Consumer(
       builder: (context, watch, child) {
         // General Student info variables
@@ -99,6 +90,8 @@ class _HomeViewState extends State<HomeView> {
                                   },
                                   loading: () => Loading(),
                                   data: (nextClassTeacher) {
+                                    trace.stop();
+
                                     return _content(
                                       context,
                                       school,
@@ -194,7 +187,7 @@ class _HomeViewState extends State<HomeView> {
               ),
               CantonActionButton(
                 icon: Icon(
-                  Iconsax.arrow_right_3,
+                  Iconsax.arrow_right_2,
                   size: 20,
                   color: Theme.of(context).primaryColor,
                 ),

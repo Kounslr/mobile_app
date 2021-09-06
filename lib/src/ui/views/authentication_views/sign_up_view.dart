@@ -1,6 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kounslr/src/ui/providers/authentication_providers/authentication_service_provider.dart';
+import 'package:kounslr/src/providers/authentication_providers/authentication_service_provider.dart';
+import 'package:kounslr/src/ui/styled_components/error_text.dart';
 
 class SignUpView extends StatefulWidget {
   final Function? toggleView;
@@ -11,11 +12,13 @@ class SignUpView extends StatefulWidget {
 }
 
 class _SignUpViewState extends State<SignUpView> {
+  String _errorMessage = '';
+  bool _hasError = false;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    final _emailController = TextEditingController();
-    final _passwordController = TextEditingController();
-
     return CantonScaffold(
       resizeToAvoidBottomInset: true,
       padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 34),
@@ -27,11 +30,8 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  Widget _content(
-    BuildContext context,
-    TextEditingController _emailController,
-    TextEditingController _passwordController,
-  ) {
+  Widget _content(BuildContext context, TextEditingController _emailController,
+      TextEditingController _passwordController) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -46,12 +46,22 @@ class _SignUpViewState extends State<SignUpView> {
             buttonText: 'Sign Up',
             color: Theme.of(context).primaryColor,
             onPressed: () async {
-              await context.read(authenticationServiceProvider).signUp(
-                    email: _emailController.text.trim(),
-                    password: _passwordController.text.trim(),
-                  );
+              var res =
+                  await context.read(authenticationServiceProvider).signUp(
+                        email: _emailController.text.trim(),
+                        password: _passwordController.text.trim(),
+                      );
+
+              if (res != 'success') {
+                setState(() {
+                  _hasError = true;
+                  _errorMessage = res;
+                });
+              }
             },
           ),
+          _hasError ? const SizedBox(height: 15) : Container(),
+          _hasError ? ErrorText(_errorMessage) : Container(),
           const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

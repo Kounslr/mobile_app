@@ -31,16 +31,11 @@ class _AddStudentCardState extends State<AddStudentCard> {
           widget.onChanged!(_isSelected!);
         });
       },
-      child: Card(
-        margin: EdgeInsets.zero,
-        shape: Border(
-          top: BorderSide(
-            color: Theme.of(context).colorScheme.onSecondary,
-            width: 1.5,
-          ),
-        ),
-        child: Container(
+      child: Column(children: [
+        Divider(),
+        Container(
           padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 7),
+          color: Theme.of(context).backgroundColor,
           child: Row(
             children: [
               CircleAvatar(
@@ -85,7 +80,7 @@ class _AddStudentCardState extends State<AddStudentCard> {
             ],
           ),
         ),
-      ),
+      ]),
     );
   }
 }

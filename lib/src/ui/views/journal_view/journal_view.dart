@@ -2,8 +2,8 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kounslr/src/models/journal_entry.dart';
-import 'package:kounslr/src/ui/providers/journal_entries_stream_provider.dart';
-import 'package:kounslr/src/ui/providers/student_repository_provider.dart';
+import 'package:kounslr/src/providers/journal_entries_stream_provider.dart';
+import 'package:kounslr/src/providers/student_repository_provider.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/journal_view/components/journal_view_components.dart';
 import 'package:kounslr/src/ui/views/journal_view/components/journal_view_header.dart';
@@ -47,11 +47,10 @@ class _JournalViewState extends State<JournalView> {
                 children: [
                   JournalViewHeader(),
                   SizedBox(height: 20),
-                  Container(
-                    padding:
-                        const EdgeInsets.only(top: 17, left: 17, right: 17),
-                    child: Expanded(
-                      child: Center(
+                  Expanded(
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
                         child: Text(
                           'Click the "+" button to create your first journal entry',
                           style: Theme.of(context).textTheme.headline5,

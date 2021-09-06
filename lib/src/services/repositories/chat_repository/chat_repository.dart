@@ -2,13 +2,17 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:encrypt/encrypt.dart' as enc;
+import 'package:kounslr/src/config/encryption_contract.dart';
 import 'package:kounslr/src/models/room.dart';
+import 'package:kounslr/src/models/student.dart';
+import 'package:kounslr/src/services/repositories/chat_repository/chat_encryption_service.dart';
 import 'package:uuid/uuid.dart';
 
 /// Provides access to Firebase chat data. Singleton, use
 /// FirebaseChatCore.instance to aceess methods.
-class FirebaseChatCore {
-  FirebaseChatCore._privateConstructor() {
+class ChatRepository {
+  ChatRepository._privateConstructor() {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       firebaseUser = user;
     });
@@ -19,8 +23,7 @@ class FirebaseChatCore {
   User? firebaseUser = FirebaseAuth.instance.currentUser;
 
   /// Singleton instance
-  static final FirebaseChatCore instance =
-      FirebaseChatCore._privateConstructor();
+  static final ChatRepository instance = ChatRepository._privateConstructor();
 
   /// School level database reference
   final ref = FirebaseFirestore.instance
@@ -46,7 +49,7 @@ class FirebaseChatCore {
     if (firebaseUser == null) return Future.error('User does not exist');
 
     final currentUser = await fetchStudent(firebaseUser!.uid);
-    final roomUsers = [currentUser, ...users];
+    final roomUsers = [currentUser.toUser(), ...users];
 
     final room = await ref.collection('chat_rooms').add({
       'createdAt': FieldValue.serverTimestamp(),
@@ -78,7 +81,7 @@ class FirebaseChatCore {
   /// Creates a direct chat for 2 people. Add [metadata] for any additional
   /// custom data.
   Future<Room> createRoom(
-    types.User otherUser, {
+    Student otherUser, {
 
     /// Could be classId or clubId
     String? groupType,
@@ -110,7 +113,7 @@ class FirebaseChatCore {
     }
 
     final currentUser = await fetchStudent(firebaseUser!.uid);
-    final users = [currentUser, otherUser];
+    final users = [currentUser.toUser(), otherUser.toUser()];
 
     final room = await ref.collection('chat_rooms').add({
       'createdAt': FieldValue.serverTimestamp(),
@@ -150,6 +153,9 @@ class FirebaseChatCore {
   /// Returns a stream of messages from Firebase for a given room
   Stream<List<types.Message>> messages(Room room,
       {String? groupType, String? id}) {
+    final encryptor = enc.Encrypter(enc.AES(enc.Key.fromLength(32)));
+    IEncryption textMessageSut = ChatEncryptionService(encryptor);
+
     return ref
         .collection('chat_rooms/${room.id}/messages')
         .orderBy('createdAt', descending: true)
@@ -159,10 +165,11 @@ class FirebaseChatCore {
         return snapshot.docs.fold<List<types.Message>>(
           [],
           (previousValue, element) {
+            final newPreviousValues = <types.TextMessage>[];
             final data = element.data();
             final author = room.users.firstWhere(
               (u) => u.id == data['authorId'],
-              orElse: () => types.User(id: data['authorId'] as String),
+              orElse: () => Student(id: data['authorId'] as String).toUser(),
             );
 
             data['author'] = author.toJson();
@@ -174,7 +181,36 @@ class FirebaseChatCore {
               // Ignore errors, null values are ok
             }
             data.removeWhere((key, value) => key == 'authorId');
-            return [...previousValue, types.Message.fromJson(data)];
+
+            for (int i = 0; i < previousValue.length; i++) {
+              var item = previousValue[i];
+              if (item.type == types.MessageType.text) {
+                final encryptedMessage =
+                    types.TextMessage.fromJson(item.toJson());
+
+                newPreviousValues.add(encryptedMessage);
+              }
+            }
+
+            if (data['type'] == 'text') {
+              var encryptedMessage = types.TextMessage.fromJson(data);
+
+              var newDecryptedMessage = types.TextMessage(
+                id: encryptedMessage.id,
+                author: encryptedMessage.author,
+                previewData: encryptedMessage.previewData,
+                createdAt: encryptedMessage.createdAt,
+                metadata: encryptedMessage.metadata,
+                status: encryptedMessage.status,
+                roomId: encryptedMessage.roomId,
+                updatedAt: encryptedMessage.updatedAt,
+                text: textMessageSut.decrypt(encryptedMessage.text),
+              );
+
+              return [...newPreviousValues, newDecryptedMessage];
+            }
+
+            return [...newPreviousValues];
           },
         );
       },
@@ -314,7 +350,17 @@ class FirebaseChatCore {
 }
 
 /// Fetches user from Firebase and returns a promise
-Future<types.User> fetchStudent(String id, {types.Role? role}) async {
+Future<Student> fetchStudent(String id, {types.Role? role}) async {
+  final ref = FirebaseFirestore.instance
+      .collection('customers/lcps/schools')
+      .doc('independence');
+
+  final doc = await ref.collection('students').doc(id).get();
+
+  return processStudentDocument(doc, role: role);
+}
+
+Future<types.User> fetchUser(String id, {types.Role? role}) async {
   final ref = FirebaseFirestore.instance
       .collection('customers/lcps/schools')
       .doc('independence');
@@ -353,7 +399,7 @@ Future<Room> processRoomDocument(
 
   final users = await Future.wait(
     userIds.map(
-      (userId) => fetchStudent(
+      (userId) => fetchUser(
         userId as String,
         role: types.getRoleFromString(userRoles?[userId] as String?),
       ),
@@ -367,7 +413,7 @@ Future<Room> processRoomDocument(
       );
 
       imageUrl = otherUser.imageUrl;
-      name = '${otherUser.firstName ?? ''} ${otherUser.lastName ?? ''}'.trim();
+      name = name!.trim();
     } catch (e) {
       // Do nothing if other user is not found, because he should be found.
       // Consider falling back to some default values.
@@ -393,25 +439,29 @@ types.User processUserDocument(
   DocumentSnapshot<Map<String, dynamic>> doc, {
   types.Role? role,
 }) {
-  final createdAt = doc.data()?['createdAt'] as Timestamp?;
-  final firstName = doc.data()?['firstName'] as String?;
-  final imageUrl = doc.data()?['imageUrl'] as String?;
-  final lastName = doc.data()?['lastName'] as String?;
-  final lastSeen = doc.data()?['lastSeen'] as Timestamp?;
-  final metadata = doc.data()?['metadata'] as Map<String, dynamic>?;
-  final roleString = doc.data()?['role'] as String?;
-  final updatedAt = doc.data()?['updatedAt'] as Timestamp?;
+  final name = doc.data()?['name'] as String?;
+  final photo = doc.data()?['imageUrl'] as String?;
 
-  final user = types.User(
-    createdAt: createdAt?.millisecondsSinceEpoch,
-    firstName: firstName,
+  final user = Student(
     id: doc.id,
-    imageUrl: imageUrl,
-    lastName: lastName,
-    lastSeen: lastSeen?.millisecondsSinceEpoch,
-    metadata: metadata,
-    role: role ?? types.getRoleFromString(roleString),
-    updatedAt: updatedAt?.millisecondsSinceEpoch,
+    photo: photo,
+    name: name,
+  );
+
+  return user.toUser();
+}
+
+Student processStudentDocument(
+  DocumentSnapshot<Map<String, dynamic>> doc, {
+  types.Role? role,
+}) {
+  final name = doc.data()?['name'] as String?;
+  final photo = doc.data()?['imageUrl'] as String?;
+
+  final user = Student(
+    id: doc.id,
+    photo: photo,
+    name: name,
   );
 
   return user;

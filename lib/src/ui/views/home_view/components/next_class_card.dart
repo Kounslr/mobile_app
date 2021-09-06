@@ -108,7 +108,7 @@ class NextClassCard extends StatelessWidget {
                 ),
                 CantonActionButton(
                   icon: Icon(
-                    Iconsax.arrow_right_3,
+                    Iconsax.arrow_right_2,
                     size: 20,
                     color: Theme.of(context).primaryColor,
                   ),

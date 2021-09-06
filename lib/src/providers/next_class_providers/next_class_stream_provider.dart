@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kounslr/src/models/school.dart';
+import 'package:kounslr/src/models/class.dart';
+import 'package:kounslr/src/providers/authentication_providers/authentication_stream_provider.dart';
 import 'package:kounslr/src/services/repositories/student_repository.dart';
-import 'package:kounslr/src/ui/providers/authentication_providers/authentication_stream_provider.dart';
 
-final schoolStreamProvider = StreamProvider.autoDispose<School>((ref) {
+final nextClassStreamProvider = StreamProvider.autoDispose<Class>((ref) {
   ref.watch(authenticationStreamProvider).whenData((value) {
     if (value == null) {
       ref.maintainState = false;
@@ -11,6 +11,5 @@ final schoolStreamProvider = StreamProvider.autoDispose<School>((ref) {
       ref.maintainState = true;
     }
   });
-
-  return StudentRepository().school;
+  return StudentRepository().nextClassStream;
 });
