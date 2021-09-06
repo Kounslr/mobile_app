@@ -54,7 +54,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -86,71 +86,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
-				</dict>
-				<dict>
-					<key>architectures</key>
-					<array>
-						<string>arm64</string>
-					</array>
-					<key>bitcode</key>
-					<false/>
-					<key>buildNumber</key>
-					<string>1</string>
-					<key>certificate</key>
-					<dict>
-						<key>SHA1</key>
-						<string>9DA0C98FFAFF794A113675DBC3585FA4ECBD8FC7</string>
-						<key>dateExpires</key>
-						<string>8/19/22</string>
-						<key>type</key>
-						<string>Apple Distribution</string>
-					</dict>
-					<key>name</key>
-					<string>DKImagePickerController.framework</string>
-					<key>symbols</key>
-					<true/>
-					<key>team</key>
-					<dict>
-						<key>id</key>
-						<string>8J372L8B5Y</string>
-						<key>name</key>
-						<string>Uday Dikshit</string>
-					</dict>
-					<key>versionNumber</key>
-					<string>1.2.0</string>
-				</dict>
-				<dict>
-					<key>architectures</key>
-					<array>
-						<string>arm64</string>
-					</array>
-					<key>bitcode</key>
-					<false/>
-					<key>buildNumber</key>
-					<string>1</string>
-					<key>certificate</key>
-					<dict>
-						<key>SHA1</key>
-						<string>9DA0C98FFAFF794A113675DBC3585FA4ECBD8FC7</string>
-						<key>dateExpires</key>
-						<string>8/19/22</string>
-						<key>type</key>
-						<string>Apple Distribution</string>
-					</dict>
-					<key>name</key>
-					<string>DKPhotoGallery.framework</string>
-					<key>symbols</key>
-					<true/>
-					<key>team</key>
-					<dict>
-						<key>id</key>
-						<string>8J372L8B5Y</string>
-						<key>name</key>
-						<string>Uday Dikshit</string>
-					</dict>
-					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -182,7 +118,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -214,7 +150,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -246,7 +182,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -278,7 +214,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -310,7 +246,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -342,7 +278,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -374,7 +310,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -406,7 +342,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -438,7 +374,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -470,7 +406,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -502,7 +438,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -534,7 +470,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -566,7 +502,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -598,7 +534,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -630,7 +566,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -662,7 +598,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -694,71 +630,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
-				</dict>
-				<dict>
-					<key>architectures</key>
-					<array>
-						<string>arm64</string>
-					</array>
-					<key>bitcode</key>
-					<false/>
-					<key>buildNumber</key>
-					<string>1</string>
-					<key>certificate</key>
-					<dict>
-						<key>SHA1</key>
-						<string>9DA0C98FFAFF794A113675DBC3585FA4ECBD8FC7</string>
-						<key>dateExpires</key>
-						<string>8/19/22</string>
-						<key>type</key>
-						<string>Apple Distribution</string>
-					</dict>
-					<key>name</key>
-					<string>SDWebImage.framework</string>
-					<key>symbols</key>
-					<true/>
-					<key>team</key>
-					<dict>
-						<key>id</key>
-						<string>8J372L8B5Y</string>
-						<key>name</key>
-						<string>Uday Dikshit</string>
-					</dict>
-					<key>versionNumber</key>
-					<string>1.2.0</string>
-				</dict>
-				<dict>
-					<key>architectures</key>
-					<array>
-						<string>arm64</string>
-					</array>
-					<key>bitcode</key>
-					<false/>
-					<key>buildNumber</key>
-					<string>1</string>
-					<key>certificate</key>
-					<dict>
-						<key>SHA1</key>
-						<string>9DA0C98FFAFF794A113675DBC3585FA4ECBD8FC7</string>
-						<key>dateExpires</key>
-						<string>8/19/22</string>
-						<key>type</key>
-						<string>Apple Distribution</string>
-					</dict>
-					<key>name</key>
-					<string>SwiftyGif.framework</string>
-					<key>symbols</key>
-					<true/>
-					<key>team</key>
-					<dict>
-						<key>id</key>
-						<string>8J372L8B5Y</string>
-						<key>name</key>
-						<string>Uday Dikshit</string>
-					</dict>
-					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -790,39 +662,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
-				</dict>
-				<dict>
-					<key>architectures</key>
-					<array>
-						<string>arm64</string>
-					</array>
-					<key>bitcode</key>
-					<false/>
-					<key>buildNumber</key>
-					<string>1</string>
-					<key>certificate</key>
-					<dict>
-						<key>SHA1</key>
-						<string>9DA0C98FFAFF794A113675DBC3585FA4ECBD8FC7</string>
-						<key>dateExpires</key>
-						<string>8/19/22</string>
-						<key>type</key>
-						<string>Apple Distribution</string>
-					</dict>
-					<key>name</key>
-					<string>file_picker.framework</string>
-					<key>symbols</key>
-					<true/>
-					<key>team</key>
-					<dict>
-						<key>id</key>
-						<string>8J372L8B5Y</string>
-						<key>name</key>
-						<string>Uday Dikshit</string>
-					</dict>
-					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -854,7 +694,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -886,39 +726,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
-				</dict>
-				<dict>
-					<key>architectures</key>
-					<array>
-						<string>arm64</string>
-					</array>
-					<key>bitcode</key>
-					<false/>
-					<key>buildNumber</key>
-					<string>1</string>
-					<key>certificate</key>
-					<dict>
-						<key>SHA1</key>
-						<string>9DA0C98FFAFF794A113675DBC3585FA4ECBD8FC7</string>
-						<key>dateExpires</key>
-						<string>8/19/22</string>
-						<key>type</key>
-						<string>Apple Distribution</string>
-					</dict>
-					<key>name</key>
-					<string>image_picker.framework</string>
-					<key>symbols</key>
-					<true/>
-					<key>team</key>
-					<dict>
-						<key>id</key>
-						<string>8J372L8B5Y</string>
-						<key>name</key>
-						<string>Uday Dikshit</string>
-					</dict>
-					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -950,7 +758,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -982,39 +790,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
-				</dict>
-				<dict>
-					<key>architectures</key>
-					<array>
-						<string>arm64</string>
-					</array>
-					<key>bitcode</key>
-					<false/>
-					<key>buildNumber</key>
-					<string>1</string>
-					<key>certificate</key>
-					<dict>
-						<key>SHA1</key>
-						<string>9DA0C98FFAFF794A113675DBC3585FA4ECBD8FC7</string>
-						<key>dateExpires</key>
-						<string>8/19/22</string>
-						<key>type</key>
-						<string>Apple Distribution</string>
-					</dict>
-					<key>name</key>
-					<string>open_file.framework</string>
-					<key>symbols</key>
-					<true/>
-					<key>team</key>
-					<dict>
-						<key>id</key>
-						<string>8J372L8B5Y</string>
-						<key>name</key>
-						<string>Uday Dikshit</string>
-					</dict>
-					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 				<dict>
 					<key>architectures</key>
@@ -1046,71 +822,7 @@
 						<string>Uday Dikshit</string>
 					</dict>
 					<key>versionNumber</key>
-					<string>1.2.0</string>
-				</dict>
-				<dict>
-					<key>architectures</key>
-					<array>
-						<string>arm64</string>
-					</array>
-					<key>bitcode</key>
-					<false/>
-					<key>buildNumber</key>
-					<string>1</string>
-					<key>certificate</key>
-					<dict>
-						<key>SHA1</key>
-						<string>9DA0C98FFAFF794A113675DBC3585FA4ECBD8FC7</string>
-						<key>dateExpires</key>
-						<string>8/19/22</string>
-						<key>type</key>
-						<string>Apple Distribution</string>
-					</dict>
-					<key>name</key>
-					<string>path_provider.framework</string>
-					<key>symbols</key>
-					<true/>
-					<key>team</key>
-					<dict>
-						<key>id</key>
-						<string>8J372L8B5Y</string>
-						<key>name</key>
-						<string>Uday Dikshit</string>
-					</dict>
-					<key>versionNumber</key>
-					<string>1.2.0</string>
-				</dict>
-				<dict>
-					<key>architectures</key>
-					<array>
-						<string>arm64</string>
-					</array>
-					<key>bitcode</key>
-					<false/>
-					<key>buildNumber</key>
-					<string>1</string>
-					<key>certificate</key>
-					<dict>
-						<key>SHA1</key>
-						<string>9DA0C98FFAFF794A113675DBC3585FA4ECBD8FC7</string>
-						<key>dateExpires</key>
-						<string>8/19/22</string>
-						<key>type</key>
-						<string>Apple Distribution</string>
-					</dict>
-					<key>name</key>
-					<string>url_launcher.framework</string>
-					<key>symbols</key>
-					<true/>
-					<key>team</key>
-					<dict>
-						<key>id</key>
-						<string>8J372L8B5Y</string>
-						<key>name</key>
-						<string>Uday Dikshit</string>
-					</dict>
-					<key>versionNumber</key>
-					<string>1.2.0</string>
+					<string>1.2.1</string>
 				</dict>
 			</array>
 			<key>entitlements</key>
@@ -1149,7 +861,7 @@
 				<string>Uday Dikshit</string>
 			</dict>
 			<key>versionNumber</key>
-			<string>1.2.0</string>
+			<string>1.2.1</string>
 		</dict>
 	</array>
 </dict>
