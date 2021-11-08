@@ -6,6 +6,7 @@ import 'package:kounslr/src/providers/school_repository_provider.dart';
 import 'package:kounslr/src/providers/student_classes_future_provider.dart';
 import 'package:kounslr/src/ui/styled_components/class_card.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
+import 'package:kounslr/src/ui/views/schedule_view/components/schedule_view_header.dart';
 
 class ScheduleView extends StatelessWidget {
   const ScheduleView();
@@ -13,6 +14,7 @@ class ScheduleView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CantonScaffold(
+      backgroundColor: CantonMethods.alternateCanvasColor(context),
       padding: EdgeInsets.zero,
       body: _content(context),
     );
@@ -21,21 +23,10 @@ class ScheduleView extends StatelessWidget {
   Widget _content(BuildContext context) {
     return Column(
       children: [
-        _header(context),
+        ScheduleViewHeader(),
         const SizedBox(height: 10),
         _body(context),
       ],
-    );
-  }
-
-  Widget _header(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 17),
-      child: ViewHeaderTwo(
-        title: 'Schedule',
-        backButton: true,
-        isBackButtonClear: true,
-      ),
     );
   }
 
@@ -74,9 +65,7 @@ class ScheduleView extends StatelessWidget {
                     itemCount: blocks.length,
                     itemBuilder: (context, index) {
                       return FutureBuilder<StaffMember>(
-                        future: context
-                            .read(schoolRepositoryProvider)
-                            .getTeacherByTeacherId(
+                        future: context.read(schoolRepositoryProvider).getTeacherByTeacherId(
                               classes[blocks[index].period! - 1].teacherId!,
                             ),
                         builder: (context, teacherSnapshot) {
@@ -85,19 +74,12 @@ class ScheduleView extends StatelessWidget {
                             return Loading();
                           } else if (!futureIsDone && index != 0) {
                             return Container();
-                          } else if (futureIsDone &&
-                              index == 0 &&
-                              classes.length <= 0) {
+                          } else if (futureIsDone && index == 0 && classes.length <= 0) {
                             return Center(
                               child: Text(
                                 'No Classes',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondaryVariant,
+                                style: Theme.of(context).textTheme.headline5?.copyWith(
+                                      color: Theme.of(context).colorScheme.secondaryVariant,
                                     ),
                               ),
                             );
