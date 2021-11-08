@@ -15,7 +15,7 @@ class ProfileView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    return CantonScaffold(body: _content(context, watch));
+    return CantonScaffold(padding: EdgeInsets.zero, body: _content(context, watch));
   }
 
   Widget _content(BuildContext context, ScopedReader watch) {
@@ -51,8 +51,7 @@ class ProfileView extends ConsumerWidget {
                     const SizedBox(height: 30),
                     StudentIdCard(school: school, student: student),
                     StudentScheduleCard(school: school, student: student),
-                    StudentUpcomingAssignmentsCard(
-                        school: school, student: student),
+                    StudentUpcomingAssignmentsCard(school: school, student: student),
                     const SizedBox(height: 30),
                     SignOutButton(),
                   ],
