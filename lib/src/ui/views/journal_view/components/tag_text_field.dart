@@ -23,28 +23,32 @@ class TagTextField extends StatelessWidget {
         // textFieldFilledColor: Theme.of(context).colorScheme.onSecondary,
         textFieldFilled: true,
         textFieldEnabledBorder: SquircleInputBorder(
-          radius: BorderRadius.all(Radius.circular(35)),
+          radius: SmoothBorderRadius.all(
+              SmoothRadius(cornerSmoothing: 1, cornerRadius: 35)),
           side: BorderSide(
             color: CantonColors.transparent,
             width: 1.5,
           ),
         ),
         textFieldBorder: SquircleInputBorder(
-          radius: BorderRadius.all(Radius.circular(35)),
+          radius: SmoothBorderRadius.all(
+              SmoothRadius(cornerSmoothing: 1, cornerRadius: 35)),
           side: BorderSide(
             color: CantonColors.transparent,
             width: 1.5,
           ),
         ),
         textFieldFocusedBorder: SquircleInputBorder(
-          radius: BorderRadius.all(Radius.circular(35)),
+          radius: SmoothBorderRadius.all(
+              SmoothRadius(cornerSmoothing: 1, cornerRadius: 35)),
           side: BorderSide(
             color: CantonColors.transparent,
             width: 1.5,
           ),
         ),
         textFieldDisabledBorder: SquircleInputBorder(
-          radius: BorderRadius.all(Radius.circular(35)),
+          radius: SmoothBorderRadius.all(
+              SmoothRadius(cornerSmoothing: 1, cornerRadius: 35)),
           side: BorderSide(
             color: CantonColors.transparent,
             width: 1.5,
