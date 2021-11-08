@@ -3,11 +3,10 @@ import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/ui/views/home_view/components/class_card.dart';
-import 'package:kounslr/src/ui/views/schedule_view.dart';
+import 'package:kounslr/src/ui/views/schedule_view/schedule_view.dart';
 
 class NextClassCard extends StatelessWidget {
-  const NextClassCard(
-      {required this.schoolClass, required this.block, required this.teacher});
+  const NextClassCard({required this.schoolClass, required this.block, required this.teacher});
 
   final Class schoolClass;
   final Block block;
@@ -66,8 +65,7 @@ class NextClassCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Sorry! We couldn\'t figure out your next class',
-                    style: Theme.of(context).textTheme.headline6),
+                Text('Sorry! We couldn\'t figure out your next class', style: Theme.of(context).textTheme.headline6),
               ],
             ),
           ),
@@ -80,8 +78,7 @@ class NextClassCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text('Next Class',
-                    style: Theme.of(context).textTheme.headline6),
+                Text('Next Class', style: Theme.of(context).textTheme.headline6),
                 const Spacer(),
                 TextButton(
                   style: ButtonStyle(
