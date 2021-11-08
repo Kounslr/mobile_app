@@ -8,8 +8,7 @@ class SignInWithStudentVueCard extends StatefulWidget {
   const SignInWithStudentVueCard({Key? key}) : super(key: key);
 
   @override
-  _SignInWithStudentVueCardState createState() =>
-      _SignInWithStudentVueCardState();
+  _SignInWithStudentVueCardState createState() => _SignInWithStudentVueCardState();
 }
 
 class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
@@ -40,6 +39,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
         const SizedBox(height: 20),
         CantonPrimaryButton(
           buttonText: 'Sign in',
+          color: Theme.of(context).primaryColor,
           containerWidth: MediaQuery.of(context).size.width / 2 - 34,
           onPressed: () => _showStudentVueSignInBottomSheet(),
         ),
@@ -69,8 +69,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                   },
                   child: Container(
                     decoration: ShapeDecoration(
-                      color: MediaQuery.of(context).platformBrightness ==
-                              Brightness.dark
+                      color: MediaQuery.of(context).platformBrightness == Brightness.dark
                           ? Theme.of(context).colorScheme.onSecondary
                           : Theme.of(context).canvasColor,
                       shape: SquircleBorder(
@@ -92,14 +91,12 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                                 width: 50,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(25),
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(context).colorScheme.secondary,
                                 ),
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 27),
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 27),
                               child: Text(
                                 'Sign in to StudentVue',
                                 style: Theme.of(context).textTheme.headline5,
@@ -109,8 +106,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                             const Divider(),
                             const SizedBox(height: 15),
                             Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 17),
+                              margin: const EdgeInsets.symmetric(horizontal: 17),
                               child: CantonTextInput(
                                 isTextFormField: true,
                                 obscureText: false,
@@ -121,8 +117,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                             ),
                             const SizedBox(height: 15),
                             Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 17),
+                              margin: const EdgeInsets.symmetric(horizontal: 17),
                               child: CantonTextInput(
                                 isTextFormField: true,
                                 obscureText: true,
@@ -133,14 +128,17 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                             ),
                             const SizedBox(height: 15),
                             CantonPrimaryButton(
+                              color: Theme.of(context).primaryColor,
+                              buttonText: 'Sign in',
+                              containerWidth: MediaQuery.of(context).size.width / 4,
+                              containerHeight: 47,
+                              padding: const EdgeInsets.all(10),
                               onPressed: () async {
                                 setState(() {
                                   result = 'Loading...';
                                 });
 
-                                var res =
-                                    await watch(authenticationServiceProvider)
-                                        .studentVueSignIn(
+                                var res = await watch(authenticationServiceProvider).studentVueSignIn(
                                   email: _emailController.text,
                                   password: _passwordController.text,
                                 );
@@ -153,35 +151,20 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                                   Phoenix.rebirth(context);
                                 }
                               },
-                              buttonText: 'Sign in',
-                              containerWidth:
-                                  MediaQuery.of(context).size.width / 4,
-                              containerHeight: 47,
-                              padding: const EdgeInsets.all(10),
                             ),
                             const SizedBox(height: 20),
                             result != ''
                                 ? result == 'failed'
                                     ? Text(
                                         'Incorrect email or password',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            ?.copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .error,
+                                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                                              color: Theme.of(context).colorScheme.error,
                                             ),
                                       )
                                     : Text(
                                         result,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            ?.copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .background,
+                                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                                              color: Theme.of(context).colorScheme.background,
                                             ),
                                       )
                                 : Container(),
