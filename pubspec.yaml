@@ -27,7 +27,7 @@ dependencies:
   # UI Library
   canton_design_system:
     git:
-      url: https://github.com/31Carlton7/canton_design_system.git
+      url: git://github.com/31Carlton7/canton_design_system.git
       ref: master
 
   # API
@@ -57,7 +57,10 @@ dependencies:
 
   # Other
   qr_flutter: ^4.0.0
-  charts_flutter: ^0.11.0
+  charts_flutter:
+    git:
+      url: https://github.com/google/charts.git
+      path: charts_flutter
   font_awesome_flutter: ^9.1.0
   flutter_launcher_icons: ^0.9.1
   flutter_native_splash: ^1.2.1
