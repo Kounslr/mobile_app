@@ -13,47 +13,33 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).canvasColor,
-        border: Border(
-          top: BorderSide(
-            color: Theme.of(context).dividerColor,
-            width: 0.5,
-          ),
+    return BottomNavigationBar(
+      currentIndex: widget.currentIndex,
+      onTap: widget.onTabTapped,
+      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      selectedItemColor: Theme.of(context).colorScheme.primary,
+      unselectedItemColor: Theme.of(context).colorScheme.secondaryVariant,
+      selectedIconTheme: IconThemeData(color: Theme.of(context).primaryColor, size: 24),
+      items: const [
+        BottomNavigationBarItem(
+          label: 'Home',
+          tooltip: '',
+          activeIcon: Icon(Iconsax.home, size: 24),
+          icon: Icon(Iconsax.home, size: 24),
         ),
-      ),
-      child: BottomNavigationBar(
-        currentIndex: widget.currentIndex,
-        onTap: widget.onTabTapped,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Theme.of(context).colorScheme.secondaryVariant,
-        selectedLabelStyle: Theme.of(context).textTheme.bodyText2,
-        unselectedLabelStyle: Theme.of(context).textTheme.bodyText2,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        items: [
-          BottomNavigationBarItem(
-            label: 'Home',
-            tooltip: '',
-            activeIcon: Icon(Iconsax.home, size: 24),
-            icon: Icon(Iconsax.home, size: 24),
-          ),
-          BottomNavigationBarItem(
-            label: 'Journal',
-            tooltip: '',
-            activeIcon: Icon(Iconsax.book, size: 24),
-            icon: Icon(Iconsax.book, size: 24),
-          ),
-          BottomNavigationBarItem(
-            label: 'Profile',
-            tooltip: '',
-            activeIcon: Icon(Iconsax.user, size: 24),
-            icon: Icon(Iconsax.user, size: 24),
-          ),
-        ],
-      ),
+        BottomNavigationBarItem(
+          label: 'Journal',
+          tooltip: '',
+          activeIcon: Icon(Iconsax.book, size: 24),
+          icon: Icon(Iconsax.book, size: 24),
+        ),
+        BottomNavigationBarItem(
+          label: 'Profile',
+          tooltip: '',
+          activeIcon: Icon(Iconsax.user, size: 24),
+          icon: Icon(Iconsax.user, size: 24),
+        ),
+      ],
     );
   }
 }
