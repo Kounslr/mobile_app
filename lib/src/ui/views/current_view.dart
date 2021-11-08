@@ -1,5 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kounslr/src/config/bottom_navigation_bar.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
@@ -7,6 +9,10 @@ import 'package:kounslr/src/ui/views/home_view/home_view.dart';
 import 'package:kounslr/src/ui/views/journal_view/journal_view.dart';
 import 'package:kounslr/src/ui/views/no_student_data_view.dart';
 import 'package:kounslr/src/ui/views/profile_view/profile_view.dart';
+
+final _homeNavigatorKey = GlobalKey<NavigatorState>();
+final _journalNavigatorKey = GlobalKey<NavigatorState>();
+final _profileNavigatorKey = GlobalKey<NavigatorState>();
 
 class CurrentView extends StatefulWidget {
   @override
@@ -45,7 +51,17 @@ class _CurrentViewState extends State<CurrentView> {
     ProfileView(),
   ];
 
-  void onTabTapped(int index) {
+  void _onTabTapped(int index) {
+    if (index == _currentIndex && _currentIndex == 0 && _homeNavigatorKey.currentState!.canPop()) {
+      _homeNavigatorKey.currentState!.pop();
+    }
+    if (index == _currentIndex && _currentIndex == 1 && _journalNavigatorKey.currentState!.canPop()) {
+      _journalNavigatorKey.currentState!.pop();
+    }
+    if (index == _currentIndex && _currentIndex == 2 && _profileNavigatorKey.currentState!.canPop()) {
+      _profileNavigatorKey.currentState!.pop();
+    }
+
     setState(() {
       _currentIndex = index;
     });
@@ -61,9 +77,48 @@ class _CurrentViewState extends State<CurrentView> {
 
     return CantonScaffold(
       padding: EdgeInsets.zero,
-      bottomNavBar:
-          studentHasData ? BottomNavBar(_currentIndex, onTabTapped) : null,
-      body: studentHasData ? _views[_currentIndex] : NoStudentDataView(),
+      backgroundColor: CantonMethods.alternateCanvasColor(context, index: _currentIndex, targetIndexes: [0]),
+      bottomNavBar: studentHasData ? BottomNavBar(_currentIndex, _onTabTapped) : null,
+      body: !studentHasData
+          ? NoStudentDataView()
+          : IndexedStack(
+              index: _currentIndex,
+              children: [
+                Navigator(
+                  key: _homeNavigatorKey,
+                  observers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics())],
+                  onGenerateRoute: (settings) {
+                    return MaterialPageRoute(
+                      settings: settings,
+                      fullscreenDialog: true,
+                      builder: (context) => SafeArea(child: _views[_currentIndex]),
+                    );
+                  },
+                ),
+                Navigator(
+                  key: _journalNavigatorKey,
+                  observers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics())],
+                  onGenerateRoute: (settings) {
+                    return MaterialPageRoute(
+                      settings: settings,
+                      fullscreenDialog: true,
+                      builder: (context) => SafeArea(child: _views[_currentIndex]),
+                    );
+                  },
+                ),
+                Navigator(
+                  key: _profileNavigatorKey,
+                  observers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics())],
+                  onGenerateRoute: (settings) {
+                    return MaterialPageRoute(
+                      settings: settings,
+                      fullscreenDialog: true,
+                      builder: (context) => SafeArea(child: _views[_currentIndex]),
+                    );
+                  },
+                ),
+              ],
+            ),
     );
   }
 }
