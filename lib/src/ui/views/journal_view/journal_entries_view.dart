@@ -4,6 +4,7 @@ import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/providers/journal_entries_stream_provider.dart';
 import 'package:kounslr/src/ui/styled_components/journal_entry_tag_card.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
+import 'package:kounslr/src/ui/views/journal_view/components/journal_entries_view_header.dart';
 
 class JournalEntriesView extends StatefulWidget {
   const JournalEntriesView();
@@ -16,7 +17,9 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   @override
   Widget build(BuildContext context) {
     return CantonScaffold(
+      backgroundColor: CantonMethods.alternateCanvasColor(context),
       padding: const EdgeInsets.all(0),
+      safeArea: false,
       body: _content(context),
     );
   }
@@ -24,19 +27,9 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   Widget _content(BuildContext context) {
     return Column(
       children: [
-        _header(),
+        JournalEntriesViewHeader(),
         _journalEntriesListView(context),
       ],
-    );
-  }
-
-  Widget _header() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 17),
-      child: ViewHeaderTwo(
-        title: 'Journal Entries',
-        backButton: true,
-      ),
     );
   }
 
@@ -64,8 +57,7 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
                           children: [
                             JournalEntryTagCard(
                               _listOfEntries(entries)
-                                  .where((element) =>
-                                      element.tags!.contains(_tagList[index]))
+                                  .where((element) => element.tags!.contains(_tagList[index]))
                                   .toList(),
                               _tagList[index],
                             ),
@@ -78,9 +70,7 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
                       child: Text(
                         'No entries',
                         style: Theme.of(context).textTheme.headline4?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .secondaryVariant,
+                              color: Theme.of(context).colorScheme.secondaryVariant,
                             ),
                       ),
                     ),
