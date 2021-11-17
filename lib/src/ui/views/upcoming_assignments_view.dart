@@ -14,6 +14,7 @@ class UpcomingAssignmentView extends StatelessWidget {
   Widget build(BuildContext context) {
     return CantonScaffold(
       padding: const EdgeInsets.all(0),
+      backgroundColor: CantonMethods.alternateCanvasColor(context),
       body: _content(context),
     );
   }
@@ -21,8 +22,7 @@ class UpcomingAssignmentView extends StatelessWidget {
   Widget _content(BuildContext context) {
     return Consumer(
       builder: (context, watch, child) {
-        final upcomingAssignmentsRepo =
-            watch(upcomingAssignmentsStreamProvider);
+        final upcomingAssignmentsRepo = watch(upcomingAssignmentsStreamProvider);
         final classesRepo = watch(studentClassesStreamProvider);
 
         return classesRepo.when(
@@ -62,8 +62,7 @@ class UpcomingAssignmentView extends StatelessWidget {
     );
   }
 
-  Widget _body(
-      BuildContext context, List<Class> classes, List<Assignment> assignments) {
+  Widget _body(BuildContext context, List<Class> classes, List<Assignment> assignments) {
     if (assignments.length == 0 || classes.length == 0) {
       return Expanded(
         child: Text(
@@ -87,10 +86,7 @@ class UpcomingAssignmentView extends StatelessWidget {
             children: [
               if (index == 0) Divider(),
               AssignmentCard(
-                classes
-                    .where(
-                        (element) => element.id == assignments[index].classId)
-                    .toList()[0],
+                classes.where((element) => element.id == assignments[index].classId).toList()[0],
                 assignments[index],
               ),
               if (index == assignments.length - 1) Divider(),
