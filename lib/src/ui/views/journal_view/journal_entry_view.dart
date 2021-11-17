@@ -58,10 +58,9 @@ class _JournalEntryViewState extends State<JournalEntryView> {
     return Expanded(
       child: Column(
         children: [
-          TitleTextField(focus: _titleFocus, controller: _titleController),
           TagTextField(tags: _tags!),
-          SummaryTextField(
-              focus: _summaryFocus, controller: _summaryController),
+          TitleTextField(focus: _titleFocus, controller: _titleController),
+          SummaryTextField(focus: _summaryFocus, controller: _summaryController),
         ],
       ),
     );
