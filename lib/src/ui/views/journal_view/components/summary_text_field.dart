@@ -24,7 +24,7 @@ class SummaryTextField extends StatelessWidget {
         focusedBorder: InputBorder.none,
         disabledBorder: InputBorder.none,
         focusedErrorBorder: InputBorder.none,
-        hintText: 'Summary',
+        hintText: 'What\'s on your mind?',
       ),
     );
   }
