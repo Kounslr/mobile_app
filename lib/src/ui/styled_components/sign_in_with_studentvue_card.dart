@@ -31,7 +31,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                       color: Theme.of(context).primaryColor,
                     ),
               ),
-              TextSpan(text: 'to take full advantage of Kounslr')
+              const TextSpan(text: 'to take full advantage of Kounslr')
             ],
           ),
           textAlign: TextAlign.center,
@@ -44,7 +44,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
           onPressed: () => _showStudentVueSignInBottomSheet(),
         ),
         const SizedBox(height: 20),
-        SignOutButton(),
+        const SignOutButton(),
       ],
     );
   }

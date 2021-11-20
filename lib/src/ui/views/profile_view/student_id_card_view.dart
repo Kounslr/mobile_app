@@ -9,7 +9,7 @@ class StudentIDCardView extends StatelessWidget {
   final Student student;
   final School school;
 
-  const StudentIDCardView(this.student, this.school);
+  const StudentIDCardView(this.student, this.school, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return _content(context);
@@ -20,7 +20,7 @@ class StudentIDCardView extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          StudentIdCardViewHeader(),
+          const StudentIdCardViewHeader(),
           _body(context, student),
           Container(height: 70),
         ],

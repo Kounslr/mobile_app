@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class JournalEntryViewHeader extends StatelessWidget {
-  const JournalEntryViewHeader({required this.completeEntry});
+  const JournalEntryViewHeader({required this.completeEntry, Key? key}) : super(key: key);
 
   final Future<void> Function() completeEntry;
 
@@ -14,7 +14,7 @@ class JournalEntryViewHeader extends StatelessWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CantonBackButton(isClear: true),
+            const CantonBackButton(isClear: true),
             Text(
               DateFormat.yMMMMd().format(DateTime.now()),
               style: Theme.of(context).textTheme.headline5,
@@ -34,8 +34,10 @@ class JournalEntryViewHeader extends StatelessWidget {
                 ),
                 child: Text(
                   'Save',
-                  style: Theme.of(context).textTheme.headline6!.copyWith(
-                      fontWeight: FontWeight.w500, color: CantonColors.white),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(fontWeight: FontWeight.w500, color: CantonColors.white),
                 ),
               ),
             ),

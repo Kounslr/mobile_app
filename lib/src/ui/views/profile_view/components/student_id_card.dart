@@ -4,7 +4,7 @@ import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/ui/views/profile_view/student_id_card_view.dart';
 
 class StudentIdCard extends StatelessWidget {
-  const StudentIdCard({required this.school, required this.student});
+  const StudentIdCard({required this.school, required this.student, Key? key}) : super(key: key);
 
   final Student student;
   final School school;
@@ -13,13 +13,12 @@ class StudentIdCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        CantonMethods.viewTransition(
-            context, StudentIDCardView(student, school));
+        CantonMethods.viewTransition(context, StudentIDCardView(student, school));
       },
       child: Card(
         margin: EdgeInsets.zero,
         shape: SquircleBorder(
-          radius: BorderRadius.vertical(
+          radius: const BorderRadius.vertical(
             top: Radius.circular(37),
           ),
           side: BorderSide(
@@ -35,7 +34,7 @@ class StudentIdCard extends StatelessWidget {
                 'ID Card',
                 style: Theme.of(context).textTheme.headline6,
               ),
-              Spacer(),
+              const Spacer(),
               IconlyIcon(
                 IconlyBold.Wallet,
                 color: Theme.of(context).colorScheme.secondaryVariant,

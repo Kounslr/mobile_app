@@ -7,9 +7,7 @@ import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
 
 class SchoolRepository {
-  var ref = FirebaseFirestore.instance
-      .collection('customers/lcps/schools')
-      .doc('independence');
+  var ref = FirebaseFirestore.instance.collection('customers/lcps/schools').doc('independence');
 
   Future<School> get school async {
     try {
@@ -64,12 +62,11 @@ class SchoolRepository {
   List<Assignment> _assignments = [];
   Future<Class> getClass({String? id}) async {
     var _class = await ref.collection('classes').doc(id).get();
-    var assignmentsRef =
-        await ref.collection('classes').doc(id).collection('assignments').get();
+    var assignmentsRef = await ref.collection('classes').doc(id).collection('assignments').get();
 
-    assignmentsRef.docs.forEach((element) {
+    for (var element in assignmentsRef.docs) {
       _assignments.add(Assignment.fromDocumentSnapshot(element));
-    });
+    }
 
     Map<String, Assignment> mapFilter = {};
     for (var item in _assignments) {
@@ -107,9 +104,7 @@ class SchoolRepository {
   Future<Block> getBlockByPeriod(int period) async {
     var _school = await school;
 
-    var _block = _school.currentDay!.blocks!
-        .where((element) => element.period == period)
-        .first;
+    var _block = _school.currentDay!.blocks!.where((element) => element.period == period).first;
 
     return _block;
   }

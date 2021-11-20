@@ -1,7 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 
 class TitleTextField extends StatelessWidget {
-  const TitleTextField({required this.focus, required this.controller});
+  const TitleTextField({required this.focus, required this.controller, Key? key}) : super(key: key);
 
   final FocusNode focus;
   final TextEditingController controller;
@@ -13,7 +13,7 @@ class TitleTextField extends StatelessWidget {
       cursorColor: Theme.of(context).primaryColor,
       controller: controller,
       maxLines: null,
-      scrollController: new ScrollController(),
+      scrollController: ScrollController(),
       onChanged: (_) {},
       style: Theme.of(context).textTheme.headline3,
       decoration: InputDecoration(
@@ -25,10 +25,8 @@ class TitleTextField extends StatelessWidget {
         focusedBorder: InputBorder.none,
         disabledBorder: InputBorder.none,
         focusedErrorBorder: InputBorder.none,
-        hintStyle: Theme.of(context)
-            .textTheme
-            .headline3!
-            .copyWith(color: Theme.of(context).colorScheme.secondaryVariant),
+        hintStyle:
+            Theme.of(context).textTheme.headline3!.copyWith(color: Theme.of(context).colorScheme.secondaryVariant),
       ),
     );
   }

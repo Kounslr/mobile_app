@@ -3,15 +3,14 @@ import 'package:intl/intl.dart';
 import 'package:kounslr/src/models/school.dart';
 
 class DateCard extends StatelessWidget {
-  const DateCard({required this.school});
+  const DateCard({required this.school, Key? key}) : super(key: key);
 
   final School school;
 
   @override
   Widget build(BuildContext context) {
     String dayType() {
-      if (school.currentDay?.dayType == null ||
-          [6, 7].contains(DateTime.now().weekday)) return '';
+      if (school.currentDay?.dayType == null || [6, 7].contains(DateTime.now().weekday)) return '';
 
       return (school.currentDay?.dayType ?? '') + ' Day';
     }
@@ -29,10 +28,7 @@ class DateCard extends StatelessWidget {
             ),
             TextSpan(
                 text: dayType(),
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    ?.copyWith(color: Theme.of(context).primaryColor)),
+                style: Theme.of(context).textTheme.headline6?.copyWith(color: Theme.of(context).primaryColor)),
           ],
         ),
         textAlign: TextAlign.right,

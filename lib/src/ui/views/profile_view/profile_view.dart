@@ -11,7 +11,7 @@ import 'package:kounslr/src/ui/views/profile_view/components/student_schedule_ca
 import 'package:kounslr/src/ui/views/profile_view/components/student_upcoming_assignments_card.dart';
 
 class ProfileView extends ConsumerWidget {
-  const ProfileView();
+  const ProfileView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
@@ -21,7 +21,7 @@ class ProfileView extends ConsumerWidget {
   Widget _content(BuildContext context, ScopedReader watch) {
     return Column(
       children: [
-        ProfileViewHeader(),
+        const ProfileViewHeader(),
         _body(context),
       ],
     );
@@ -36,12 +36,12 @@ class ProfileView extends ConsumerWidget {
         return schoolRepo.when(
           loading: () => Loading(),
           error: (e, s) {
-            return SomethingWentWrong();
+            return const SomethingWentWrong();
           },
           data: (school) {
             return studentRepo.when(
               error: (e, s) {
-                return SomethingWentWrong();
+                return const SomethingWentWrong();
               },
               loading: () => Loading(),
               data: (student) {
@@ -53,7 +53,7 @@ class ProfileView extends ConsumerWidget {
                     StudentScheduleCard(school: school, student: student),
                     StudentUpcomingAssignmentsCard(school: school, student: student),
                     const SizedBox(height: 30),
-                    SignOutButton(),
+                    const SignOutButton(),
                   ],
                 );
               },

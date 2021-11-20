@@ -1,7 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 
 class ViewCard extends StatelessWidget {
-  const ViewCard({required this.view, required this.text});
+  const ViewCard({required this.view, required this.text, Key? key}) : super(key: key);
 
   final Widget view;
   final String text;
@@ -23,7 +23,7 @@ class ViewCard extends StatelessWidget {
                   text,
                   style: Theme.of(context).textTheme.headline6!.copyWith(),
                 ),
-                Spacer(),
+                const Spacer(),
                 Icon(
                   Iconsax.arrow_right_3,
                   size: 20,

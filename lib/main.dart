@@ -27,7 +27,7 @@ Future<void> main() async {
 
   /// Lock screen orientation to vertical
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
-    runApp(Phoenix(child: ProviderScope(child: MyApp())));
+    runApp(Phoenix(child: const ProviderScope(child: MyApp())));
   });
 }
 
@@ -42,6 +42,8 @@ Future<void> _useLocalEmulator() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -55,7 +57,7 @@ class MyApp extends StatelessWidget {
           navigatorObservers: [
             FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
           ],
-          home: AuthenticationWrapper(),
+          home: const AuthenticationWrapper(),
         );
       },
     );

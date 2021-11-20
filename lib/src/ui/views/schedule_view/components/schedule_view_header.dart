@@ -7,7 +7,7 @@ class ScheduleViewHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 17),
-      child: ViewHeaderTwo(title: 'Schedule', backButton: true),
+      child: const ViewHeaderTwo(title: 'Schedule', backButton: true),
     );
   }
 }

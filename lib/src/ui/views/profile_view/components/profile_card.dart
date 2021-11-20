@@ -3,7 +3,7 @@ import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/student.dart';
 
 class ProfileCard extends StatelessWidget {
-  const ProfileCard({required this.school, required this.student});
+  const ProfileCard({required this.school, required this.student, Key? key}) : super(key: key);
 
   final Student student;
   final School school;
@@ -33,7 +33,7 @@ class ProfileCard extends StatelessWidget {
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             IconlyIcon(
               IconlyBold.Profile,
               size: 40,

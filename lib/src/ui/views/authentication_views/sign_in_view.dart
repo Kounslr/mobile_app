@@ -6,7 +6,7 @@ import 'package:kounslr/src/ui/styled_components/error_text.dart';
 
 class SignInView extends StatefulWidget {
   final Function? toggleView;
-  const SignInView({this.toggleView});
+  const SignInView({this.toggleView, Key? key}) : super(key: key);
 
   @override
   _SignInViewState createState() => _SignInViewState();
@@ -27,8 +27,8 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
-  Widget _content(BuildContext context, TextEditingController _emailController,
-      TextEditingController _passwordController) {
+  Widget _content(
+      BuildContext context, TextEditingController _emailController, TextEditingController _passwordController) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -102,8 +102,7 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
-  Widget _emailTextInput(
-      BuildContext context, TextEditingController _emailController) {
+  Widget _emailTextInput(BuildContext context, TextEditingController _emailController) {
     return CantonTextInput(
       hintText: 'Email',
       isTextFormField: true,
@@ -117,8 +116,7 @@ class _SignInViewState extends State<SignInView> {
     );
   }
 
-  Widget _passwordTextInput(
-      BuildContext context, TextEditingController _passwordController) {
+  Widget _passwordTextInput(BuildContext context, TextEditingController _passwordController) {
     return CantonTextInput(
       hintText: 'Password',
       isTextFormField: true,
@@ -133,16 +131,12 @@ class _SignInViewState extends State<SignInView> {
   }
 
   Widget _signInButton(
-      BuildContext context,
-      TextEditingController _emailController,
-      TextEditingController _passwordController) {
+      BuildContext context, TextEditingController _emailController, TextEditingController _passwordController) {
     return CantonPrimaryButton(
       buttonText: 'Sign In',
       color: Theme.of(context).primaryColor,
       onPressed: () async {
-        var res = await context
-            .read(authenticationServiceProvider)
-            .signInWithEmailAndPassword(
+        var res = await context.read(authenticationServiceProvider).signInWithEmailAndPassword(
               email: _emailController.text.trim(),
               password: _passwordController.text.trim(),
             );
@@ -175,9 +169,7 @@ class _SignInViewState extends State<SignInView> {
         ),
       ),
       onPressed: () async {
-        var res = await context
-            .read(authenticationServiceProvider)
-            .signInWithGoogle();
+        var res = await context.read(authenticationServiceProvider).signInWithGoogle();
 
         if (res == 'failed') {
           setState(() {

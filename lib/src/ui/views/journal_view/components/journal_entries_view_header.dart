@@ -7,7 +7,7 @@ class JournalEntriesViewHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 17),
-      child: ViewHeaderTwo(
+      child: const ViewHeaderTwo(
         title: 'Journal Entries',
         backButton: true,
       ),

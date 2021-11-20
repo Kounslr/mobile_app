@@ -1,12 +1,12 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:intl/intl.dart';
+
 import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 
 class ClassCard extends StatefulWidget {
-  const ClassCard(
-      {required this.schoolClass, required this.block, required this.teacher});
+  const ClassCard({required this.schoolClass, required this.block, required this.teacher, Key? key}) : super(key: key);
 
   final Class schoolClass;
   final Block block;
@@ -21,7 +21,7 @@ class _ClassCardState extends State<ClassCard> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Divider(),
+        const Divider(),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 12),
           child: Row(
@@ -45,9 +45,7 @@ class _ClassCardState extends State<ClassCard> {
                       Text(
                         widget.schoolClass.roomNumber ?? 'LOCATION',
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .secondaryVariant,
+                              color: Theme.of(context).colorScheme.secondaryVariant,
                             ),
                       ),
                     ],
@@ -64,16 +62,14 @@ class _ClassCardState extends State<ClassCard> {
                       Text(
                         widget.teacher.name!,
                         style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .secondaryVariant,
+                              color: Theme.of(context).colorScheme.secondaryVariant,
                             ),
                       ),
                     ],
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               Text(
                 _classTime(widget.block.time!),
                 style: Theme.of(context).textTheme.headline6,

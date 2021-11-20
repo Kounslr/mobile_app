@@ -2,7 +2,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class HorizontalBarChart extends StatelessWidget {
-  const HorizontalBarChart({required this.tags});
+  const HorizontalBarChart({required this.tags, Key? key}) : super(key: key);
 
   final Map<String?, int?> tags;
 
@@ -23,7 +23,7 @@ class HorizontalBarChart extends StatelessWidget {
     );
 
     final List<charts.Series<dynamic, String>> series = [
-      new charts.Series(
+      charts.Series(
         id: 'Tags',
         seriesColor: seriesColor,
         domainFn: (tag, _) => tag.key,
@@ -34,7 +34,7 @@ class HorizontalBarChart extends StatelessWidget {
 
     return Column(
       children: [
-        Divider(),
+        const Divider(),
         Container(
           color: Theme.of(context).colorScheme.secondary,
           padding: const EdgeInsets.only(left: 17, bottom: 10),
@@ -68,8 +68,7 @@ class HorizontalBarChart extends StatelessWidget {
                         color: labelColor,
                         fontSize: 12,
                       ),
-                      lineStyle: charts.LineStyleSpec(
-                          color: charts.MaterialPalette.transparent),
+                      lineStyle: const charts.LineStyleSpec(color: charts.MaterialPalette.transparent),
                     ),
                   ),
                   primaryMeasureAxis: charts.NumericAxisSpec(
@@ -86,7 +85,7 @@ class HorizontalBarChart extends StatelessWidget {
             ],
           ),
         ),
-        Divider(),
+        const Divider(),
       ],
     );
   }

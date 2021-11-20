@@ -6,7 +6,8 @@ import 'package:kounslr/src/ui/views/home_view/components/class_card.dart';
 import 'package:kounslr/src/ui/views/schedule_view/schedule_view.dart';
 
 class NextClassCard extends StatelessWidget {
-  const NextClassCard({required this.schoolClass, required this.block, required this.teacher});
+  const NextClassCard({required this.schoolClass, required this.block, required this.teacher, Key? key})
+      : super(key: key);
 
   final Class schoolClass;
   final Block block;
@@ -100,7 +101,7 @@ class NextClassCard extends StatelessWidget {
                         ),
                   ),
                   onPressed: () {
-                    CantonMethods.viewTransition(context, ScheduleView());
+                    CantonMethods.viewTransition(context, const ScheduleView());
                   },
                 ),
                 CantonActionButton(
@@ -110,7 +111,7 @@ class NextClassCard extends StatelessWidget {
                     color: Theme.of(context).primaryColor,
                   ),
                   onPressed: () {
-                    CantonMethods.viewTransition(context, ScheduleView());
+                    CantonMethods.viewTransition(context, const ScheduleView());
                   },
                 ),
               ],

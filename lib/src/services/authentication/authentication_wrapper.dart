@@ -7,6 +7,8 @@ import 'package:kounslr/src/ui/views/authentication_views/sign_up_view.dart';
 import 'package:kounslr/src/ui/views/current_view.dart';
 
 class AuthenticationWrapper extends StatefulWidget {
+  const AuthenticationWrapper({Key? key}) : super(key: key);
+
   @override
   _AuthenticationWrapperState createState() => _AuthenticationWrapperState();
 }
@@ -28,7 +30,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
 
         return _authState.when(
           error: (e, s) {
-            return SomethingWentWrong();
+            return const SomethingWentWrong();
           },
           loading: () => Loading(),
           data: (user) {
@@ -39,7 +41,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
                 return SignUpView(toggleView: toggleView);
               }
             } else {
-              return CurrentView();
+              return const CurrentView();
             }
           },
         );

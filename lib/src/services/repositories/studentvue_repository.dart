@@ -6,14 +6,13 @@ import 'package:xml/xml.dart';
 import 'package:kounslr/src/models/assignment.dart';
 
 class StudentVueClient {
-  final domain;
+  final String domain;
   late String reqURL;
 
   final bool mock;
   final String username, password;
   final bool studentAccount;
-  StudentVueClient(this.username, this.password, this.domain,
-      {this.studentAccount = true, this.mock = false}) {
+  StudentVueClient(this.username, this.password, this.domain, {this.studentAccount = true, this.mock = false}) {
     reqURL = 'https://' + domain + '/Service/PXPCommunication.asmx?WSDL';
   }
 
@@ -43,9 +42,8 @@ class StudentVueClient {
 
       var headers = <String, String>{'Content-Type': 'text/xml'};
 
-      var res = await _dio.post(reqURL,
-          data: requestData,
-          options: Options(headers: headers), onSendProgress: (one, two) {
+      var res =
+          await _dio.post(reqURL, data: requestData, options: Options(headers: headers), onSendProgress: (one, two) {
         if (callback != null) {
           callback((one / two) * 0.5);
         }
@@ -70,9 +68,8 @@ class StudentVueClient {
       if (current.getAttribute('Title') == null) continue;
       Class _class = Class();
 
-      _class.name = _formattedStringName(current
-          .getAttribute('Title')!
-          .substring(0, current.getAttribute('Title')!.indexOf('(')));
+      _class.name = _formattedStringName(
+          current.getAttribute('Title')!.substring(0, current.getAttribute('Title')!.indexOf('(')));
 
       _class.block = int.tryParse(current.getAttribute('Period') ?? '0') ?? -1;
       _class.roomNumber = current.getAttribute('Room') ?? 'N/A';
@@ -95,8 +92,7 @@ class StudentVueClient {
       for (int i = 0; i < current.children.length; i++) {
         var ass = Assignment();
 
-        ass.name =
-            _formattedStringName(current.children[i].getAttribute('Measure'));
+        ass.name = _formattedStringName(current.children[i].getAttribute('Measure'));
         ass.type = current.children[i].getAttribute('Type') ?? 'No Type';
 
         // bool dueDateIsNull = false;
@@ -115,17 +111,12 @@ class StudentVueClient {
         //                     .split('/')[0]) ??
         //             -1;
         if (current.children[i].getAttribute('Score') == 'Not Graded') {
-          ass.possiblePoints = double.tryParse(
-              (current.children[i].getAttribute('Points') ?? '')
-                  .replaceAll(' Points Possible', ''));
+          ass.possiblePoints =
+              double.tryParse((current.children[i].getAttribute('Points') ?? '').replaceAll(' Points Possible', ''));
         } else {
-          if (double.tryParse(
-                  current.children[i].getAttribute('Score') ?? 'N/A') ==
-              null) {
+          if (double.tryParse(current.children[i].getAttribute('Score') ?? 'N/A') == null) {
             List<String> pointsStr =
-                (current.children[i].getAttribute('Points') ?? 'N/A')
-                    .replaceAll(' ', '')
-                    .split('/');
+                (current.children[i].getAttribute('Points') ?? 'N/A').replaceAll(' ', '').split('/');
             if (pointsStr.length < 2) {
               ass.possiblePoints = -1;
             } else {
@@ -133,8 +124,7 @@ class StudentVueClient {
               ass.possiblePoints = pp ?? -1;
             }
           } else {
-            ass.possiblePoints = double.tryParse(
-                current.children[i].getAttribute('Score') ?? 'N/A');
+            ass.possiblePoints = double.tryParse(current.children[i].getAttribute('Score') ?? 'N/A');
           }
         }
         _class.assignments!.add(ass);
@@ -167,9 +157,8 @@ class StudentVueClient {
 
       var headers = <String, String>{'Content-Type': 'text/xml'};
 
-      var res = await _dio.post(reqURL,
-          data: requestData,
-          options: Options(headers: headers), onSendProgress: (one, two) {
+      var res =
+          await _dio.post(reqURL, data: requestData, options: Options(headers: headers), onSendProgress: (one, two) {
         if (callback != null) {
           callback((one / two) * 0.5);
         }
@@ -184,8 +173,8 @@ class StudentVueClient {
     final document = XmlDocument.parse(HtmlUnescape().convert(resData!));
 
     // the StudentInfo element is inside four other dumb elements
-    final el = document.root.firstElementChild!.firstElementChild!
-        .firstElementChild!.firstElementChild!.firstElementChild!;
+    final el =
+        document.root.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild!;
 
     var student = Student(
       studentId: el.getElement('PermID')?.innerText,

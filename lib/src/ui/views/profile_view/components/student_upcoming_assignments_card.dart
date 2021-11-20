@@ -4,8 +4,7 @@ import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
 
 class StudentUpcomingAssignmentsCard extends StatelessWidget {
-  const StudentUpcomingAssignmentsCard(
-      {required this.school, required this.student});
+  const StudentUpcomingAssignmentsCard({required this.school, required this.student, Key? key}) : super(key: key);
 
   final Student student;
   final School school;
@@ -14,12 +13,12 @@ class StudentUpcomingAssignmentsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        CantonMethods.viewTransition(context, UpcomingAssignmentView());
+        CantonMethods.viewTransition(context, const UpcomingAssignmentView());
       },
       child: Card(
         margin: EdgeInsets.zero,
         shape: SquircleBorder(
-          radius: BorderRadius.vertical(
+          radius: const BorderRadius.vertical(
             bottom: Radius.circular(37),
           ),
           side: BorderSide(
@@ -35,7 +34,7 @@ class StudentUpcomingAssignmentsCard extends StatelessWidget {
                 'Upcoming Assignments',
                 style: Theme.of(context).textTheme.headline6,
               ),
-              Spacer(),
+              const Spacer(),
               IconlyIcon(
                 IconlyBold.Paper,
                 color: Theme.of(context).colorScheme.secondaryVariant,

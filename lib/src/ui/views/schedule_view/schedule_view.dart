@@ -9,7 +9,7 @@ import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/schedule_view/components/schedule_view_header.dart';
 
 class ScheduleView extends StatelessWidget {
-  const ScheduleView();
+  const ScheduleView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class ScheduleView extends StatelessWidget {
   Widget _content(BuildContext context) {
     return Column(
       children: [
-        ScheduleViewHeader(),
+        const ScheduleViewHeader(),
         const SizedBox(height: 10),
         _body(context),
       ],
@@ -40,10 +40,10 @@ class ScheduleView extends StatelessWidget {
         return studentClassesRepo.when(
           loading: () => Loading(),
           error: (e, s) {
-            return SomethingWentWrong();
+            return const SomethingWentWrong();
           },
           data: (classes) {
-            if (classes.length <= 0) {
+            if (classes.isEmpty) {
               return Expanded(
                 child: Text(
                   'No Classes',
@@ -57,7 +57,7 @@ class ScheduleView extends StatelessWidget {
             return schoolBlocksRepo.when(
               loading: () => Loading(),
               error: (e, s) {
-                return SomethingWentWrong();
+                return const SomethingWentWrong();
               },
               data: (blocks) {
                 return Expanded(
@@ -74,7 +74,7 @@ class ScheduleView extends StatelessWidget {
                             return Loading();
                           } else if (!futureIsDone && index != 0) {
                             return Container();
-                          } else if (futureIsDone && index == 0 && classes.length <= 0) {
+                          } else if (futureIsDone && index == 0 && classes.isEmpty) {
                             return Center(
                               child: Text(
                                 'No Classes',
@@ -92,7 +92,7 @@ class ScheduleView extends StatelessWidget {
                                 block: blocks[index],
                                 teacher: teacherSnapshot.data!,
                               ),
-                              if (index == blocks.length - 1) Divider(),
+                              if (index == blocks.length - 1) const Divider(),
                             ],
                           );
                         },

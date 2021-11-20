@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/providers/authentication_providers/authentication_service_provider.dart';
 
 class SignOutButton extends StatelessWidget {
-  const SignOutButton();
+  const SignOutButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

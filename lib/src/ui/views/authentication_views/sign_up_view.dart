@@ -5,7 +5,7 @@ import 'package:kounslr/src/ui/styled_components/error_text.dart';
 
 class SignUpView extends StatefulWidget {
   final Function? toggleView;
-  const SignUpView({this.toggleView});
+  const SignUpView({this.toggleView, Key? key}) : super(key: key);
 
   @override
   _SignUpViewState createState() => _SignUpViewState();
@@ -30,8 +30,8 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  Widget _content(BuildContext context, TextEditingController _emailController,
-      TextEditingController _passwordController) {
+  Widget _content(
+      BuildContext context, TextEditingController _emailController, TextEditingController _passwordController) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -46,11 +46,10 @@ class _SignUpViewState extends State<SignUpView> {
             buttonText: 'Sign Up',
             color: Theme.of(context).primaryColor,
             onPressed: () async {
-              var res =
-                  await context.read(authenticationServiceProvider).signUp(
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
+              var res = await context.read(authenticationServiceProvider).signUp(
+                    email: _emailController.text.trim(),
+                    password: _passwordController.text.trim(),
+                  );
 
               if (res != 'success') {
                 setState(() {
@@ -91,8 +90,7 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  Widget _emailTextInput(
-      BuildContext context, TextEditingController controller) {
+  Widget _emailTextInput(BuildContext context, TextEditingController controller) {
     return CantonTextInput(
       hintText: 'Email',
       isTextFormField: true,
@@ -106,8 +104,7 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  Widget _passwordTextInput(
-      BuildContext context, TextEditingController controller) {
+  Widget _passwordTextInput(BuildContext context, TextEditingController controller) {
     return CantonTextInput(
       hintText: 'Password',
       isTextFormField: true,

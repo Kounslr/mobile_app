@@ -1,7 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 
 class SummaryTextField extends StatelessWidget {
-  const SummaryTextField({required this.focus, required this.controller});
+  const SummaryTextField({required this.focus, required this.controller, Key? key}) : super(key: key);
 
   final FocusNode focus;
   final TextEditingController controller;
@@ -13,10 +13,10 @@ class SummaryTextField extends StatelessWidget {
       cursorColor: Theme.of(context).primaryColor,
       controller: controller,
       maxLines: null,
-      scrollController: new ScrollController(),
+      scrollController: ScrollController(),
       onChanged: (_) {},
       style: Theme.of(context).textTheme.headline6,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         fillColor: CantonColors.transparent,
         border: InputBorder.none,
         enabledBorder: InputBorder.none,

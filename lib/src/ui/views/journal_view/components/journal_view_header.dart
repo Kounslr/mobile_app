@@ -20,7 +20,7 @@ class JournalViewHeader extends StatelessWidget {
           ),
           onPressed: () => CantonMethods.viewTransition(
             context,
-            JournalEntryView(new JournalEntry()),
+            JournalEntryView(JournalEntry()),
           ),
         ),
       ),

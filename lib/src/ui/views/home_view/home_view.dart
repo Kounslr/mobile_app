@@ -23,6 +23,8 @@ import 'package:kounslr/src/ui/views/home_view/components/home_view_header.dart'
 import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
 
 class HomeView extends StatefulWidget {
+  const HomeView({Key? key}) : super(key: key);
+
   @override
   _HomeViewState createState() => _HomeViewState();
 }
@@ -40,8 +42,7 @@ class _HomeViewState extends State<HomeView> {
         final schoolStream = watch(schoolStreamProvider);
         final studentStream = watch(studentStreamProvider);
         final studentClassesStream = watch(studentClassesStreamProvider);
-        final studentAssignmentsStream =
-            watch(upcomingAssignmentsStreamProvider);
+        final studentAssignmentsStream = watch(upcomingAssignmentsStreamProvider);
 
         // Next class variables
         final nextClassStream = watch(nextClassStreamProvider);
@@ -50,43 +51,43 @@ class _HomeViewState extends State<HomeView> {
 
         return schoolStream.when(
           error: (e, s) {
-            return SomethingWentWrong();
+            return const SomethingWentWrong();
           },
           loading: () => Loading(),
           data: (school) {
             return studentStream.when(
               error: (e, s) {
-                return SomethingWentWrong();
+                return const SomethingWentWrong();
               },
               loading: () => Loading(),
               data: (student) {
                 return studentClassesStream.when(
                   error: (e, s) {
-                    return SomethingWentWrong();
+                    return const SomethingWentWrong();
                   },
                   loading: () => Loading(),
                   data: (classes) {
                     return studentAssignmentsStream.when(
                       error: (e, s) {
-                        return SomethingWentWrong();
+                        return const SomethingWentWrong();
                       },
                       loading: () => Loading(),
                       data: (assignments) {
                         return nextBlockStream.when(
                           loading: () => Loading(),
                           error: (e, s) {
-                            return SomethingWentWrong();
+                            return const SomethingWentWrong();
                           },
                           data: (nextBlock) {
                             return nextClassStream.when(
                               error: (e, s) {
-                                return SomethingWentWrong();
+                                return const SomethingWentWrong();
                               },
                               loading: () => Loading(),
                               data: (nextClass) {
                                 return nextClassTeacherStream.when(
                                   error: (e, s) {
-                                    return SomethingWentWrong();
+                                    return const SomethingWentWrong();
                                   },
                                   loading: () => Loading(),
                                   data: (nextClassTeacher) {
@@ -120,31 +121,16 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _content(
-      BuildContext context,
-      School school,
-      Student student,
-      List<Class> classes,
-      List<Assignment> assignments,
-      Class nextClass,
-      Block nextBlock,
-      StaffMember teacher) {
+  Widget _content(BuildContext context, School school, Student student, List<Class> classes,
+      List<Assignment> assignments, Class nextClass, Block nextBlock, StaffMember teacher) {
     return ListView(
       shrinkWrap: false,
-      children: _contentChildren(context, school, student, classes, assignments,
-          nextClass, nextBlock, teacher),
+      children: _contentChildren(context, school, student, classes, assignments, nextClass, nextBlock, teacher),
     );
   }
 
-  List<Widget> _contentChildren(
-      BuildContext context,
-      School school,
-      Student student,
-      List<Class> classes,
-      List<Assignment> assignments,
-      Class nextClass,
-      Block nextBlock,
-      StaffMember teacher) {
+  List<Widget> _contentChildren(BuildContext context, School school, Student student, List<Class> classes,
+      List<Assignment> assignments, Class nextClass, Block nextBlock, StaffMember teacher) {
     List<Widget> children = [
       const SizedBox(height: 10),
       DateCard(school: school),
@@ -152,7 +138,7 @@ class _HomeViewState extends State<HomeView> {
       NextClassCard(schoolClass: nextClass, block: nextBlock, teacher: teacher),
     ];
 
-    if (assignments.length > 0) {
+    if (assignments.isNotEmpty) {
       children.add(
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 17),
@@ -162,7 +148,7 @@ class _HomeViewState extends State<HomeView> {
                 'Upcoming Assignments',
                 style: Theme.of(context).textTheme.headline6,
               ),
-              Spacer(),
+              const Spacer(),
               TextButton(
                 style: ButtonStyle(
                   alignment: Alignment.centerRight,
@@ -182,8 +168,7 @@ class _HomeViewState extends State<HomeView> {
                         color: Theme.of(context).primaryColor,
                       ),
                 ),
-                onPressed: () => CantonMethods.viewTransition(
-                    context, UpcomingAssignmentView()),
+                onPressed: () => CantonMethods.viewTransition(context, const UpcomingAssignmentView()),
               ),
               CantonActionButton(
                 icon: Icon(
@@ -191,28 +176,21 @@ class _HomeViewState extends State<HomeView> {
                   size: 20,
                   color: Theme.of(context).primaryColor,
                 ),
-                onPressed: () => CantonMethods.viewTransition(
-                    context, UpcomingAssignmentView()),
+                onPressed: () => CantonMethods.viewTransition(context, const UpcomingAssignmentView()),
               ),
             ],
           ),
         ),
       );
 
-      for (var i = 0;
-          i < ((assignments.length < 7) ? assignments.length : 7);
-          i++) {
+      for (var i = 0; i < ((assignments.length < 7) ? assignments.length : 7); i++) {
         children.add(
           AssignmentCard(
-            classes
-                .where((element) => element.id == assignments[i].classId)
-                .toList()[0],
+            classes.where((element) => element.id == assignments[i].classId).toList()[0],
             assignments[i],
           ),
         );
       }
-
-      children.add(Divider());
     } else {
       children.add(
         Padding(

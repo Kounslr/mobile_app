@@ -7,7 +7,7 @@ import 'package:kounslr/src/providers/student_repository_provider.dart';
 import 'package:kounslr/src/ui/styled_components/journal_entry_card.dart';
 
 class JournalEntryTagCard extends StatefulWidget {
-  const JournalEntryTagCard(this.entries, this.tag);
+  const JournalEntryTagCard(this.entries, this.tag, {Key? key}) : super(key: key);
 
   final List<JournalEntry> entries;
   final Tag tag;
@@ -27,9 +27,9 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
 
     return Slidable(
       key: UniqueKey(),
-      actionPane: SlidableDrawerActionPane(),
+      actionPane: const SlidableDrawerActionPane(),
       actionExtentRatio: 0.25,
-      dismissal: SlidableDismissal(
+      dismissal: const SlidableDismissal(
         child: SlidableDrawerDismissal(),
         dismissThresholds: <SlideActionType, double>{
           SlideActionType.primary: 1.0,
@@ -41,7 +41,7 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
       ],
       child: Column(
         children: [
-          Divider(),
+          const Divider(),
           CantonExpansionTile(
             childrenPadding: const EdgeInsets.all(8.0),
             iconColor: Theme.of(context).primaryColor,
@@ -89,8 +89,7 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
                 child: Container(
                   padding: MediaQuery.of(context).viewInsets,
                   decoration: ShapeDecoration(
-                    color: MediaQuery.of(context).platformBrightness ==
-                            Brightness.dark
+                    color: MediaQuery.of(context).platformBrightness == Brightness.dark
                         ? Theme.of(context).colorScheme.onSecondary
                         : Theme.of(context).canvasColor,
                     shape: SquircleBorder(
@@ -124,8 +123,7 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
                             margin: const EdgeInsets.symmetric(horizontal: 17),
                             child: CantonTextInput(
                               formatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp("[a-zA-Z]")),
+                                FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
                                 LengthLimitingTextInputFormatter(10),
                               ],
                               textInputType: TextInputType.text,
@@ -138,8 +136,7 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
                           const SizedBox(height: 15),
                           GestureDetector(
                             onTap: () {
-                              watch(studentRepositoryProvider)
-                                  .renameJournalEntryTags(
+                              watch(studentRepositoryProvider).renameJournalEntryTags(
                                 widget.entries,
                                 widget.tag,
                                 Tag(name: _tagRenameController.text),
@@ -151,8 +148,7 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
                               style: Theme.of(context)
                                   .textTheme
                                   .headline5
-                                  ?.copyWith(
-                                      color: Theme.of(context).primaryColor),
+                                  ?.copyWith(color: Theme.of(context).primaryColor),
                             ),
                           ),
                         ],

@@ -6,7 +6,7 @@ class StudentIDCard extends StatelessWidget {
   final Student student;
   final School school;
 
-  const StudentIDCard(this.student, this.school);
+  const StudentIDCard(this.student, this.school, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -29,10 +29,7 @@ class StudentIDCard extends StatelessWidget {
                 const SizedBox(width: 15),
                 Text(
                   school.name!,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline5!
-                      .copyWith(color: CantonColors.white),
+                  style: Theme.of(context).textTheme.headline5!.copyWith(color: CantonColors.white),
                 ),
               ],
             ),

@@ -2,7 +2,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:kounslr/src/models/student.dart';
 
 class HomeViewHeader extends StatelessWidget {
-  const HomeViewHeader({required this.student});
+  const HomeViewHeader({required this.student, Key? key}) : super(key: key);
 
   final Student student;
 

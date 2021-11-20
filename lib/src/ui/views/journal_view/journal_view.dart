@@ -10,6 +10,8 @@ import 'package:kounslr/src/ui/views/journal_view/components/journal_view_header
 import 'package:kounslr/src/ui/views/journal_view/journal_entries_view.dart';
 
 class JournalView extends StatefulWidget {
+  const JournalView({Key? key}) : super(key: key);
+
   @override
   _JournalViewState createState() => _JournalViewState();
 }
@@ -28,25 +30,23 @@ class _JournalViewState extends State<JournalView> {
         return entryRepo.when(
           loading: () => Loading(),
           error: (e, s) {
-            return SomethingWentWrong();
+            return const SomethingWentWrong();
           },
           data: (data) {
             List<JournalEntry> entries = [];
 
-            data.docs.forEach((element) {
+            for (var element in data.docs) {
               entries.add(JournalEntry.fromDocumentSnapshot(element));
-            });
+            }
 
-            final tags = context
-                .read(studentRepositoryProvider)
-                .getTopThreeMostUsedTags(entries);
+            final tags = context.read(studentRepositoryProvider).getTopThreeMostUsedTags(entries);
 
-            if (entries.length < 1) {
+            if (entries.isEmpty) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  JournalViewHeader(),
-                  SizedBox(height: 20),
+                  const JournalViewHeader(),
+                  const SizedBox(height: 20),
                   Expanded(
                     child: Center(
                       child: Container(
@@ -66,11 +66,11 @@ class _JournalViewState extends State<JournalView> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                JournalViewHeader(),
-                SizedBox(height: 10),
+                const JournalViewHeader(),
+                const SizedBox(height: 10),
                 HorizontalBarChart(tags: tags),
-                SizedBox(height: 10),
-                ViewCard(view: JournalEntriesView(), text: 'View all entries'),
+                const SizedBox(height: 10),
+                const ViewCard(view: JournalEntriesView(), text: 'View all entries'),
               ],
             );
           },

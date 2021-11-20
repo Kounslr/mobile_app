@@ -1,10 +1,10 @@
 import 'package:canton_design_system/canton_design_system.dart';
 
 class StudentIdCardViewHeader extends StatelessWidget {
-  const StudentIdCardViewHeader();
+  const StudentIdCardViewHeader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewHeaderTwo(title: 'ID Card', backButton: true);
+    return const ViewHeaderTwo(title: 'ID Card', backButton: true);
   }
 }

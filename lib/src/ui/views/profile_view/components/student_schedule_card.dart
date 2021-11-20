@@ -4,7 +4,7 @@ import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/ui/views/schedule_view/schedule_view.dart';
 
 class StudentScheduleCard extends StatelessWidget {
-  const StudentScheduleCard({required this.school, required this.student});
+  const StudentScheduleCard({required this.school, required this.student, Key? key}) : super(key: key);
 
   final Student student;
   final School school;
@@ -13,7 +13,7 @@ class StudentScheduleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        CantonMethods.viewTransition(context, ScheduleView());
+        CantonMethods.viewTransition(context, const ScheduleView());
       },
       child: Card(
         margin: EdgeInsets.zero,
@@ -35,7 +35,7 @@ class StudentScheduleCard extends StatelessWidget {
                 'Schedule',
                 style: Theme.of(context).textTheme.headline6,
               ),
-              Spacer(),
+              const Spacer(),
               IconlyIcon(
                 IconlyBold.Calendar,
                 color: Theme.of(context).colorScheme.secondaryVariant,

@@ -8,7 +8,7 @@ import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
 import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 
 class UpcomingAssignmentView extends StatelessWidget {
-  const UpcomingAssignmentView();
+  const UpcomingAssignmentView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,14 +27,14 @@ class UpcomingAssignmentView extends StatelessWidget {
 
         return classesRepo.when(
           error: (e, s) {
-            return SomethingWentWrong();
+            return const SomethingWentWrong();
           },
           loading: () => Loading(),
           data: (classes) {
             return upcomingAssignmentsRepo.when(
               loading: () => Loading(),
               error: (e, s) {
-                return SomethingWentWrong();
+                return const SomethingWentWrong();
               },
               data: (assignments) {
                 return Column(
@@ -54,7 +54,7 @@ class UpcomingAssignmentView extends StatelessWidget {
   Widget _header(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 17),
-      child: ViewHeaderTwo(
+      child: const ViewHeaderTwo(
         title: 'Upcoming Assignments',
         backButton: true,
         isBackButtonClear: true,
@@ -63,7 +63,7 @@ class UpcomingAssignmentView extends StatelessWidget {
   }
 
   Widget _body(BuildContext context, List<Class> classes, List<Assignment> assignments) {
-    if (assignments.length == 0 || classes.length == 0) {
+    if (assignments.isEmpty || classes.isEmpty) {
       return Expanded(
         child: Text(
           'No Upcoming Assignments',
@@ -75,22 +75,13 @@ class UpcomingAssignmentView extends StatelessWidget {
     }
 
     return Expanded(
-      child: ListView.separated(
+      child: ListView.builder(
         itemCount: assignments.length,
-        separatorBuilder: (context, index) {
-          return const Divider();
-        },
         itemBuilder: (context, index) {
           assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
-          return Column(
-            children: [
-              if (index == 0) Divider(),
-              AssignmentCard(
-                classes.where((element) => element.id == assignments[index].classId).toList()[0],
-                assignments[index],
-              ),
-              if (index == assignments.length - 1) Divider(),
-            ],
+          return AssignmentCard(
+            classes.where((element) => element.id == assignments[index].classId).toList()[0],
+            assignments[index],
           );
         },
       ),

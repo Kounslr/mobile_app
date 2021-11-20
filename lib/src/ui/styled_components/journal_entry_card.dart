@@ -7,18 +7,17 @@ import 'package:kounslr/src/ui/views/journal_view/journal_entry_view.dart';
 
 class JournalEntryCard extends ConsumerWidget {
   final JournalEntry journalEntry;
-  const JournalEntryCard(this.journalEntry);
+  const JournalEntryCard(this.journalEntry, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     return GestureDetector(
-      onTap: () =>
-          CantonMethods.viewTransition(context, JournalEntryView(journalEntry)),
+      onTap: () => CantonMethods.viewTransition(context, JournalEntryView(journalEntry)),
       child: Slidable(
         key: UniqueKey(),
-        actionPane: SlidableDrawerActionPane(),
+        actionPane: const SlidableDrawerActionPane(),
         actionExtentRatio: 0.25,
-        dismissal: SlidableDismissal(
+        dismissal: const SlidableDismissal(
           child: SlidableDrawerDismissal(),
           dismissThresholds: <SlideActionType, double>{
             SlideActionType.primary: 1.0,

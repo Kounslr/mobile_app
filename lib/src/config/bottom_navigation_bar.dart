@@ -5,7 +5,7 @@ class BottomNavBar extends StatefulWidget {
   final int currentIndex;
   final void Function(int) onTabTapped;
 
-  const BottomNavBar(this.currentIndex, this.onTabTapped);
+  const BottomNavBar(this.currentIndex, this.onTabTapped, {Key? key}) : super(key: key);
   @override
   _BottomNavBarState createState() => _BottomNavBarState();
 }

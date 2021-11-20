@@ -5,8 +5,7 @@ import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 
 class ClassCard extends StatelessWidget {
-  const ClassCard(
-      {required this.schoolClass, required this.block, required this.teacher});
+  const ClassCard({required this.schoolClass, required this.block, required this.teacher, Key? key}) : super(key: key);
 
   final Class schoolClass;
   final Block block;
@@ -64,8 +63,7 @@ class ClassCard extends StatelessWidget {
                     Text(
                       schoolClass.roomNumber ?? 'LOCATION',
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.secondaryVariant,
+                            color: Theme.of(context).colorScheme.secondaryVariant,
                           ),
                     ),
                   ],
@@ -82,21 +80,17 @@ class ClassCard extends StatelessWidget {
                     Text(
                       _teacherName(teacher),
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.secondaryVariant,
+                            color: Theme.of(context).colorScheme.secondaryVariant,
                           ),
                     ),
                   ],
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             Text(
               _nextClassTime(block.time!.toLocal()),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              style: Theme.of(context).textTheme.bodyText1?.copyWith(fontWeight: FontWeight.w600),
             ),
           ],
         ),

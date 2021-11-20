@@ -9,7 +9,7 @@ import 'package:kounslr/src/ui/views/journal_view/components/title_text_field.da
 
 class JournalEntryView extends StatefulWidget {
   final JournalEntry entry;
-  const JournalEntryView(this.entry);
+  const JournalEntryView(this.entry, {Key? key}) : super(key: key);
 
   @override
   _JournalEntryViewState createState() => _JournalEntryViewState();

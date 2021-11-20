@@ -7,7 +7,7 @@ import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/journal_view/components/journal_entries_view_header.dart';
 
 class JournalEntriesView extends StatefulWidget {
-  const JournalEntriesView();
+  const JournalEntriesView({Key? key}) : super(key: key);
 
   @override
   _JournalEntriesViewState createState() => _JournalEntriesViewState();
@@ -27,7 +27,7 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
   Widget _content(BuildContext context) {
     return Column(
       children: [
-        JournalEntriesViewHeader(),
+        const JournalEntriesViewHeader(),
         _journalEntriesListView(context),
       ],
     );
@@ -39,17 +39,17 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
         final entryRepo = watch(journalEntriesStreamProvider);
         return entryRepo.when(
           error: (e, s) {
-            return SomethingWentWrong();
+            return const SomethingWentWrong();
           },
           loading: () => Loading(),
           data: (data) {
             List<JournalEntry> entries = [];
-            data.docs.forEach((element) {
+            for (var element in data.docs) {
               entries.add(JournalEntry.fromDocumentSnapshot(element));
-            });
+            }
             _listOfEntries(entries);
             return Expanded(
-              child: _tagList.length > 0
+              child: _tagList.isNotEmpty
                   ? ListView.builder(
                       itemCount: _tagList.length,
                       itemBuilder: (context, index) {
@@ -61,7 +61,7 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
                                   .toList(),
                               _tagList[index],
                             ),
-                            if (index == _tagList.length - 1) Divider(),
+                            if (index == _tagList.length - 1) const Divider(),
                           ],
                         );
                       },
@@ -88,7 +88,9 @@ class _JournalEntriesViewState extends State<JournalEntriesView> {
       e.add(item);
     }
     for (var entry in e) {
-      for (var tag in entry.tags!) if (!_tags.contains(tag)) _tags.add(tag);
+      for (var tag in entry.tags!) {
+        if (!_tags.contains(tag)) _tags.add(tag);
+      }
     }
 
     _tagList = _tags;

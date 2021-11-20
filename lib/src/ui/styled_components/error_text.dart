@@ -1,7 +1,7 @@
 import 'package:canton_design_system/canton_design_system.dart';
 
 class ErrorText extends StatelessWidget {
-  const ErrorText(this.error);
+  const ErrorText(this.error, {Key? key}) : super(key: key);
   final String error;
 
   @override

@@ -25,7 +25,6 @@ class AuthenticationExceptions implements Exception {
         message = "Too many requests to log into this account.";
         break;
       case "ERROR_OPERATION_NOT_ALLOWED":
-      case "operation-not-allowed":
         message = "Server error, please try again later.";
         break;
       case "ERROR_INVALID_EMAIL":

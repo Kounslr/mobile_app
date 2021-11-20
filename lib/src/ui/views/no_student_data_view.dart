@@ -15,7 +15,7 @@ class NoStudentDataView extends StatelessWidget {
       child: Column(
         children: [
           _header(context),
-          Expanded(
+          const Expanded(
             child: SignInWithStudentVueCard(),
           )
         ],
@@ -43,10 +43,8 @@ class NoStudentDataView extends StatelessWidget {
             ),
           ],
         ),
-        Spacer(),
-        CantonHeaderButton(
-          backgroundColor: CantonColors.transparent,
-        ),
+        const Spacer(),
+        const CantonHeaderButton(backgroundColor: CantonColors.transparent),
       ],
     );
   }

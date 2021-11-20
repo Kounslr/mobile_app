@@ -15,6 +15,8 @@ final _journalNavigatorKey = GlobalKey<NavigatorState>();
 final _profileNavigatorKey = GlobalKey<NavigatorState>();
 
 class CurrentView extends StatefulWidget {
+  const CurrentView({Key? key}) : super(key: key);
+
   @override
   _CurrentViewState createState() => _CurrentViewState();
 }
@@ -46,9 +48,9 @@ class _CurrentViewState extends State<CurrentView> {
 
   int _currentIndex = 0;
   final List<Widget> _views = [
-    HomeView(),
-    JournalView(),
-    ProfileView(),
+    const HomeView(),
+    const JournalView(),
+    const ProfileView(),
   ];
 
   void _onTabTapped(int index) {
@@ -70,17 +72,17 @@ class _CurrentViewState extends State<CurrentView> {
   @override
   Widget build(BuildContext context) {
     if (FirebaseAuth.instance.currentUser == null) {
-      return CantonScaffold(
+      return const CantonScaffold(
         body: SomethingWentWrong(),
       );
     }
 
     return CantonScaffold(
       padding: EdgeInsets.zero,
-      backgroundColor: CantonMethods.alternateCanvasColor(context, index: _currentIndex, targetIndexes: [0]),
+      // backgroundColor: CantonMethods.alternateCanvasColor(context),
       bottomNavBar: studentHasData ? BottomNavBar(_currentIndex, _onTabTapped) : null,
       body: !studentHasData
-          ? NoStudentDataView()
+          ? const NoStudentDataView()
           : IndexedStack(
               index: _currentIndex,
               children: [
