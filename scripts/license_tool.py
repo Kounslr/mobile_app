@@ -25,16 +25,21 @@ def getListOfFiles(dirName):
     return allFiles
 
 
+# GPL 3.0 License Header
 license_text = "/*\nKounslr iOS & Android App\nCopyright (C) 2021 Kounslr\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License\nalong with this program.  If not, see <https://www.gnu.org/licenses/>.\n*/"
 
 
 def line_prepender(filename: str, line):
-    print(filename[-5:])
+    # Add text to beginning of file,
+    # and prevent rewriting of license.
     if filename[-5:] == ".dart":
         with open(filename, 'r+') as f:
             content = f.read()
-            f.seek(0, 0)
-            f.write(line.rstrip('\r\n') + '\n\n' + content)
+            if content.find(license_text) == -1:
+                f.seek(0, 0)
+                f.write(line.rstrip('\r\n') + '\n\n' + content)
+
+            f.close()
 
 
 for file in getListOfFiles(rootdir):
