@@ -34,8 +34,8 @@ import 'package:kounslr/src/providers/school_stream_provider.dart';
 import 'package:kounslr/src/providers/student_assignments_provider.dart';
 import 'package:kounslr/src/providers/student_classes_future_provider.dart';
 import 'package:kounslr/src/providers/student_stream_provider.dart';
-import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
-import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
+import 'package:kounslr/src/ui/components/assignment_card.dart';
+import 'package:kounslr/src/ui/components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/home_view/components/home_view_components.dart';
 import 'package:kounslr/src/ui/views/home_view/components/home_view_header.dart';
 import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
@@ -202,10 +202,38 @@ class _HomeViewState extends State<HomeView> {
       );
 
       for (var i = 0; i < ((assignments.length < 7) ? assignments.length : 7); i++) {
+        BorderRadius radiiByIndex() {
+          if (assignments.length == 1) {
+            return BorderRadius.circular(37);
+          } else if (assignments.length == 2) {
+            if (i == 0) {
+              return const BorderRadius.vertical(top: Radius.circular(37));
+            } else {
+              return const BorderRadius.vertical(bottom: Radius.circular(37));
+            }
+          } else {
+            if (i == 0) {
+              return const BorderRadius.vertical(top: Radius.circular(37));
+            } else if (i == assignments.length - 1) {
+              return const BorderRadius.vertical(bottom: Radius.circular(37));
+            } else {
+              return BorderRadius.zero;
+            }
+          }
+        }
+
         children.add(
-          AssignmentCard(
-            classes.where((element) => element.id == assignments[i].classId).toList()[0],
-            assignments[i],
+          Column(
+            children: [
+              AssignmentCard(
+                classes.where((element) => element.id == assignments[i].classId).toList()[0],
+                assignments[i],
+                radius: radiiByIndex(),
+              ),
+              i != assignments.length - 1
+                  ? Container(padding: const EdgeInsets.symmetric(horizontal: 17), child: const Divider())
+                  : Container()
+            ],
           ),
         );
       }

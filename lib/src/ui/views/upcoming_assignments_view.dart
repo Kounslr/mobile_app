@@ -22,8 +22,8 @@ import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/providers/student_assignments_provider.dart';
 import 'package:kounslr/src/providers/student_classes_future_provider.dart';
-import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
-import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
+import 'package:kounslr/src/ui/components/assignment_card.dart';
+import 'package:kounslr/src/ui/components/something_went_wrong.dart';
 
 class UpcomingAssignmentView extends StatelessWidget {
   const UpcomingAssignmentView({Key? key}) : super(key: key);
@@ -97,9 +97,31 @@ class UpcomingAssignmentView extends StatelessWidget {
         itemCount: assignments.length,
         itemBuilder: (context, index) {
           assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+
+          BorderRadius radiiByIndex() {
+            if (assignments.length == 1) {
+              return BorderRadius.circular(37);
+            } else if (assignments.length == 2) {
+              if (index == 0) {
+                return const BorderRadius.vertical(top: Radius.circular(37));
+              } else {
+                return const BorderRadius.vertical(bottom: Radius.circular(37));
+              }
+            } else {
+              if (index == 0) {
+                return const BorderRadius.vertical(top: Radius.circular(37));
+              } else if (index == assignments.length - 1) {
+                return const BorderRadius.vertical(bottom: Radius.circular(37));
+              } else {
+                return BorderRadius.zero;
+              }
+            }
+          }
+
           return AssignmentCard(
             classes.where((element) => element.id == assignments[index].classId).toList()[0],
             assignments[index],
+            radius: radiiByIndex(),
           );
         },
       ),

@@ -22,7 +22,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/providers/student_repository_provider.dart';
-import 'package:kounslr/src/ui/styled_components/journal_entry_card.dart';
+import 'package:kounslr/src/ui/components/journal_entry_card.dart';
 
 class JournalEntryTagCard extends StatefulWidget {
   const JournalEntryTagCard(this.entries, this.tag, {Key? key}) : super(key: key);

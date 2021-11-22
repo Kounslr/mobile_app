@@ -33,34 +33,30 @@ class StudentScheduleCard extends StatelessWidget {
       onTap: () {
         CantonMethods.viewTransition(context, const ScheduleView());
       },
-      child: Card(
-        margin: EdgeInsets.zero,
-        shape: Border(
-          left: BorderSide(
-            width: 0.5,
-            color: Theme.of(context).dividerColor,
-          ),
-          right: BorderSide(
-            width: 0.5,
-            color: Theme.of(context).dividerColor,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            children: [
-              Text(
-                'Schedule',
-                style: Theme.of(context).textTheme.headline6,
+      child: Column(
+        children: [
+          Card(
+            margin: EdgeInsets.zero,
+            shape: const Border(),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Row(
+                children: [
+                  Text(
+                    'Schedule',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  const Spacer(),
+                  IconlyIcon(
+                    IconlyBold.Calendar,
+                    color: Theme.of(context).colorScheme.secondaryVariant,
+                  ),
+                ],
               ),
-              const Spacer(),
-              IconlyIcon(
-                IconlyBold.Calendar,
-                color: Theme.of(context).colorScheme.secondaryVariant,
-              ),
-            ],
+            ),
           ),
-        ),
+          const Divider(),
+        ],
       ),
     );
   }

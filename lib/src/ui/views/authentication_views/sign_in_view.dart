@@ -20,7 +20,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:kounslr/src/ui/styled_components/error_text.dart';
+import 'package:kounslr/src/ui/components/error_text.dart';
 
 class SignInView extends StatefulWidget {
   final Function? toggleView;

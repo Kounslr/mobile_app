@@ -25,12 +25,16 @@ import 'package:kounslr/src/models/class.dart';
 class AssignmentCard extends StatelessWidget {
   final Class? schoolClass;
   final Assignment? assignment;
-  const AssignmentCard(this.schoolClass, this.assignment, {Key? key}) : super(key: key);
+  final BorderRadius? radius;
+  const AssignmentCard(this.schoolClass, this.assignment, {this.radius, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 17, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 17),
+      shape: SquircleBorder(
+        radius: radius ?? BorderRadius.zero,
+      ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         child: Row(

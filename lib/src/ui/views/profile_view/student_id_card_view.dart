@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/student.dart';
-import 'package:kounslr/src/ui/styled_components/student_id_card.dart';
+import 'package:kounslr/src/ui/components/student_id_card.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/student_id_card_view_header.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 

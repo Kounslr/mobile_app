@@ -22,8 +22,8 @@ import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/providers/school_blocks_future_provider.dart';
 import 'package:kounslr/src/providers/school_repository_provider.dart';
 import 'package:kounslr/src/providers/student_classes_future_provider.dart';
-import 'package:kounslr/src/ui/styled_components/class_card.dart';
-import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
+import 'package:kounslr/src/ui/components/class_card.dart';
+import 'package:kounslr/src/ui/components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/schedule_view/components/schedule_view_header.dart';
 
 class ScheduleView extends StatelessWidget {

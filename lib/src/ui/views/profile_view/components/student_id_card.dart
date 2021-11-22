@@ -33,33 +33,34 @@ class StudentIdCard extends StatelessWidget {
       onTap: () {
         CantonMethods.viewTransition(context, StudentIDCardView(student, school));
       },
-      child: Card(
-        margin: EdgeInsets.zero,
-        shape: SquircleBorder(
-          radius: const BorderRadius.vertical(
-            top: Radius.circular(37),
-          ),
-          side: BorderSide(
-            width: 0.5,
-            color: Theme.of(context).dividerColor,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            children: [
-              Text(
-                'ID Card',
-                style: Theme.of(context).textTheme.headline6,
+      child: Column(
+        children: [
+          Card(
+            margin: EdgeInsets.zero,
+            shape: const SquircleBorder(
+              radius: BorderRadius.vertical(
+                top: Radius.circular(37),
               ),
-              const Spacer(),
-              IconlyIcon(
-                IconlyBold.Wallet,
-                color: Theme.of(context).colorScheme.secondaryVariant,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Row(
+                children: [
+                  Text(
+                    'ID Card',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  const Spacer(),
+                  IconlyIcon(
+                    IconlyBold.Wallet,
+                    color: Theme.of(context).colorScheme.secondaryVariant,
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          const Divider(),
+        ],
       ),
     );
   }

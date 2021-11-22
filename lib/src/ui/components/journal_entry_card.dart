@@ -47,7 +47,8 @@ class JournalEntryCard extends ConsumerWidget {
         ],
         child: Card(
           color: Theme.of(context).colorScheme.secondary,
-          child: Padding(
+          margin: const EdgeInsets.all(1),
+          child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
             child: Row(
               children: [

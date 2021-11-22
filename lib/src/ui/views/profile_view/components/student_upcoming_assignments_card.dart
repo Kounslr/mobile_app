@@ -35,13 +35,9 @@ class StudentUpcomingAssignmentsCard extends StatelessWidget {
       },
       child: Card(
         margin: EdgeInsets.zero,
-        shape: SquircleBorder(
-          radius: const BorderRadius.vertical(
+        shape: const SquircleBorder(
+          radius: BorderRadius.vertical(
             bottom: Radius.circular(37),
-          ),
-          side: BorderSide(
-            width: 0.5,
-            color: Theme.of(context).dividerColor,
           ),
         ),
         child: Container(

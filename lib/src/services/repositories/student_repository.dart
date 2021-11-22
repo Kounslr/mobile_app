@@ -298,7 +298,7 @@ class StudentRepository {
   Map<String?, int?> getTopThreeMostUsedTags(List<JournalEntry> entries) {
     /// Variables
     List<Tag> _tags = [];
-    var map = <dynamic, dynamic>{};
+    var map = <String?, int?>{};
 
     /// Adds [Tag] (s) from [JournalEntry] to a list
     for (var element in entries) {
@@ -312,7 +312,7 @@ class StudentRepository {
       map[x.name] = ((map[x.name] ?? 0) + 1);
     }
 
-    var sortedKeys = map.keys.toList()..sort((k1, k2) => map[k2].compareTo(map[k1]));
+    var sortedKeys = map.keys.toList()..sort((k1, k2) => map[k2]!.compareTo(map[k1]!));
 
     var newList = [];
 
@@ -322,13 +322,13 @@ class StudentRepository {
       }
     }
 
-    var sortedMap = {for (var k in newList) k: map[k]};
+    Map<String?, int?> sortedMap = {for (var k in newList) k: map[k]};
 
     map = sortedMap;
 
     map.removeWhere((key, value) => false);
 
-    return map as Map<String?, int?>;
+    return map;
   }
 
   Future<void> renameJournalEntryTags(
