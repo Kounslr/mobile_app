@@ -18,8 +18,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:kounslr/src/models/block.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kounslr/src/providers/authentication_providers/authentication_stream_provider.dart';
 import 'package:kounslr/src/services/repositories/school_repository.dart';
 
-final schoolBlocksFutureProvider = FutureProvider<List<Block>>((ref) {
+final schoolBlocksFutureProvider = FutureProvider.autoDispose<List<Block>>((ref) {
+  ref.watch(authenticationStreamProvider).whenData((value) {
+    if (value == null) {
+      ref.maintainState = false;
+    } else {
+      ref.maintainState = true;
+    }
+  });
   return SchoolRepository().blocks;
 });
