@@ -37,65 +37,69 @@ class ClassCard extends StatefulWidget {
 class _ClassCardState extends State<ClassCard> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Divider(),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 12),
-          child: Row(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 12),
+      margin: const EdgeInsets.symmetric(horizontal: 17, vertical: 7),
+      decoration: ShapeDecoration(
+        color: CantonMethods.alternateCanvasColorType2(context),
+        shape: CantonSmoothBorder.defaultBorder(
+          side: BorderSide(
+            color: Theme.of(context).dividerColor,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Text(
+                _className(widget.schoolClass.name!),
+                style: Theme.of(context).textTheme.headline4,
+              ),
+              const SizedBox(height: 12),
+              Row(
                 children: [
+                  Icon(
+                    Iconsax.location,
+                    color: Theme.of(context).colorScheme.secondaryVariant,
+                    size: 17,
+                  ),
+                  const SizedBox(width: 7),
                   Text(
-                    _className(widget.schoolClass.name!),
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      IconlyIcon(
-                        IconlyBold.Location,
-                        color: Theme.of(context).colorScheme.secondaryVariant,
-                        size: 17,
-                      ),
-                      const SizedBox(width: 7),
-                      Text(
-                        widget.schoolClass.roomNumber ?? 'LOCATION',
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                              color: Theme.of(context).colorScheme.secondaryVariant,
-                            ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      IconlyIcon(
-                        IconlyBold.Profile,
-                        color: Theme.of(context).colorScheme.secondaryVariant,
-                        size: 17,
-                      ),
-                      const SizedBox(width: 7),
-                      Text(
-                        widget.teacher.name!,
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                              color: Theme.of(context).colorScheme.secondaryVariant,
-                            ),
-                      ),
-                    ],
+                    widget.schoolClass.roomNumber ?? 'LOCATION',
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          color: Theme.of(context).colorScheme.secondaryVariant,
+                        ),
                   ),
                 ],
               ),
-              const Spacer(),
-              Text(
-                _classTime(widget.block.time!),
-                style: Theme.of(context).textTheme.headline6,
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Icon(
+                    Iconsax.user,
+                    color: Theme.of(context).colorScheme.secondaryVariant,
+                    size: 17,
+                  ),
+                  const SizedBox(width: 7),
+                  Text(
+                    widget.teacher.name!,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          color: Theme.of(context).colorScheme.secondaryVariant,
+                        ),
+                  ),
+                ],
               ),
             ],
           ),
-        ),
-      ],
+          const Spacer(),
+          Text(
+            _classTime(widget.block.time!),
+            style: Theme.of(context).textTheme.headline6,
+          ),
+        ],
+      ),
     );
   }
 
