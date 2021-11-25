@@ -17,12 +17,15 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/providers/authentication_providers/authentication_stream_provider.dart';
 import 'package:kounslr/src/ui/components/something_went_wrong.dart';
-import 'package:kounslr/src/ui/views/authentication_views/sign_in_view.dart';
-import 'package:kounslr/src/ui/views/authentication_views/sign_up_view.dart';
+import 'package:kounslr/src/ui/views/authentication_views/sign_in_view/sign_in_view.dart';
+import 'package:kounslr/src/ui/views/authentication_views/sign_up_view/sign_up_view.dart';
 import 'package:kounslr/src/ui/views/current_view.dart';
+import 'package:kounslr/src/ui/views/no_student_data_view/no_student_data_view.dart';
 
 class AuthenticationWrapper extends StatefulWidget {
   const AuthenticationWrapper({Key? key}) : super(key: key);
@@ -33,6 +36,22 @@ class AuthenticationWrapper extends StatefulWidget {
 
 class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   bool showSignIn = true;
+  final user = FirebaseFirestore.instance
+      .collection('customers')
+      .doc('lcps')
+      .collection('schools')
+      .doc('independence')
+      .collection('students');
+
+  bool studentHasData = true;
+
+  Future<bool> _checkIfStudentIsSignedIntoStudentVue() async {
+    var student = await user.doc(FirebaseAuth.instance.currentUser!.uid).get();
+    if (student.data() == null || student.data()!['studentId'] == null) {
+      return false;
+    }
+    return true;
+  }
 
   void toggleView() {
     setState(() {
@@ -59,7 +78,17 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
                 return SignUpView(toggleView: toggleView);
               }
             } else {
-              return const CurrentView();
+              return FutureBuilder<bool>(
+                future: _checkIfStudentIsSignedIntoStudentVue(),
+                builder: (context, snapshot) {
+                  if (snapshot.data == null) return CantonScaffold(body: Loading());
+
+                  if (snapshot.data!) {
+                    return const CurrentView();
+                  }
+                  return const NoStudentDataView();
+                },
+              );
             }
           },
         );
