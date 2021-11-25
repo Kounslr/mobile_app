@@ -49,7 +49,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                       color: Theme.of(context).primaryColor,
                     ),
               ),
-              const TextSpan(text: 'to take full advantage of Kounslr')
+              const TextSpan(text: 'to take full advantage of Kounslr'),
             ],
           ),
           textAlign: TextAlign.center,
@@ -67,13 +67,12 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
     );
   }
 
-  Future<void> _showStudentVueSignInBottomSheet() async {
+  _showStudentVueSignInBottomSheet() async {
     var _emailController = TextEditingController();
     var _passwordController = TextEditingController();
     var result = '';
     return showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
       elevation: 0,
       useRootNavigator: true,
       builder: (context) {
@@ -87,9 +86,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                   },
                   child: Container(
                     decoration: ShapeDecoration(
-                      color: MediaQuery.of(context).platformBrightness == Brightness.dark
-                          ? Theme.of(context).colorScheme.onSecondary
-                          : Theme.of(context).canvasColor,
+                      color: CantonMethods.alternateCanvasColor(context),
                       shape: SquircleBorder(
                         radius: BorderRadius.circular(50),
                       ),
@@ -125,6 +122,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                             const SizedBox(height: 15),
                             Container(
                               margin: const EdgeInsets.symmetric(horizontal: 17),
+                              padding: EdgeInsets.zero,
                               child: CantonTextInput(
                                 isTextFormField: true,
                                 obscureText: false,
@@ -136,6 +134,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                             const SizedBox(height: 15),
                             Container(
                               margin: const EdgeInsets.symmetric(horizontal: 17),
+                              padding: EdgeInsets.zero,
                               child: CantonTextInput(
                                 isTextFormField: true,
                                 obscureText: true,
@@ -186,6 +185,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                                             ),
                                       )
                                 : Container(),
+                            SizedBox(height: MediaQuery.of(context).viewInsets.bottom * 3),
                           ],
                         ),
                       ),
