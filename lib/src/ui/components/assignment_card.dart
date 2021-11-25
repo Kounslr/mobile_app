@@ -32,6 +32,7 @@ class AssignmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 17),
+      color: CantonMethods.alternateCanvasColorType2(context),
       shape: SquircleBorder(
         radius: radius ?? BorderRadius.zero,
       ),
