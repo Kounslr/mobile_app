@@ -72,8 +72,8 @@ class ClassCard extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    IconlyIcon(
-                      IconlyBold.Location,
+                    Icon(
+                      Iconsax.location,
                       color: Theme.of(context).colorScheme.secondaryVariant,
                       size: 17,
                     ),
@@ -89,8 +89,8 @@ class ClassCard extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    IconlyIcon(
-                      IconlyBold.Profile,
+                    Icon(
+                      Iconsax.user,
                       color: Theme.of(context).colorScheme.secondaryVariant,
                       size: 17,
                     ),
