@@ -52,8 +52,8 @@ class ProfileCard extends StatelessWidget {
               ],
             ),
             const Spacer(),
-            IconlyIcon(
-              IconlyBold.Profile,
+            Icon(
+              Iconsax.user,
               size: 40,
               color: Theme.of(context).colorScheme.secondaryVariant,
             ),
