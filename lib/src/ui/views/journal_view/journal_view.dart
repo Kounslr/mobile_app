@@ -23,9 +23,10 @@ import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/providers/journal_entries_stream_provider.dart';
 import 'package:kounslr/src/providers/student_repository_provider.dart';
 import 'package:kounslr/src/ui/components/something_went_wrong.dart';
-import 'package:kounslr/src/ui/views/journal_view/components/journal_view_components.dart';
+import 'package:kounslr/src/ui/views/journal_view/components/horizontal_bar_chart.dart';
 import 'package:kounslr/src/ui/views/journal_view/components/journal_view_header.dart';
-import 'package:kounslr/src/ui/views/journal_view/journal_entries_view.dart';
+import 'package:kounslr/src/ui/views/journal_entries_view/journal_entries_view.dart';
+import 'package:kounslr/src/ui/views/journal_view/components/view_card.dart';
 
 class JournalView extends StatefulWidget {
   const JournalView({Key? key}) : super(key: key);
@@ -63,16 +64,30 @@ class _JournalViewState extends State<JournalView> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const JournalViewHeader(),
+                  JournalViewHeader(tags),
                   const SizedBox(height: 20),
                   Expanded(
                     child: Center(
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 17),
-                        child: Text(
-                          'Click the "+" button to create your first journal entry',
-                          style: Theme.of(context).textTheme.headline5,
+                        child: RichText(
                           textAlign: TextAlign.center,
+                          text: TextSpan(children: [
+                            TextSpan(
+                              text: 'Click the "',
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            const WidgetSpan(
+                              child: Icon(
+                                Iconsax.message_edit,
+                                size: 27,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '" button to create your first journal entry',
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                          ]),
                         ),
                       ),
                     ),
@@ -84,11 +99,11 @@ class _JournalViewState extends State<JournalView> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const JournalViewHeader(),
+                JournalViewHeader(tags),
                 const SizedBox(height: 10),
                 HorizontalBarChart(tags: tags),
                 const SizedBox(height: 10),
-                const ViewCard(view: JournalEntriesView(), text: 'View all entries'),
+                ViewCard(view: JournalEntriesView(tags), text: 'View all entries'),
               ],
             );
           },
