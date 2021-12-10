@@ -51,8 +51,8 @@ class StudentIdCard extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   const Spacer(),
-                  IconlyIcon(
-                    IconlyBold.Wallet,
+                  Icon(
+                    Iconsax.card,
                     color: Theme.of(context).colorScheme.secondaryVariant,
                   ),
                 ],
