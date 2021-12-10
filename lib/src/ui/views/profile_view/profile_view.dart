@@ -25,15 +25,15 @@ import 'package:kounslr/src/ui/views/profile_view/components/profile_card.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/profile_view_header.dart';
 import 'package:kounslr/src/ui/components/sign_out_button.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/student_id_card.dart';
-import 'package:kounslr/src/ui/views/profile_view/components/student_schedule_card.dart';
-import 'package:kounslr/src/ui/views/profile_view/components/student_upcoming_assignments_card.dart';
+import 'package:kounslr/src/ui/views/profile_view/components/schedule_card.dart';
+import 'package:kounslr/src/ui/views/profile_view/components/upcoming_assignments_card.dart';
 
 class ProfileView extends ConsumerWidget {
   const ProfileView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    return CantonScaffold(padding: const EdgeInsets.symmetric(horizontal: 17), body: _content(context, watch));
+    return Container(padding: const EdgeInsets.symmetric(horizontal: 17), child: _content(context, watch));
   }
 
   Widget _content(BuildContext context, ScopedReader watch) {
@@ -68,8 +68,8 @@ class ProfileView extends ConsumerWidget {
                     ProfileCard(school: school, student: student),
                     const SizedBox(height: 30),
                     StudentIdCard(school: school, student: student),
-                    StudentScheduleCard(school: school, student: student),
-                    StudentUpcomingAssignmentsCard(school: school, student: student),
+                    ScheduleCard(school: school, student: student),
+                    UpcomingAssignmentsCard(school: school, student: student),
                     const SizedBox(height: 30),
                     const SignOutButton(),
                   ],
