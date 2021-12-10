@@ -17,7 +17,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +24,6 @@ import 'package:kounslr/src/config/bottom_navigation_bar.dart';
 import 'package:kounslr/src/ui/components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/home_view/home_view.dart';
 import 'package:kounslr/src/ui/views/journal_view/journal_view.dart';
-import 'package:kounslr/src/ui/views/no_student_data_view.dart';
 import 'package:kounslr/src/ui/views/profile_view/profile_view.dart';
 
 final _homeNavigatorKey = GlobalKey<NavigatorState>();
@@ -40,30 +38,6 @@ class CurrentView extends StatefulWidget {
 }
 
 class _CurrentViewState extends State<CurrentView> {
-  final user = FirebaseFirestore.instance
-      .collection('customers')
-      .doc('lcps')
-      .collection('schools')
-      .doc('independence')
-      .collection('students');
-
-  bool studentHasData = true;
-
-  Future<void> _checkIfStudentIsSignedIntoStudentVue() async {
-    var student = await user.doc(FirebaseAuth.instance.currentUser!.uid).get();
-    if (student.data() == null || student.data()!['studentId'] == null) {
-      setState(() {
-        studentHasData = false;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _checkIfStudentIsSignedIntoStudentVue();
-  }
-
   int _currentIndex = 0;
   final List<Widget> _views = [
     const HomeView(),
@@ -97,48 +71,47 @@ class _CurrentViewState extends State<CurrentView> {
 
     return CantonScaffold(
       padding: EdgeInsets.zero,
-      // backgroundColor: CantonMethods.alternateCanvasColor(context),
-      bottomNavBar: studentHasData ? BottomNavBar(_currentIndex, _onTabTapped) : null,
-      body: !studentHasData
-          ? const NoStudentDataView()
-          : IndexedStack(
-              index: _currentIndex,
-              children: [
-                Navigator(
-                  key: _homeNavigatorKey,
-                  observers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics())],
-                  onGenerateRoute: (settings) {
-                    return MaterialPageRoute(
-                      settings: settings,
-                      fullscreenDialog: true,
-                      builder: (context) => SafeArea(child: _views[_currentIndex]),
-                    );
-                  },
-                ),
-                Navigator(
-                  key: _journalNavigatorKey,
-                  observers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics())],
-                  onGenerateRoute: (settings) {
-                    return MaterialPageRoute(
-                      settings: settings,
-                      fullscreenDialog: true,
-                      builder: (context) => SafeArea(child: _views[_currentIndex]),
-                    );
-                  },
-                ),
-                Navigator(
-                  key: _profileNavigatorKey,
-                  observers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics())],
-                  onGenerateRoute: (settings) {
-                    return MaterialPageRoute(
-                      settings: settings,
-                      fullscreenDialog: true,
-                      builder: (context) => SafeArea(child: _views[_currentIndex]),
-                    );
-                  },
-                ),
-              ],
-            ),
+      safeArea: false,
+      backgroundColor: CantonMethods.alternateCanvasColor(context, index: _currentIndex, targetIndexes: [1]),
+      bottomNavBar: BottomNavBar(_currentIndex, _onTabTapped),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          Navigator(
+            key: _homeNavigatorKey,
+            observers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics())],
+            onGenerateRoute: (settings) {
+              return MaterialPageRoute(
+                settings: settings,
+                fullscreenDialog: true,
+                builder: (context) => SafeArea(child: _views[_currentIndex]),
+              );
+            },
+          ),
+          Navigator(
+            key: _journalNavigatorKey,
+            observers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics())],
+            onGenerateRoute: (settings) {
+              return MaterialPageRoute(
+                settings: settings,
+                fullscreenDialog: true,
+                builder: (context) => SafeArea(child: _views[_currentIndex]),
+              );
+            },
+          ),
+          Navigator(
+            key: _profileNavigatorKey,
+            observers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics())],
+            onGenerateRoute: (settings) {
+              return MaterialPageRoute(
+                settings: settings,
+                fullscreenDialog: true,
+                builder: (context) => SafeArea(child: _views[_currentIndex]),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
