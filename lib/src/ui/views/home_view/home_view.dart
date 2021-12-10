@@ -32,13 +32,14 @@ import 'package:kounslr/src/providers/next_class_providers/next_class_stream_pro
 import 'package:kounslr/src/providers/next_class_providers/next_class_teacher_stream_provider.dart';
 import 'package:kounslr/src/providers/school_stream_provider.dart';
 import 'package:kounslr/src/providers/student_assignments_provider.dart';
-import 'package:kounslr/src/providers/student_classes_future_provider.dart';
+import 'package:kounslr/src/providers/student_classes_stream_provider.dart';
 import 'package:kounslr/src/providers/student_stream_provider.dart';
 import 'package:kounslr/src/ui/components/assignment_card.dart';
 import 'package:kounslr/src/ui/components/something_went_wrong.dart';
-import 'package:kounslr/src/ui/views/home_view/components/home_view_components.dart';
+import 'package:kounslr/src/ui/views/home_view/components/date_card.dart';
 import 'package:kounslr/src/ui/views/home_view/components/home_view_header.dart';
-import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
+import 'package:kounslr/src/ui/views/home_view/components/next_class_card.dart';
+import 'package:kounslr/src/ui/views/upcoming_assignments_view/upcoming_assignments_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -154,6 +155,7 @@ class _HomeViewState extends State<HomeView> {
       DateCard(school: school),
       HomeViewHeader(student: student),
       NextClassCard(schoolClass: nextClass, block: nextBlock, teacher: teacher),
+      const SizedBox(height: 15),
     ];
 
     if (assignments.isNotEmpty) {
@@ -232,7 +234,8 @@ class _HomeViewState extends State<HomeView> {
               ),
               i != assignments.length - 1
                   ? Container(padding: const EdgeInsets.symmetric(horizontal: 17), child: const Divider())
-                  : Container()
+                  : Container(),
+              i == assignments.length - 1 ? const SizedBox(height: 17) : Container(),
             ],
           ),
         );
