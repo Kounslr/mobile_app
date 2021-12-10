@@ -70,7 +70,7 @@ class MyApp extends StatelessWidget {
           title: kAppTitle,
           primaryLightColor: CantonColors.orange[500],
           primaryDarkColor: CupertinoColors.systemOrange,
-          primaryLightVariantColor: CantonColors.orange[300]!,
+          primaryLightVariantColor: CantonColors.orange[200]!,
           primaryDarkVariantColor: CantonDarkColors.orange[200]!,
           navigatorObservers: [
             FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
