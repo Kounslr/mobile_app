@@ -21,7 +21,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/providers/school_blocks_future_provider.dart';
 import 'package:kounslr/src/providers/school_repository_provider.dart';
-import 'package:kounslr/src/providers/student_classes_future_provider.dart';
+import 'package:kounslr/src/providers/student_classes_stream_provider.dart';
 import 'package:kounslr/src/ui/components/class_card.dart';
 import 'package:kounslr/src/ui/components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/schedule_view/components/schedule_view_header.dart';
@@ -32,7 +32,6 @@ class ScheduleView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CantonScaffold(
-      backgroundColor: CantonMethods.alternateCanvasColor(context),
       padding: EdgeInsets.zero,
       body: _content(context),
     );
@@ -71,7 +70,6 @@ class ScheduleView extends StatelessWidget {
                 ),
               );
             }
-
             return schoolBlocksRepo.when(
               loading: () => Loading(),
               error: (e, s) {
@@ -82,15 +80,17 @@ class ScheduleView extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: blocks.length,
                     itemBuilder: (context, index) {
+                      var getTeacherFuture = context.read(schoolRepositoryProvider).getTeacherByTeacherId(
+                            classes[blocks[index].period! - 1].teacherId!,
+                          );
+                      final stopwatch = Stopwatch()..start();
                       return FutureBuilder<StaffMember>(
-                        future: context.read(schoolRepositoryProvider).getTeacherByTeacherId(
-                              classes[blocks[index].period! - 1].teacherId!,
-                            ),
+                        future: getTeacherFuture,
                         builder: (context, teacherSnapshot) {
                           futureIsDone = teacherSnapshot.data != null;
-                          if (!futureIsDone && index == 0) {
+                          if (!futureIsDone && stopwatch.elapsed.inMilliseconds > 1500) {
                             return Loading();
-                          } else if (!futureIsDone && index != 0) {
+                          } else if (!futureIsDone) {
                             return Container();
                           } else if (futureIsDone && index == 0 && classes.isEmpty) {
                             return Center(
@@ -110,7 +110,6 @@ class ScheduleView extends StatelessWidget {
                                 block: blocks[index],
                                 teacher: teacherSnapshot.data!,
                               ),
-                              if (index == blocks.length - 1) const Divider(),
                             ],
                           );
                         },
