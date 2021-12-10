@@ -251,6 +251,21 @@ class StudentRepository {
     }
   }
 
+  Future<List<Tag>> get getAllJournalEntryTags async {
+    try {
+      var tags = <Tag>[];
+      // var newDocs = <DocumentSnapshot>[];
+      var entries = await ref.collection('students/$uid/journal_entries').get();
+      for (var item in entries.docs) {
+        tags.addAll(JournalEntry.fromDocumentSnapshot(item).tags!);
+      }
+
+      return tags.toSet().toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> addJournalEntry(JournalEntry entry) async {
     await ref.collection('students/$uid/journal_entries').doc(entry.id).set(entry.toDocumentSnapshot());
   }
