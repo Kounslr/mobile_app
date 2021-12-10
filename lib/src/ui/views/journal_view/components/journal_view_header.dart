@@ -18,10 +18,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:kounslr/src/models/journal_entry.dart';
-import 'package:kounslr/src/ui/views/journal_view/journal_entry_view.dart';
+import 'package:kounslr/src/ui/views/journal_entry_view/journal_entry_view.dart';
 
 class JournalViewHeader extends StatelessWidget {
-  const JournalViewHeader({Key? key}) : super(key: key);
+  const JournalViewHeader(this.allEntries, {Key? key}) : super(key: key);
+
+  final Map<String?, int?> allEntries;
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +32,15 @@ class JournalViewHeader extends StatelessWidget {
       child: ViewHeaderOne(
         title: 'Journal',
         button: CantonHeaderButton(
-          isClear: true,
-          icon: Icon(
-            Iconsax.message_edit,
-            color: Theme.of(context).primaryColor,
-            size: 27,
-          ),
-          onPressed: () => CantonMethods.viewTransition(
-            context,
-            JournalEntryView(JournalEntry()),
-          ),
-        ),
+            isClear: true,
+            icon: Icon(
+              Iconsax.message_edit,
+              color: Theme.of(context).primaryColor,
+              size: 27,
+            ),
+            onPressed: () {
+              CantonMethods.viewTransition(context, JournalEntryView(JournalEntry(), allEntries));
+            }),
       ),
     );
   }
