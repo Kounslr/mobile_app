@@ -41,8 +41,8 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "09f2afe5a0f7f79c67d0c0a606f9898ab6a05333"
-      url: "git://github.com/31Carlton7/canton_design_system.git"
+      resolved-ref: "01d66d42329203a1049fd4d66a3b83e1df2967d4"
+      url: "https://github.com/31Carlton7/canton_design_system.git"
     source: git
     version: "0.0.1"
   characters:
@@ -72,7 +72,7 @@ packages:
       path: charts_flutter
       ref: HEAD
       resolved-ref: d6adb193ff91d2042941bad388845cbc8c5cd964
-      url: "https://github.com/google/charts.git"
+      url: "git://github.com/google/charts.git"
     source: git
     version: "0.12.0"
   clock:
@@ -283,6 +283,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0+1"
+  flutter_keyboard_visibility:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.1.0"
+  flutter_keyboard_visibility_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
+  flutter_keyboard_visibility_web:
+    dependency: transitive
+    description:
+      name: flutter_keyboard_visibility_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -344,6 +365,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_typeahead:
+    dependency: "direct main"
+    description:
+      name: flutter_typeahead
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.4"
   flutter_web_plugins:
     dependency: transitive
     description: flutter

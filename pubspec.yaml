@@ -27,8 +27,17 @@ dependencies:
   # UI Library
   canton_design_system:
     git:
-      url: git://github.com/31Carlton7/canton_design_system.git
+      url: https://github.com/31Carlton7/canton_design_system.git
       ref: master
+  # autocomplete_textfield: ^1.7.3
+  charts_flutter:
+    git:
+      url: git://github.com/google/charts.git
+      path: charts_flutter
+  font_awesome_flutter: ^9.1.0
+  flutter_slidable: ^0.6.0
+  flutter_svg: ^0.22.0
+  flutter_typeahead: ^3.2.4
 
   # API
   dio: ^4.0.0
@@ -49,23 +58,18 @@ dependencies:
   cloud_firestore: ^2.4.0
   google_sign_in: ^5.0.5
 
-  # Multi-Purpose
-  intl: ^0.17.0
+  # Security
   uuid: ^3.0.4
   encrypt: ^5.0.1
   pointycastle: ^3.3.3
 
-  # Other
-  qr_flutter: ^4.0.0
-  charts_flutter:
-    git:
-      url: https://github.com/google/charts.git
-      path: charts_flutter
-  font_awesome_flutter: ^9.1.0
+  # Config
   flutter_launcher_icons: ^0.9.1
   flutter_native_splash: ^1.2.1
-  flutter_slidable: ^0.6.0
-  flutter_svg: ^0.22.0
+
+  # Other
+  intl: ^0.17.0
+  qr_flutter: ^4.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
