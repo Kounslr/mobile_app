@@ -32,7 +32,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/config/constants.dart';
 import 'package:kounslr/src/services/authentication/authentication_wrapper.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
