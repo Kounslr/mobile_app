@@ -16,12 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:kounslr/src/models/class.dart';
-import 'package:kounslr/src/models/student.dart';
 import 'package:dio/dio.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:xml/xml.dart';
+
 import 'package:kounslr/src/models/assignment.dart';
+import 'package:kounslr/src/models/class.dart';
+import 'package:kounslr/src/models/student.dart';
 
 class StudentVueClient {
   final String domain;
