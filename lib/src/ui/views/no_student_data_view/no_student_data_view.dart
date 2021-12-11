@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import 'package:canton_design_system/canton_design_system.dart';
+
 import 'package:kounslr/src/ui/components/sign_in_with_studentvue_card.dart';
 import 'package:kounslr/src/ui/views/no_student_data_view/components/no_student_data_view_header.dart';
 
