@@ -140,8 +140,16 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _content(BuildContext context, School school, Student student, List<Class> classes,
-      List<Assignment> assignments, Class nextClass, Block nextBlock, StaffMember teacher) {
+  Widget _content(
+    BuildContext context,
+    School school,
+    Student student,
+    List<Class> classes,
+    List<Assignment> assignments,
+    Class nextClass,
+    Block nextBlock,
+    StaffMember teacher,
+  ) {
     return ListView(
       shrinkWrap: false,
       children: _contentChildren(context, school, student, classes, assignments, nextClass, nextBlock, teacher),
