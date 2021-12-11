@@ -34,22 +34,25 @@ class StudentIDCard extends StatelessWidget {
         padding: const EdgeInsets.all(15),
         child: Column(
           children: [
-            Row(
-              children: [
-                ClipSquircleBorder(
-                  radius: BorderRadius.circular(40),
-                  child: Container(
-                    height: 80,
-                    width: 80,
-                    color: Theme.of(context).colorScheme.secondary,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Row(
+                children: [
+                  // ClipSquircleBorder(
+                  //   radius: BorderRadius.circular(40),
+                  //   child: Container(
+                  //     height: 80,
+                  //     width: 80,
+                  //     color: Theme.of(context).colorScheme.secondary,
+                  //   ),
+                  // ),
+                  // const SizedBox(width: 15),
+                  Text(
+                    school.name!,
+                    style: Theme.of(context).textTheme.headline5!.copyWith(color: CantonColors.white),
                   ),
-                ),
-                const SizedBox(width: 15),
-                Text(
-                  school.name!,
-                  style: Theme.of(context).textTheme.headline5!.copyWith(color: CantonColors.white),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(height: 50),
             Row(
