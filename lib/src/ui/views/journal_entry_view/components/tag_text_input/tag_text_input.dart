@@ -176,7 +176,9 @@ class _CantonTagTextInputState extends State<CantonTagTextInput> {
     return TypeAheadField(
       suggestionsCallback: (pattern) async {
         var suggTags = await widget.suggestedTags!;
-        return suggTags.where((element) => !_getTagsInField.contains(element));
+        return suggTags.where((element) {
+          return (!_getTagsInField.contains(element)) && element.name!.contains(_textEditingController.text);
+        });
       },
       itemBuilder: (context, Tag suggestion) {
         return ListTile(
