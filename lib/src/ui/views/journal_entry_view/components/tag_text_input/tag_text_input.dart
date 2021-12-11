@@ -1,8 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
+
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:flutter/services.dart';
 
 class CantonTagTextInput extends StatefulWidget {
   ///[tagsStyler] must not be [null]
