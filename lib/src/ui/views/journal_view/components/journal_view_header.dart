@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import 'package:canton_design_system/canton_design_system.dart';
+
 import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/ui/views/journal_entry_view/journal_entry_view.dart';
 
