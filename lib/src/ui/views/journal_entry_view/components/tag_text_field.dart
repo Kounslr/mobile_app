@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:kounslr/src/providers/student_repository_provider.dart';
 import 'package:kounslr/src/ui/views/journal_entry_view/components/tag_text_input/tag_text_input.dart' as input;
 
