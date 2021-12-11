@@ -20,6 +20,7 @@ import 'package:canton_design_system/canton_design_system.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:kounslr/src/config/bottom_navigation_bar.dart';
 import 'package:kounslr/src/ui/components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/home_view/home_view.dart';
