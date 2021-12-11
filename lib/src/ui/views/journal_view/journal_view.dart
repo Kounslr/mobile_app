@@ -23,9 +23,9 @@ import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/providers/journal_entries_stream_provider.dart';
 import 'package:kounslr/src/providers/student_repository_provider.dart';
 import 'package:kounslr/src/ui/components/something_went_wrong.dart';
+import 'package:kounslr/src/ui/views/journal_entries_view/journal_entries_view.dart';
 import 'package:kounslr/src/ui/views/journal_view/components/horizontal_bar_chart.dart';
 import 'package:kounslr/src/ui/views/journal_view/components/journal_view_header.dart';
-import 'package:kounslr/src/ui/views/journal_entries_view/journal_entries_view.dart';
 import 'package:kounslr/src/ui/views/journal_view/components/view_card.dart';
 
 class JournalView extends StatefulWidget {
