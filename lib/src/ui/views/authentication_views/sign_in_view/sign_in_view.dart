@@ -18,8 +18,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kounslr/src/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:kounslr/src/providers/authentication_providers/authentication_service_provider.dart';
 import 'package:kounslr/src/ui/components/error_text.dart';
 import 'package:kounslr/src/ui/views/authentication_views/components/email_text_input.dart';
 import 'package:kounslr/src/ui/views/authentication_views/components/password_text_input.dart';
