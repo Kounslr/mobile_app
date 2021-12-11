@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:kounslr/src/providers/authentication_providers/authentication_service_provider.dart';
 
 final authenticationStreamProvider = StreamProvider<User?>((ref) {
