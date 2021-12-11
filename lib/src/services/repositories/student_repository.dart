@@ -21,16 +21,17 @@ import 'dart:async';
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
-
 import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/services/repositories/school_repository.dart';
-import 'package:uuid/uuid.dart';
 
 class StudentRepository {
   var ref = FirebaseFirestore.instance.collection('customers/lcps/schools').doc('independence');
@@ -42,7 +43,9 @@ class StudentRepository {
       var school = ref.snapshots().map((event) => School.fromDocumentSnapshot(event));
 
       return school;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -52,7 +55,9 @@ class StudentRepository {
       var student = ref.collection('students').doc(uid).snapshots().map((event) => Student.fromDocumentSnapshot(event));
 
       return student;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -89,89 +94,121 @@ class StudentRepository {
       schoolClass = Class.fromDocumentSnapshot(classesRef.docs.first, assignments);
 
       return schoolClass;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
 
   Stream<Block> get nextBlockStream async* {
-    await for (var item in SchoolRepository().school.asStream()) {
-      final now = DateTime.now();
-      var nextBlock = Block();
-      var blocks = item.currentDay!.blocks!;
-      var times = blocks.map((e) => e.time!).toList();
-      var timesAfterNow = [];
+    try {
+      await for (var item in SchoolRepository().school.asStream()) {
+        final now = DateTime.now();
+        var nextBlock = Block();
+        var blocks = item.currentDay!.blocks!;
+        var times = blocks.map((e) => e.time!).toList();
+        var timesAfterNow = [];
+
+        for (var element in times) {
+          if (element.isAfter(now)) timesAfterNow.add(element);
+        }
+
+        if (timesAfterNow.isEmpty) {
+          yield Block(period: 0);
+        } else {
+          var closestTime = timesAfterNow.reduce((a, b) => a.difference(now).abs() < b.difference(now).abs() ? a : b);
+
+          nextBlock = blocks.where((element) => element.time == closestTime).toList()[0];
+
+          yield nextBlock;
+        }
+      }
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
+      rethrow;
+    }
+  }
+
+  Future<Block> get nextBlock async {
+    try {
+      var school = await SchoolRepository().school;
+      var block = Block();
+      var now = DateTime.now();
+
+      List<Block> blocks = school.currentDay!.blocks!;
+      List<DateTime> times = blocks.map((e) => e.time!).toList();
+      List<DateTime> timesAfterNow = [];
 
       for (var element in times) {
         if (element.isAfter(now)) timesAfterNow.add(element);
       }
 
       if (timesAfterNow.isEmpty) {
-        yield Block(period: 0);
-      } else {
-        var closestTime = timesAfterNow.reduce((a, b) => a.difference(now).abs() < b.difference(now).abs() ? a : b);
-
-        nextBlock = blocks.where((element) => element.time == closestTime).toList()[0];
-
-        yield nextBlock;
+        return Block(period: 0);
       }
+
+      var closestTime = timesAfterNow.reduce((a, b) => a.difference(now).abs() < b.difference(now).abs() ? a : b);
+
+      block = blocks.where((element) => element.time == closestTime).toList()[0];
+
+      return block;
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
+      rethrow;
     }
-  }
-
-  Future<Block> get nextBlock async {
-    var school = await SchoolRepository().school;
-    var block = Block();
-    var now = DateTime.now();
-
-    List<Block> blocks = school.currentDay!.blocks!;
-    List<DateTime> times = blocks.map((e) => e.time!).toList();
-    List<DateTime> timesAfterNow = [];
-
-    for (var element in times) {
-      if (element.isAfter(now)) timesAfterNow.add(element);
-    }
-
-    if (timesAfterNow.isEmpty) {
-      return Block(period: 0);
-    }
-
-    var closestTime = timesAfterNow.reduce((a, b) => a.difference(now).abs() < b.difference(now).abs() ? a : b);
-
-    block = blocks.where((element) => element.time == closestTime).toList()[0];
-
-    return block;
   }
 
   Stream<StaffMember> get nextClassTeacher async* {
-    await for (var item in nextClassStream) {
-      if (item.id == 'done') {
-        yield StaffMember();
-      } else {
-        await for (var teacher in SchoolRepository().getTeacherByTeacherId(item.teacherId ?? '').asStream()) {
-          yield teacher;
+    try {
+      await for (var item in nextClassStream) {
+        if (item.id == 'done') {
+          yield StaffMember();
+        } else {
+          await for (var teacher in SchoolRepository().getTeacherByTeacherId(item.teacherId ?? '').asStream()) {
+            yield teacher;
+          }
         }
       }
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
+      rethrow;
     }
   }
 
   Stream<Class> get nextClassStream async* {
-    await for (var item in nextBlockStream) {
-      if (![0, null].contains(item.period)) {
-        await for (var upcomingClass in getClassByBlock(item.period!).asStream()) {
-          yield upcomingClass;
+    try {
+      await for (var item in nextBlockStream) {
+        if (![0, null].contains(item.period)) {
+          await for (var upcomingClass in getClassByBlock(item.period!).asStream()) {
+            yield upcomingClass;
+          }
+        } else {
+          yield Class(id: 'done');
         }
-      } else {
-        yield Class(id: 'done');
       }
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
+      rethrow;
     }
   }
 
   Future<Class> get nextClass async {
-    var upcomingClass = Class();
-    var upcomingBlock = await nextBlock;
-    upcomingClass =
-        ![0, null].contains(upcomingBlock.period) ? await getClassByBlock(upcomingBlock.period!) : Class(id: 'done');
-    return upcomingClass;
+    try {
+      var upcomingClass = Class();
+      var upcomingBlock = await nextBlock;
+      upcomingClass =
+          ![0, null].contains(upcomingBlock.period) ? await getClassByBlock(upcomingBlock.period!) : Class(id: 'done');
+      return upcomingClass;
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
+      rethrow;
+    }
   }
 
   Stream<List<Class>> get studentClasses async* {
@@ -202,7 +239,9 @@ class StudentRepository {
       classes.sort((a, b) => a.block!.compareTo(b.block!));
 
       yield classes;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -241,7 +280,9 @@ class StudentRepository {
       ass.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
 
       yield ass;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -251,7 +292,9 @@ class StudentRepository {
       var entries = ref.collection('students/$uid/journal_entries').snapshots();
 
       return entries;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -266,7 +309,9 @@ class StudentRepository {
       }
 
       return tags.toSet().toList();
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
