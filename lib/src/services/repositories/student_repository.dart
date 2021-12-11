@@ -95,26 +95,26 @@ class StudentRepository {
   }
 
   Stream<Block> get nextBlockStream async* {
-    var school = await SchoolRepository().school;
-    var nextBlock = Block();
-    var now = DateTime.now();
+    await for (var item in SchoolRepository().school.asStream()) {
+      final now = DateTime.now();
+      var nextBlock = Block();
+      var blocks = item.currentDay!.blocks!;
+      var times = blocks.map((e) => e.time!).toList();
+      var timesAfterNow = [];
 
-    List<Block> blocks = school.currentDay!.blocks!;
-    List<DateTime> times = blocks.map((e) => e.time!).toList();
-    List<DateTime> timesAfterNow = [];
+      for (var element in times) {
+        if (element.isAfter(now)) timesAfterNow.add(element);
+      }
 
-    for (var element in times) {
-      if (element.isAfter(now)) timesAfterNow.add(element);
-    }
+      if (timesAfterNow.isEmpty) {
+        yield Block(period: 0);
+      } else {
+        var closestTime = timesAfterNow.reduce((a, b) => a.difference(now).abs() < b.difference(now).abs() ? a : b);
 
-    if (timesAfterNow.isEmpty) {
-      yield Block(period: 0);
-    } else {
-      var closestTime = timesAfterNow.reduce((a, b) => a.difference(now).abs() < b.difference(now).abs() ? a : b);
+        nextBlock = blocks.where((element) => element.time == closestTime).toList()[0];
 
-      nextBlock = blocks.where((element) => element.time == closestTime).toList()[0];
-
-      yield nextBlock;
+        yield nextBlock;
+      }
     }
   }
 
@@ -143,22 +143,27 @@ class StudentRepository {
   }
 
   Stream<StaffMember> get nextClassTeacher async* {
-    var schoolClass = await nextClass;
-    if (schoolClass.id == 'done') {
-      yield StaffMember();
+    await for (var item in nextClassStream) {
+      if (item.id == 'done') {
+        yield StaffMember();
+      } else {
+        await for (var teacher in SchoolRepository().getTeacherByTeacherId(item.teacherId ?? '').asStream()) {
+          yield teacher;
+        }
+      }
     }
-
-    var teacher = await SchoolRepository().getTeacherByTeacherId(schoolClass.teacherId ?? '');
-
-    yield teacher;
   }
 
   Stream<Class> get nextClassStream async* {
-    var upcomingClass = Class();
-    var upcomingBlock = await nextBlock;
-    upcomingClass =
-        ![0, null].contains(upcomingBlock.period) ? await getClassByBlock(upcomingBlock.period!) : Class(id: 'done');
-    yield upcomingClass;
+    await for (var item in nextBlockStream) {
+      if (![0, null].contains(item.period)) {
+        await for (var upcomingClass in getClassByBlock(item.period!).asStream()) {
+          yield upcomingClass;
+        }
+      } else {
+        yield Class(id: 'done');
+      }
+    }
   }
 
   Future<Class> get nextClass async {
