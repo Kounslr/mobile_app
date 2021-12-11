@@ -1,9 +1,10 @@
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/providers/journal_entries_stream_provider.dart';
-import 'package:kounslr/src/ui/views/journal_entries_view/components/journal_entry_tag_card.dart';
 import 'package:kounslr/src/ui/components/something_went_wrong.dart';
+import 'package:kounslr/src/ui/views/journal_entries_view/components/journal_entry_tag_card.dart';
 
 class JournalEntriesListView extends StatefulWidget {
   const JournalEntriesListView(this.allEntries, {Key? key}) : super(key: key);
