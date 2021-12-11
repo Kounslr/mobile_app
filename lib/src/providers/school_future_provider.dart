@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/services/repositories/school_repository.dart';
 
