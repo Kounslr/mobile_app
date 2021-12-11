@@ -17,6 +17,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
@@ -33,7 +35,9 @@ class SchoolRepository {
       var school = School.fromDocumentSnapshot(_school);
 
       return school;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -44,7 +48,9 @@ class SchoolRepository {
       var student = Student.fromDocumentSnapshot(_student);
 
       return student;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -60,7 +66,9 @@ class SchoolRepository {
       }
 
       return students;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -72,7 +80,9 @@ class SchoolRepository {
       var _blocks = _school.currentDay!.blocks!;
 
       return _blocks;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
