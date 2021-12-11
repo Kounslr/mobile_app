@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import 'package:canton_design_system/canton_design_system.dart';
+
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/ui/views/schedule_view/schedule_view.dart';
