@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:intl/intl.dart';
+
 import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/models/staff_member.dart';
