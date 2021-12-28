@@ -16,8 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:intl/intl.dart';
+import 'package:kounslr/src/models/staff_member.dart';
+import 'package:kounslr/src/services/authentication/authentication_repository.dart';
+import 'package:kounslr/src/services/repositories/school_repository.dart';
+import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
 
 import 'package:kounslr/src/models/assignment.dart';
@@ -41,7 +48,7 @@ class StudentVueClient {
     return string?.replaceFirst('.', '').replaceAll('/', ' ') ?? 'Assignment';
   }
 
-  Future<List<Class>> loadGradebook({Function(double)? callback}) async {
+  Future<List<Class>> loadGradebook({Function(double)? callback, required String studentID}) async {
     String? resData;
     if (!mock) {
       var requestData = '''<?xml version="1.0" encoding="utf-8"?>
@@ -81,6 +88,7 @@ class StudentVueClient {
 
     var courses = document.findAllElements('Courses').first;
     var classes = <Class>[];
+
     for (int i = 0; i < courses.children.length; i++) {
       XmlNode current = courses.children[i];
 
@@ -92,43 +100,121 @@ class StudentVueClient {
 
       _class.block = int.tryParse(current.getAttribute('Period') ?? '0') ?? -1;
       _class.roomNumber = current.getAttribute('Room') ?? 'N/A';
-      // _class.teacher?.name = current.getAttribute('Staff') ?? 'N/A';
-      // _class.teacher?.emailAddress =
-      //     current.getAttribute('StaffEMail') ?? 'N/A';
-      // _class.teacher?.role = 'Teacher';
-      // _class.teacher?.phoneNumber = '';
-      // _class.teacher?.id = '';
 
-      // var mark = current.findAllElements('Mark').first;
-      // _class.pctGrade = mark.getAttribute('CalculatedScoreRaw');
-      // _class.letterGrade = mark.getAttribute('CalculatedScoreString');
+      /// Gets teacher email
 
-      current = current.findAllElements('GradeCalculationSummary').first;
+      final teacherEmail = current.getAttribute('StaffEMail') ?? 'N/A';
 
-      current = current.parent!.findAllElements('Assignments').first;
+      /// Checks if teacher is in database (If [list] is empty then the teacher is not in the database)
+      final teacherChecklist = await FirebaseFirestore.instance
+          .collection('customers/lcps/schools/independence/staff')
+          .where('emailAddress', isEqualTo: teacherEmail)
+          .get();
 
-      // _class.assignments = <Assignment>[];
-      for (int i = 0; i < current.children.length; i++) {
-        var ass = Assignment();
+      final teacher = StaffMember(
+        id: const Uuid().v4(),
+        name: current.getAttribute('Staff') ?? 'N/A',
+        emailAddress: teacherEmail,
+        role: 'Teacher',
+        phoneNumber: '',
+        gender: '',
+      );
 
-        ass.name = _formattedStringName(current.children[i].getAttribute('Measure'));
-        ass.type = current.children[i].getAttribute('Type') ?? 'No Type';
+      if (teacherChecklist.docs.isEmpty) {
+        /// Creates new teacher as well as new class and adds student
+        await _addTeacherToDatabase(teacher);
+        await _addClassToDatabase(current, teacher, studentID);
+      } else {
+        /// Gathers list of classes that the teacher teaches
+        var classChecklist = [...await SchoolRepository().getClassesByTeacherId(teacherChecklist.docs[0].data()['id'])];
+        var targetClass = classChecklist.where((element) => element.name == _class.name).toList();
 
-        // bool dueDateIsNull = false;
+        /// Checks if the teacher has the class registered in the database
+        if (targetClass.isEmpty) {
+          /// Creates new class and adds student
+          _addClassToDatabase(current, teacher, studentID);
+        } else {
+          /// Adds student to existing class
+          final classesRef = FirebaseFirestore.instance
+              .collection('customers/lcps/schools/independence/classes')
+              .doc(targetClass[0].id);
+          final classesDoc = await classesRef.get();
+          final student = await SchoolRepository().getStudent(studentID);
 
-        // String? dateString = dateStringMethod();
+          await classesRef.update({
+            'students': [
+              ...classesDoc.data()!['students'],
+              student.id,
+            ],
+          });
 
-        // ass.dueDate = DateTime.parse(dateString);
-        ass.dueDate = DateTime.now();
+          final assignmentsRef = await classesRef.collection('assignments').get();
 
-        // ass.earnedPoints =
-        //     current.children[i].getAttribute('Score') == 'Not Graded'
-        //         ? -1
-        //         : double.tryParse(
-        //                 (current.children[i].getAttribute('Points') ?? 'N/A')
-        //                     .replaceAll(' ', '')
-        //                     .split('/')[0]) ??
-        //             -1;
+          for (var item in assignmentsRef.docs) {
+            await item.reference.update({
+              'students': [
+                ...item['students'],
+                student.toStudentInAssignment().toMap(),
+              ],
+            });
+          }
+
+          await AuthenticationRepository(FirebaseAuth.instance)
+              .userRef
+              .doc('$studentID/classes/${classesDoc.data()!["id"]}')
+              .set(student.toStudentInClass().toMap());
+        }
+      }
+    }
+
+    svData = classes;
+
+    return svData;
+  }
+
+  Future<void> _addTeacherToDatabase(StaffMember staffMember) async {
+    FirebaseFirestore.instance
+        .collection('customers/lcps/schools/independence/staff')
+        .doc(staffMember.id)
+        .set(staffMember.toMap());
+  }
+
+  Future<void> _addClassToDatabase(XmlNode current, StaffMember teacher, String studentID) async {
+    /// Creates the class and gathers info
+    var schoolClass = Class(
+      id: const Uuid().v4(),
+      name: _formattedStringName(
+          current.getAttribute('Title')!.substring(0, current.getAttribute('Title')!.indexOf('('))),
+      block: int.tryParse(current.getAttribute('Period') ?? '0') ?? -1,
+      markingPeriod: 1,
+      roomNumber: current.getAttribute('Room') ?? 'N/A',
+      teacherId: teacher.id,
+      students: [StudentID(id: studentID)],
+      assignments: [],
+    );
+
+    current = current.findAllElements('Assignments').first;
+
+    for (int i = 0; i < current.children.length; i++) {
+      var ass = Assignment();
+
+      while (current.children[i].runtimeType == XmlElement) {
+        ass.id = const Uuid().v4();
+        ass.name = _formattedStringName(current.children[i].getAttribute('Measure')).trim();
+        ass.type = (current.children[i].getAttribute('Type') ?? 'No Type').trim();
+        ass.creationDate = DateFormat.yMd().parse(current.children[i].getAttribute('Date')!);
+        ass.dueDate = DateFormat.yMd().parse(current.children[i].getAttribute('DueDate')!);
+        ass.classId = schoolClass.id;
+        ass.markingPeriod = schoolClass.markingPeriod;
+
+        var earnedPoints = current.children[i].getAttribute('Score') == 'Not Graded'
+            ? -1.0
+            : double.tryParse(
+                    (current.children[i].getAttribute('Points') ?? 'N/A').replaceAll(' ', '').split('/')[0]) ??
+                -1.0;
+
+        ass.students = [StudentInAssignment(id: studentID, completed: false, earnedPoints: earnedPoints)];
+
         if (current.children[i].getAttribute('Score') == 'Not Graded') {
           ass.possiblePoints =
               double.tryParse((current.children[i].getAttribute('Points') ?? '').replaceAll(' Points Possible', ''));
@@ -146,14 +232,25 @@ class StudentVueClient {
             ass.possiblePoints = double.tryParse(current.children[i].getAttribute('Score') ?? 'N/A');
           }
         }
-        _class.assignments!.add(ass);
+        schoolClass.assignments!.add(ass);
+        break;
       }
-
-      classes.add(_class);
     }
-    svData = classes;
 
-    return svData;
+    /// Adds class to database
+    final nClass = schoolClass.toMap();
+    nClass.remove('assignments');
+
+    final ref = FirebaseFirestore.instance.collection('customers/lcps/schools/independence/classes');
+    final userRef = FirebaseFirestore.instance.collection('customers/lcps/schools/independence/students');
+
+    await ref.doc(schoolClass.id).set(nClass);
+    await userRef.doc(studentID).collection('classes').doc(schoolClass.id).set(StudentInClass(grades: []).toMap());
+
+    for (Assignment item in schoolClass.assignments!) {
+      print(item);
+      await ref.doc(schoolClass.id).collection('assignments').doc(item.id).set(item.toDocumentSnapshot());
+    }
   }
 
   Future<Student> loadStudentData({Function(double)? callback}) async {
