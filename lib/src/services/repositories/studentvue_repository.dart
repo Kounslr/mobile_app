@@ -48,7 +48,7 @@ class StudentVueClient {
     return string?.replaceFirst('.', '').replaceAll('/', ' ') ?? 'Assignment';
   }
 
-  Future<List<Class>> loadGradebook({Function(double)? callback, required String studentID}) async {
+  Future<void> loadInfoToDatabase({Function(double)? callback, required String studentID}) async {
     String? resData;
     if (!mock) {
       var requestData = '''<?xml version="1.0" encoding="utf-8"?>
@@ -84,10 +84,7 @@ class StudentVueClient {
 
     final document = XmlDocument.parse(HtmlUnescape().convert(resData!));
 
-    var svData = <Class>[];
-
     var courses = document.findAllElements('Courses').first;
-    var classes = <Class>[];
 
     for (int i = 0; i < courses.children.length; i++) {
       XmlNode current = courses.children[i];
@@ -166,10 +163,6 @@ class StudentVueClient {
         }
       }
     }
-
-    svData = classes;
-
-    return svData;
   }
 
   Future<void> _addTeacherToDatabase(StaffMember staffMember) async {
@@ -248,7 +241,6 @@ class StudentVueClient {
     await userRef.doc(studentID).collection('classes').doc(schoolClass.id).set(StudentInClass(grades: []).toMap());
 
     for (Assignment item in schoolClass.assignments!) {
-      print(item);
       await ref.doc(schoolClass.id).collection('assignments').doc(item.id).set(item.toDocumentSnapshot());
     }
   }
