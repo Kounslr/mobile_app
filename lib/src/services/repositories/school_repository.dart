@@ -109,6 +109,17 @@ class SchoolRepository {
     return schoolClass;
   }
 
+  Future<List<Class>> getClassesByTeacherId(String teacherId) async {
+    var _classes = <Class>[];
+    var _classesDocs = await ref.collection('classes').where('teacherId', isEqualTo: teacherId).get();
+
+    for (QueryDocumentSnapshot<Map<String, dynamic>> item in _classesDocs.docs) {
+      _classes.add(await getClass(id: item.data()['id']));
+    }
+
+    return _classes;
+  }
+
   Future<StaffMember> getTeacherByClassId(String classId) async {
     var _class = await ref.collection('classes').doc(classId).get();
 
