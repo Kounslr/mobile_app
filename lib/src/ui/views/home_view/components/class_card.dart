@@ -45,11 +45,14 @@ class ClassCard extends StatelessWidget {
     }
 
     String _teacherName(StaffMember teacher) {
-      String string = teacher.name!.substring(teacher.name!.indexOf(' '));
-      if (teacher.gender == 'Male') {
-        return 'Mr.' + string;
+      if (teacher.gender != null) {
+        String string = teacher.name!.substring(teacher.name!.indexOf(' '));
+        if (teacher.gender == 'Male') {
+          return 'Mr.' + string;
+        }
+        return 'Ms.' + string;
       }
-      return 'Ms.' + string;
+      return teacher.name!;
     }
 
     String _nextClassTime(DateTime date) {
