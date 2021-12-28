@@ -31,15 +31,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kounslr/src/config/constants.dart';
 import 'package:kounslr/src/services/authentication/authentication_wrapper.dart';
-import 'package:kounslr/src/services/repositories/studentvue_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-
-  print(await StudentVueClient('1056083', 'Bingie@jordan0831!', 'portal.lcps.org')
-      .loadGradebook(studentID: 'mweGvVaYqmhMJlEA325Prpvgz6q1'));
 
   /// Comment this line out in production
   /// or when merging to [master]
