@@ -28,17 +28,18 @@ class AuthenticationRepository {
   final FirebaseAuth _firebaseAuth;
   AuthenticationRepository(this._firebaseAuth);
 
-  final CollectionReference userRef = FirebaseFirestore.instance
-      .collection('customers/lcps/schools/independence/students');
+  final CollectionReference userRef =
+      FirebaseFirestore.instance.collection('customers/lcps/schools/independence/students');
 
-  final CollectionReference classesRef = FirebaseFirestore.instance
-      .collection('customers/lcps/schools/independence/classes');
+  final CollectionReference classesRef =
+      FirebaseFirestore.instance.collection('customers/lcps/schools/independence/classes');
 
   Future<void> _createUserInDatabase(User user) async {
     await userRef.doc(user.uid).set({'id': user.uid, 'email': user.email});
   }
 
   Future<void> _createStudentInDatabase(Student student) async {
+    /// TODO: Call StudentVue method
     await userRef.doc(student.id).update(student.toMap());
 
     var allClasses = await classesRef.get();
@@ -51,12 +52,9 @@ class AuthenticationRepository {
         ],
       });
 
-      await userRef
-          .doc('${student.id}/classes/${allClasses.docs[i].id}')
-          .set(student.toStudentInClass().toMap());
+      await userRef.doc('${student.id}/classes/${allClasses.docs[i].id}').set(student.toStudentInClass().toMap());
 
-      var assignmentsRef =
-          await allClasses.docs[i].reference.collection('assignments').get();
+      var assignmentsRef = await allClasses.docs[i].reference.collection('assignments').get();
 
       for (var item in assignmentsRef.docs) {
         await item.reference.update({
@@ -84,8 +82,7 @@ class AuthenticationRepository {
     }
   }
 
-  Future<String> signInWithEmailAndPassword(
-      {required String email, required String password}) async {
+  Future<String> signInWithEmailAndPassword({required String email, required String password}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
@@ -113,8 +110,7 @@ class AuthenticationRepository {
         idToken: googleAuth.idToken,
       );
 
-      final credential =
-          await FirebaseAuth.instance.signInWithCredential(googleCredential);
+      final credential = await FirebaseAuth.instance.signInWithCredential(googleCredential);
 
       var userDataRef = await userRef.doc(credential.user!.uid).get();
 
@@ -143,8 +139,7 @@ class AuthenticationRepository {
       var student = Student();
       String username = email.substring(0, email.indexOf('@'));
       String domain = 'portal.lcps.org';
-      student =
-          await StudentVueClient(username, password, domain).loadStudentData();
+      student = await StudentVueClient(username, password, domain).loadStudentData();
 
       student.id = FirebaseAuth.instance.currentUser?.uid;
 
