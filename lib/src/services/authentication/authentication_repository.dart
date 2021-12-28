@@ -39,32 +39,7 @@ class AuthenticationRepository {
   }
 
   Future<void> _createStudentInDatabase(Student student) async {
-    /// TODO: Call StudentVue method
     await userRef.doc(student.id).update(student.toMap());
-
-    var allClasses = await classesRef.get();
-
-    for (int i = 0; i < allClasses.docs.length; i++) {
-      await classesRef.doc(allClasses.docs[i].id).update({
-        'students': [
-          ...allClasses.docs[i]['students'],
-          student.idOnly().toMap(),
-        ],
-      });
-
-      await userRef.doc('${student.id}/classes/${allClasses.docs[i].id}').set(student.toStudentInClass().toMap());
-
-      var assignmentsRef = await allClasses.docs[i].reference.collection('assignments').get();
-
-      for (var item in assignmentsRef.docs) {
-        await item.reference.update({
-          'students': [
-            ...item['students'],
-            student.toStudentInAssignment().toMap(),
-          ],
-        });
-      }
-    }
   }
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
@@ -131,10 +106,7 @@ class AuthenticationRepository {
     }
   }
 
-  Future<String> studentVueSignIn({
-    required String email,
-    required String password,
-  }) async {
+  Future<String> studentVueSignIn({required String email, required String password}) async {
     try {
       var student = Student();
       String username = email.substring(0, email.indexOf('@'));
@@ -146,6 +118,8 @@ class AuthenticationRepository {
       if (student.studentId == null) return 'failed';
 
       await _createStudentInDatabase(student);
+
+      await StudentVueClient(username, password, domain).loadInfoToDatabase(studentID: student.id!);
 
       return 'success';
     } catch (e) {
