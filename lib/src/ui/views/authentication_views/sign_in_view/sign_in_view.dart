@@ -114,6 +114,12 @@ class _SignInViewState extends State<SignInView> {
     return CantonPrimaryButton(
       buttonText: 'Sign In',
       color: Theme.of(context).primaryColor,
+      containerWidth: 140,
+      containerHeight: 40,
+      borderRadius: const SmoothBorderRadius.all(
+        SmoothRadius(cornerRadius: 12, cornerSmoothing: 1),
+      ),
+      padding: EdgeInsets.zero,
       onPressed: () async {
         var res = await context.read(authenticationServiceProvider).signInWithEmailAndPassword(
               email: _emailController.text.trim(),
@@ -135,6 +141,12 @@ class _SignInViewState extends State<SignInView> {
       buttonText: 'Google',
       alignment: MainAxisAlignment.center,
       color: Theme.of(context).colorScheme.onSecondary,
+      containerWidth: 140,
+      containerHeight: 40,
+      borderRadius: const SmoothBorderRadius.all(
+        SmoothRadius(cornerRadius: 12, cornerSmoothing: 1),
+      ),
+      padding: EdgeInsets.zero,
       border: BorderSide(
         color: Theme.of(context).colorScheme.secondary,
         width: 1.7,

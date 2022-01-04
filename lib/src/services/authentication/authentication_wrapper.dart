@@ -54,7 +54,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
     return true;
   }
 
-  void toggleView() {
+  void _toggleView() {
     setState(() {
       showSignIn = !showSignIn;
     });
@@ -74,9 +74,9 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
           data: (user) {
             if (user == null) {
               if (showSignIn) {
-                return SignInView(toggleView: toggleView);
+                return SignInView(toggleView: _toggleView);
               } else {
-                return SignUpView(toggleView: toggleView);
+                return SignUpView(toggleView: _toggleView);
               }
             } else {
               return FutureBuilder<bool>(
