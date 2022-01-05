@@ -87,8 +87,6 @@ class _HomeViewState extends State<HomeView> {
                   data: (classes) {
                     return studentAssignmentsStream.when(
                       error: (e, s) {
-                        print(e);
-                        print(s);
                         return const SomethingWentWrong();
                       },
                       loading: () => Loading(),
