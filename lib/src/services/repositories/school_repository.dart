@@ -89,24 +89,28 @@ class SchoolRepository {
 
   List<Assignment> _assignments = [];
   Future<Class> getClass({String? id}) async {
-    var _class = await ref.collection('classes').doc(id).get();
-    var assignmentsRef = await ref.collection('classes').doc(id).collection('assignments').get();
+    try {
+      var _class = await ref.collection('classes').doc(id).get();
+      var assignmentsRef = await ref.collection('classes').doc(id).collection('assignments').get();
 
-    for (var element in assignmentsRef.docs) {
-      _assignments.add(Assignment.fromDocumentSnapshot(element));
+      for (var element in assignmentsRef.docs) {
+        _assignments.add(Assignment.fromDocumentSnapshot(element));
+      }
+
+      Map<String, Assignment> mapFilter = {};
+      for (var item in _assignments) {
+        mapFilter[item.id!] = item;
+      }
+      _assignments = mapFilter.values.toList();
+
+      _assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
+
+      var schoolClass = Class.fromDocumentSnapshot(_class, _assignments);
+
+      return schoolClass;
+    } catch (e) {
+      rethrow;
     }
-
-    Map<String, Assignment> mapFilter = {};
-    for (var item in _assignments) {
-      mapFilter[item.id!] = item;
-    }
-    _assignments = mapFilter.values.toList();
-
-    _assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
-
-    var schoolClass = Class.fromDocumentSnapshot(_class, _assignments);
-
-    return schoolClass;
   }
 
   Future<List<Class>> getClassesByTeacherId(String teacherId) async {
@@ -114,7 +118,8 @@ class SchoolRepository {
     var _classesDocs = await ref.collection('classes').where('teacherId', isEqualTo: teacherId).get();
 
     for (QueryDocumentSnapshot<Map<String, dynamic>> item in _classesDocs.docs) {
-      _classes.add(await getClass(id: item.data()['id']));
+      final mClass = await getClass(id: item.data()['id']);
+      _classes.add(mClass);
     }
 
     return _classes;
