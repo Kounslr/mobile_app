@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -69,7 +70,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
   }
 
   _showStudentVueSignInBottomSheet() async {
-    var _emailController = TextEditingController();
+    var _usernameController = TextEditingController();
     var _passwordController = TextEditingController();
     var result = '';
     return showModalBottomSheet(
@@ -127,9 +128,9 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                               child: CantonTextInput(
                                 isTextFormField: true,
                                 obscureText: false,
-                                hintText: 'Email',
-                                textInputType: TextInputType.emailAddress,
-                                controller: _emailController,
+                                hintText: 'Username',
+                                textInputType: TextInputType.name,
+                                controller: _usernameController,
                               ),
                             ),
                             const SizedBox(height: 15),
@@ -145,46 +146,67 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
                               ),
                             ),
                             const SizedBox(height: 15),
-                            CantonPrimaryButton(
-                              color: Theme.of(context).primaryColor,
-                              buttonText: 'Sign in',
-                              containerWidth: MediaQuery.of(context).size.width / 4,
-                              containerHeight: 47,
-                              padding: const EdgeInsets.all(10),
-                              onPressed: () async {
-                                setState(() {
-                                  result = 'Loading...';
-                                });
-
-                                var res = await watch(authenticationServiceProvider).studentVueSignIn(
-                                  email: _emailController.text,
-                                  password: _passwordController.text,
-                                );
-
-                                setState(() {
-                                  result = res;
-                                });
-
-                                if (result == 'success') {
-                                  Phoenix.rebirth(context);
-                                }
-                              },
-                            ),
-                            const SizedBox(height: 20),
                             result != ''
-                                ? result == 'failed'
-                                    ? Text(
-                                        'Incorrect email or password',
-                                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                                              color: Theme.of(context).colorScheme.error,
-                                            ),
+                                ? result != 'failed'
+                                    ? const CupertinoActivityIndicator()
+                                    : CantonPrimaryButton(
+                                        color: Theme.of(context).primaryColor,
+                                        buttonText: 'Sign in',
+                                        containerWidth: MediaQuery.of(context).size.width / 4,
+                                        containerHeight: 47,
+                                        padding: const EdgeInsets.all(10),
+                                        onPressed: () async {
+                                          setState(() {
+                                            result = 'Loading...';
+                                          });
+
+                                          var res = await watch(authenticationServiceProvider).studentVueSignIn(
+                                            username: _usernameController.text,
+                                            password: _passwordController.text,
+                                          );
+
+                                          setState(() {
+                                            result = res;
+                                          });
+
+                                          if (result == 'success') {
+                                            Phoenix.rebirth(context);
+                                          }
+                                        },
                                       )
-                                    : Text(
-                                        result,
-                                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                                              color: Theme.of(context).colorScheme.background,
-                                            ),
-                                      )
+                                : CantonPrimaryButton(
+                                    color: Theme.of(context).primaryColor,
+                                    buttonText: 'Sign in',
+                                    containerWidth: MediaQuery.of(context).size.width / 4,
+                                    containerHeight: 47,
+                                    padding: const EdgeInsets.all(10),
+                                    onPressed: () async {
+                                      setState(() {
+                                        result = 'Loading...';
+                                      });
+
+                                      var res = await watch(authenticationServiceProvider).studentVueSignIn(
+                                        username: _usernameController.text,
+                                        password: _passwordController.text,
+                                      );
+
+                                      setState(() {
+                                        result = res;
+                                      });
+
+                                      if (result == 'success') {
+                                        Phoenix.rebirth(context);
+                                      }
+                                    },
+                                  ),
+                            const SizedBox(height: 20),
+                            result == 'failed'
+                                ? Text(
+                                    'Incorrect email or password',
+                                    style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                                          color: Theme.of(context).colorScheme.error,
+                                        ),
+                                  )
                                 : Container(),
                             SizedBox(height: MediaQuery.of(context).viewInsets.bottom * 3),
                           ],
