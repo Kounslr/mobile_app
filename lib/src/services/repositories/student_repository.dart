@@ -52,7 +52,11 @@ class StudentRepository {
 
   Stream<Student> get student {
     try {
-      var student = ref.collection('students').doc(uid).snapshots().map((event) => Student.fromDocumentSnapshot(event));
+      var student = ref
+          .collection('students')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .snapshots()
+          .map((event) => Student.fromDocumentSnapshot(event));
 
       return student;
     } on FirebaseException catch (e) {
@@ -68,7 +72,7 @@ class StudentRepository {
       List<Assignment> assignments = [];
       var classesRef = await ref
           .collection('classes')
-          .where('students', arrayContains: {'id': uid})
+          .where('students', arrayContains: {'id': FirebaseAuth.instance.currentUser?.uid})
           .where('block', isEqualTo: block)
           .get();
 
@@ -215,7 +219,9 @@ class StudentRepository {
     try {
       List<Class> classes = [];
 
-      var classesRef = await ref.collection('classes').where('students', arrayContains: {'id': uid}).get();
+      var classesRef = await ref
+          .collection('classes')
+          .where('students', arrayContains: {'id': FirebaseAuth.instance.currentUser?.uid}).get();
 
       for (var item in classesRef.docs) {
         List<Assignment> ass = [];
@@ -249,7 +255,9 @@ class StudentRepository {
   Stream<List<Assignment>> get upcomingAssignments async* {
     try {
       List<Assignment>? ass;
-      var classesRef = await ref.collection('classes').where('students', arrayContains: {'id': uid}).get();
+      var classesRef = await ref
+          .collection('classes')
+          .where('students', arrayContains: {'id': FirebaseAuth.instance.currentUser?.uid}).get();
       ass = [];
 
       for (var item in classesRef.docs) {
@@ -290,7 +298,7 @@ class StudentRepository {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> get journalEntries {
     try {
-      var entries = ref.collection('students/$uid/journal_entries').snapshots();
+      var entries = ref.collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries').snapshots();
 
       return entries;
     } on FirebaseException catch (e) {
@@ -304,7 +312,7 @@ class StudentRepository {
     try {
       var tags = <Tag>[];
       // var newDocs = <DocumentSnapshot>[];
-      var entries = await ref.collection('students/$uid/journal_entries').get();
+      var entries = await ref.collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries').get();
       for (var item in entries.docs) {
         tags.addAll(JournalEntry.fromDocumentSnapshot(item).tags!);
       }
@@ -318,23 +326,29 @@ class StudentRepository {
   }
 
   Future<void> addJournalEntry(JournalEntry entry) async {
-    await ref.collection('students/$uid/journal_entries').doc(entry.id).set(entry.toDocumentSnapshot());
+    await ref
+        .collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries')
+        .doc(entry.id)
+        .set(entry.toDocumentSnapshot());
   }
 
   Future<void> deleteJournalEntry(JournalEntry entry) async {
-    await ref.collection('students/$uid/journal_entries').doc(entry.id).delete();
+    await ref.collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries').doc(entry.id).delete();
   }
 
   Future<void> updateJournalEntry(
       {required JournalEntry entry, String? title, String? summary, List<Tag>? tags}) async {
-    await ref.collection('students/$uid/journal_entries').doc(entry.id).update(entry
-        .copyWith(
-          title: title,
-          summary: summary,
-          tags: tags,
-          lastEditDate: DateTime.now(),
-        )
-        .toDocumentSnapshot());
+    await ref
+        .collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries')
+        .doc(entry.id)
+        .update(entry
+            .copyWith(
+              title: title,
+              summary: summary,
+              tags: tags,
+              lastEditDate: DateTime.now(),
+            )
+            .toDocumentSnapshot());
   }
 
   Future<void> completeJournalEntry({JournalEntry? entry, String? title, String? summary, List<Tag>? tags}) async {
