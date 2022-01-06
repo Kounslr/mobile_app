@@ -69,7 +69,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
     );
   }
 
-  _showStudentVueSignInBottomSheet() async {
+  void _showStudentVueSignInBottomSheet() async {
     var _usernameController = TextEditingController();
     var _passwordController = TextEditingController();
     var result = '';
