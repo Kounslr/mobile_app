@@ -1,7 +1,24 @@
+/*
+Kounslr iOS & Android App
+Copyright (C) 2021 Kounslr
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/models/block.dart';
@@ -14,15 +31,18 @@ import 'package:kounslr/src/providers/next_class_providers/next_class_stream_pro
 import 'package:kounslr/src/providers/next_class_providers/next_class_teacher_stream_provider.dart';
 import 'package:kounslr/src/providers/school_stream_provider.dart';
 import 'package:kounslr/src/providers/student_assignments_provider.dart';
-import 'package:kounslr/src/providers/student_classes_future_provider.dart';
+import 'package:kounslr/src/providers/student_classes_stream_provider.dart';
 import 'package:kounslr/src/providers/student_stream_provider.dart';
-import 'package:kounslr/src/ui/styled_components/assignment_card.dart';
-import 'package:kounslr/src/ui/styled_components/something_went_wrong.dart';
-import 'package:kounslr/src/ui/views/home_view/components/home_view_components.dart';
+import 'package:kounslr/src/ui/components/assignment_card.dart';
+import 'package:kounslr/src/ui/components/something_went_wrong.dart';
+import 'package:kounslr/src/ui/views/home_view/components/date_card.dart';
 import 'package:kounslr/src/ui/views/home_view/components/home_view_header.dart';
-import 'package:kounslr/src/ui/views/upcoming_assignments_view.dart';
+import 'package:kounslr/src/ui/views/home_view/components/next_class_card.dart';
+import 'package:kounslr/src/ui/views/upcoming_assignments_view/upcoming_assignments_view.dart';
 
 class HomeView extends StatefulWidget {
+  const HomeView({Key? key}) : super(key: key);
+
   @override
   _HomeViewState createState() => _HomeViewState();
 }
@@ -40,8 +60,7 @@ class _HomeViewState extends State<HomeView> {
         final schoolStream = watch(schoolStreamProvider);
         final studentStream = watch(studentStreamProvider);
         final studentClassesStream = watch(studentClassesStreamProvider);
-        final studentAssignmentsStream =
-            watch(upcomingAssignmentsStreamProvider);
+        final studentAssignmentsStream = watch(upcomingAssignmentsStreamProvider);
 
         // Next class variables
         final nextClassStream = watch(nextClassStreamProvider);
@@ -50,43 +69,43 @@ class _HomeViewState extends State<HomeView> {
 
         return schoolStream.when(
           error: (e, s) {
-            return SomethingWentWrong();
+            return const SomethingWentWrong();
           },
           loading: () => Loading(),
           data: (school) {
             return studentStream.when(
               error: (e, s) {
-                return SomethingWentWrong();
+                return const SomethingWentWrong();
               },
               loading: () => Loading(),
               data: (student) {
                 return studentClassesStream.when(
                   error: (e, s) {
-                    return SomethingWentWrong();
+                    return const SomethingWentWrong();
                   },
                   loading: () => Loading(),
                   data: (classes) {
                     return studentAssignmentsStream.when(
                       error: (e, s) {
-                        return SomethingWentWrong();
+                        return const SomethingWentWrong();
                       },
                       loading: () => Loading(),
                       data: (assignments) {
                         return nextBlockStream.when(
                           loading: () => Loading(),
                           error: (e, s) {
-                            return SomethingWentWrong();
+                            return const SomethingWentWrong();
                           },
                           data: (nextBlock) {
                             return nextClassStream.when(
                               error: (e, s) {
-                                return SomethingWentWrong();
+                                return const SomethingWentWrong();
                               },
                               loading: () => Loading(),
                               data: (nextClass) {
                                 return nextClassTeacherStream.when(
                                   error: (e, s) {
-                                    return SomethingWentWrong();
+                                    return const SomethingWentWrong();
                                   },
                                   loading: () => Loading(),
                                   data: (nextClassTeacher) {
@@ -121,38 +140,32 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _content(
-      BuildContext context,
-      School school,
-      Student student,
-      List<Class> classes,
-      List<Assignment> assignments,
-      Class nextClass,
-      Block nextBlock,
-      StaffMember teacher) {
+    BuildContext context,
+    School school,
+    Student student,
+    List<Class> classes,
+    List<Assignment> assignments,
+    Class nextClass,
+    Block nextBlock,
+    StaffMember teacher,
+  ) {
     return ListView(
       shrinkWrap: false,
-      children: _contentChildren(context, school, student, classes, assignments,
-          nextClass, nextBlock, teacher),
+      children: _contentChildren(context, school, student, classes, assignments, nextClass, nextBlock, teacher),
     );
   }
 
-  List<Widget> _contentChildren(
-      BuildContext context,
-      School school,
-      Student student,
-      List<Class> classes,
-      List<Assignment> assignments,
-      Class nextClass,
-      Block nextBlock,
-      StaffMember teacher) {
+  List<Widget> _contentChildren(BuildContext context, School school, Student student, List<Class> classes,
+      List<Assignment> assignments, Class nextClass, Block nextBlock, StaffMember teacher) {
     List<Widget> children = [
       const SizedBox(height: 10),
       DateCard(school: school),
       HomeViewHeader(student: student),
       NextClassCard(schoolClass: nextClass, block: nextBlock, teacher: teacher),
+      const SizedBox(height: 15),
     ];
 
-    if (assignments.length > 0) {
+    if (assignments.isNotEmpty) {
       children.add(
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 17),
@@ -162,7 +175,7 @@ class _HomeViewState extends State<HomeView> {
                 'Upcoming Assignments',
                 style: Theme.of(context).textTheme.headline6,
               ),
-              Spacer(),
+              const Spacer(),
               TextButton(
                 style: ButtonStyle(
                   alignment: Alignment.centerRight,
@@ -182,8 +195,7 @@ class _HomeViewState extends State<HomeView> {
                         color: Theme.of(context).primaryColor,
                       ),
                 ),
-                onPressed: () => CantonMethods.viewTransition(
-                    context, UpcomingAssignmentView()),
+                onPressed: () => CantonMethods.viewTransition(context, const UpcomingAssignmentView()),
               ),
               CantonActionButton(
                 icon: Icon(
@@ -191,28 +203,50 @@ class _HomeViewState extends State<HomeView> {
                   size: 20,
                   color: Theme.of(context).primaryColor,
                 ),
-                onPressed: () => CantonMethods.viewTransition(
-                    context, UpcomingAssignmentView()),
+                onPressed: () => CantonMethods.viewTransition(context, const UpcomingAssignmentView()),
               ),
             ],
           ),
         ),
       );
 
-      for (var i = 0;
-          i < ((assignments.length < 7) ? assignments.length : 7);
-          i++) {
+      for (var i = 0; i < ((assignments.length < 7) ? assignments.length : 7); i++) {
+        BorderRadius radiiByIndex() {
+          if (assignments.length == 1) {
+            return BorderRadius.circular(37);
+          } else if (assignments.length == 2) {
+            if (i == 0) {
+              return const BorderRadius.vertical(top: Radius.circular(37));
+            } else {
+              return const BorderRadius.vertical(bottom: Radius.circular(37));
+            }
+          } else {
+            if (i == 0) {
+              return const BorderRadius.vertical(top: Radius.circular(37));
+            } else if (i == assignments.length - 1) {
+              return const BorderRadius.vertical(bottom: Radius.circular(37));
+            } else {
+              return BorderRadius.zero;
+            }
+          }
+        }
+
         children.add(
-          AssignmentCard(
-            classes
-                .where((element) => element.id == assignments[i].classId)
-                .toList()[0],
-            assignments[i],
+          Column(
+            children: [
+              AssignmentCard(
+                classes.where((element) => element.id == assignments[i].classId).toList()[0],
+                assignments[i],
+                radius: radiiByIndex(),
+              ),
+              i != assignments.length - 1
+                  ? Container(padding: const EdgeInsets.symmetric(horizontal: 17), child: const Divider())
+                  : Container(),
+              i == assignments.length - 1 ? const SizedBox(height: 17) : Container(),
+            ],
           ),
         );
       }
-
-      children.add(Divider());
     } else {
       children.add(
         Padding(

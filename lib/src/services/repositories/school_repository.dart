@@ -1,4 +1,24 @@
+/*
+Kounslr iOS & Android App
+Copyright (C) 2021 Kounslr
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import 'package:kounslr/src/models/assignment.dart';
 import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
@@ -7,9 +27,7 @@ import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
 
 class SchoolRepository {
-  var ref = FirebaseFirestore.instance
-      .collection('customers/lcps/schools')
-      .doc('independence');
+  var ref = FirebaseFirestore.instance.collection('customers/lcps/schools').doc('independence');
 
   Future<School> get school async {
     try {
@@ -17,7 +35,9 @@ class SchoolRepository {
       var school = School.fromDocumentSnapshot(_school);
 
       return school;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -28,7 +48,9 @@ class SchoolRepository {
       var student = Student.fromDocumentSnapshot(_student);
 
       return student;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -44,7 +66,9 @@ class SchoolRepository {
       }
 
       return students;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -56,7 +80,9 @@ class SchoolRepository {
       var _blocks = _school.currentDay!.blocks!;
 
       return _blocks;
-    } catch (e) {
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
       rethrow;
     }
   }
@@ -64,12 +90,11 @@ class SchoolRepository {
   List<Assignment> _assignments = [];
   Future<Class> getClass({String? id}) async {
     var _class = await ref.collection('classes').doc(id).get();
-    var assignmentsRef =
-        await ref.collection('classes').doc(id).collection('assignments').get();
+    var assignmentsRef = await ref.collection('classes').doc(id).collection('assignments').get();
 
-    assignmentsRef.docs.forEach((element) {
+    for (var element in assignmentsRef.docs) {
       _assignments.add(Assignment.fromDocumentSnapshot(element));
-    });
+    }
 
     Map<String, Assignment> mapFilter = {};
     for (var item in _assignments) {
@@ -82,6 +107,17 @@ class SchoolRepository {
     var schoolClass = Class.fromDocumentSnapshot(_class, _assignments);
 
     return schoolClass;
+  }
+
+  Future<List<Class>> getClassesByTeacherId(String teacherId) async {
+    var _classes = <Class>[];
+    var _classesDocs = await ref.collection('classes').where('teacherId', isEqualTo: teacherId).get();
+
+    for (QueryDocumentSnapshot<Map<String, dynamic>> item in _classesDocs.docs) {
+      _classes.add(await getClass(id: item.data()['id']));
+    }
+
+    return _classes;
   }
 
   Future<StaffMember> getTeacherByClassId(String classId) async {
@@ -107,9 +143,7 @@ class SchoolRepository {
   Future<Block> getBlockByPeriod(int period) async {
     var _school = await school;
 
-    var _block = _school.currentDay!.blocks!
-        .where((element) => element.period == period)
-        .first;
+    var _block = _school.currentDay!.blocks!.where((element) => element.period == period).first;
 
     return _block;
   }

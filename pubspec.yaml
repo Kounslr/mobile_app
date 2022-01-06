@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.2.1+1
+version: 0.0.1+5
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -27,8 +27,16 @@ dependencies:
   # UI Library
   canton_design_system:
     git:
-      url: https://github.com/31Carlton7/canton_design_system.git
+      url: git://github.com/31Carlton7/canton_design_system.git
       ref: master
+  charts_flutter:
+    git:
+      url: git://github.com/google/charts.git
+      path: charts_flutter
+  font_awesome_flutter: ^9.1.0
+  flutter_slidable: ^0.6.0
+  flutter_svg: ^0.22.0
+  flutter_typeahead: ^3.2.4
 
   # API
   dio: ^4.0.0
@@ -49,29 +57,18 @@ dependencies:
   cloud_firestore: ^2.4.0
   google_sign_in: ^5.0.5
 
-  # Real-Time chat
-  flutter_chat_ui: ^1.1.8
-  flutter_firebase_chat_core: ^1.1.2
-  file_picker: ^4.0.0
-  image_picker: ^0.8.3+2
-  mime: ^1.0.0
-  open_file: ^3.2.1
-  path_provider: ^2.0.2
-
-  # Multi-Purpose
-  intl: ^0.17.0
+  # Security
   uuid: ^3.0.4
   encrypt: ^5.0.1
   pointycastle: ^3.3.3
 
-  # Other
-  qr_flutter: ^4.0.0
-  charts_flutter: ^0.11.0
-  font_awesome_flutter: ^9.1.0
+  # Config
   flutter_launcher_icons: ^0.9.1
   flutter_native_splash: ^1.2.1
-  flutter_slidable: ^0.6.0
-  flutter_svg: ^0.22.0
+
+  # Other
+  intl: ^0.17.0
+  qr_flutter: ^4.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -80,6 +77,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^1.0.0
+  import_sorter: ^4.6.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -121,3 +126,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+import_sorter:
+  comments: false

@@ -1,12 +1,30 @@
+/*
+Kounslr iOS & Android App
+Copyright (C) 2021 Kounslr
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:intl/intl.dart';
+
 import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 
 class ClassCard extends StatelessWidget {
-  const ClassCard(
-      {required this.schoolClass, required this.block, required this.teacher});
+  const ClassCard({required this.schoolClass, required this.block, required this.teacher, Key? key}) : super(key: key);
 
   final Class schoolClass;
   final Block block;
@@ -27,11 +45,14 @@ class ClassCard extends StatelessWidget {
     }
 
     String _teacherName(StaffMember teacher) {
-      String string = teacher.name!.substring(teacher.name!.indexOf(' '));
-      if (teacher.gender == 'Male') {
-        return 'Mr.' + string;
+      if (teacher.gender != null) {
+        String string = teacher.name!.substring(teacher.name!.indexOf(' '));
+        if (teacher.gender == 'Male') {
+          return 'Mr.' + string;
+        }
+        return 'Ms.' + string;
       }
-      return 'Ms.' + string;
+      return teacher.name!;
     }
 
     String _nextClassTime(DateTime date) {
@@ -55,8 +76,8 @@ class ClassCard extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    IconlyIcon(
-                      IconlyBold.Location,
+                    Icon(
+                      Iconsax.location,
                       color: Theme.of(context).colorScheme.secondaryVariant,
                       size: 17,
                     ),
@@ -64,8 +85,7 @@ class ClassCard extends StatelessWidget {
                     Text(
                       schoolClass.roomNumber ?? 'LOCATION',
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.secondaryVariant,
+                            color: Theme.of(context).colorScheme.secondaryVariant,
                           ),
                     ),
                   ],
@@ -73,8 +93,8 @@ class ClassCard extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    IconlyIcon(
-                      IconlyBold.Profile,
+                    Icon(
+                      Iconsax.user,
                       color: Theme.of(context).colorScheme.secondaryVariant,
                       size: 17,
                     ),
@@ -82,21 +102,17 @@ class ClassCard extends StatelessWidget {
                     Text(
                       _teacherName(teacher),
                       style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.secondaryVariant,
+                            color: Theme.of(context).colorScheme.secondaryVariant,
                           ),
                     ),
                   ],
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             Text(
               _nextClassTime(block.time!.toLocal()),
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              style: Theme.of(context).textTheme.bodyText1?.copyWith(fontWeight: FontWeight.w600),
             ),
           ],
         ),

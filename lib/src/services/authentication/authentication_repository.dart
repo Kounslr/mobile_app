@@ -1,22 +1,38 @@
+/*
+Kounslr iOS & Android App
+Copyright (C) 2021 Kounslr
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:kounslr/src/config/authentication_exceptions.dart';
 import 'package:kounslr/src/models/student.dart';
-import 'package:kounslr/src/services/repositories/chat_repository/chat_repository.dart';
 import 'package:kounslr/src/services/repositories/studentvue_repository.dart';
 
 class AuthenticationRepository {
   final FirebaseAuth _firebaseAuth;
   AuthenticationRepository(this._firebaseAuth);
 
-  final CollectionReference userRef = FirebaseFirestore.instance
-      .collection('customers/lcps/schools/independence/students');
+  final CollectionReference userRef =
+      FirebaseFirestore.instance.collection('customers/lcps/schools/independence/students');
 
-  final CollectionReference classesRef = FirebaseFirestore.instance
-      .collection('customers/lcps/schools/independence/classes');
+  final CollectionReference classesRef =
+      FirebaseFirestore.instance.collection('customers/lcps/schools/independence/classes');
 
   Future<void> _createUserInDatabase(User user) async {
     await userRef.doc(user.uid).set({'id': user.uid, 'email': user.email});
@@ -24,33 +40,6 @@ class AuthenticationRepository {
 
   Future<void> _createStudentInDatabase(Student student) async {
     await userRef.doc(student.id).update(student.toMap());
-
-    var allClasses = await classesRef.get();
-
-    for (int i = 0; i < allClasses.docs.length; i++) {
-      await classesRef.doc(allClasses.docs[i].id).update({
-        'students': [
-          ...allClasses.docs[i]['students'],
-          student.idOnly().toMap(),
-        ],
-      });
-
-      await userRef
-          .doc('${student.id}/classes/${allClasses.docs[i].id}')
-          .set(student.toStudentInClass().toMap());
-
-      var assignmentsRef =
-          await allClasses.docs[i].reference.collection('assignments').get();
-
-      for (var item in assignmentsRef.docs) {
-        await item.reference.update({
-          'students': [
-            ...item['students'],
-            student.toStudentInAssignment().toMap(),
-          ],
-        });
-      }
-    }
   }
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
@@ -68,8 +57,7 @@ class AuthenticationRepository {
     }
   }
 
-  Future<String> signInWithEmailAndPassword(
-      {required String email, required String password}) async {
+  Future<String> signInWithEmailAndPassword({required String email, required String password}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
@@ -97,23 +85,12 @@ class AuthenticationRepository {
         idToken: googleAuth.idToken,
       );
 
-      final credential =
-          await FirebaseAuth.instance.signInWithCredential(googleCredential);
+      final credential = await FirebaseAuth.instance.signInWithCredential(googleCredential);
 
-      var user = FirebaseAuth.instance.currentUser;
       var userDataRef = await userRef.doc(credential.user!.uid).get();
 
       if (!userDataRef.exists || credential.additionalUserInfo!.isNewUser) {
         await _createUserInDatabase(credential.user!);
-        String id = user!.uid;
-        String imageUrl = user.photoURL!;
-
-        await ChatRepository.instance.createUserInFirestore(
-          types.User(
-            id: id,
-            imageUrl: imageUrl,
-          ),
-        );
 
         return 'new';
       }
@@ -129,22 +106,20 @@ class AuthenticationRepository {
     }
   }
 
-  Future<String> studentVueSignIn({
-    required String email,
-    required String password,
-  }) async {
+  Future<String> studentVueSignIn({required String email, required String password}) async {
     try {
       var student = Student();
       String username = email.substring(0, email.indexOf('@'));
       String domain = 'portal.lcps.org';
-      student =
-          await StudentVueClient(username, password, domain).loadStudentData();
+      student = await StudentVueClient(username, password, domain).loadStudentData();
 
       student.id = FirebaseAuth.instance.currentUser?.uid;
 
       if (student.studentId == null) return 'failed';
 
       await _createStudentInDatabase(student);
+
+      await StudentVueClient(username, password, domain).loadInfoToDatabase(studentID: student.id!);
 
       return 'success';
     } catch (e) {
@@ -163,13 +138,6 @@ class AuthenticationRepository {
       );
 
       _createUserInDatabase(user.user!);
-
-      await ChatRepository.instance.createUserInFirestore(
-        types.User(
-          id: user.user!.uid,
-          imageUrl: '',
-        ),
-      );
 
       return 'success';
     } catch (e) {

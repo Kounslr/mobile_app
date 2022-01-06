@@ -1,8 +1,26 @@
+/*
+Kounslr iOS & Android App
+Copyright (C) 2021 Kounslr
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import 'package:canton_design_system/canton_design_system.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 class HorizontalBarChart extends StatelessWidget {
-  const HorizontalBarChart({required this.tags});
+  const HorizontalBarChart({required this.tags, Key? key}) : super(key: key);
 
   final Map<String?, int?> tags;
 
@@ -23,7 +41,7 @@ class HorizontalBarChart extends StatelessWidget {
     );
 
     final List<charts.Series<dynamic, String>> series = [
-      new charts.Series(
+      charts.Series(
         id: 'Tags',
         seriesColor: seriesColor,
         domainFn: (tag, _) => tag.key,
@@ -34,7 +52,7 @@ class HorizontalBarChart extends StatelessWidget {
 
     return Column(
       children: [
-        Divider(),
+        const Divider(),
         Container(
           color: Theme.of(context).colorScheme.secondary,
           padding: const EdgeInsets.only(left: 17, bottom: 10),
@@ -68,8 +86,7 @@ class HorizontalBarChart extends StatelessWidget {
                         color: labelColor,
                         fontSize: 12,
                       ),
-                      lineStyle: charts.LineStyleSpec(
-                          color: charts.MaterialPalette.transparent),
+                      lineStyle: const charts.LineStyleSpec(color: charts.MaterialPalette.transparent),
                     ),
                   ),
                   primaryMeasureAxis: charts.NumericAxisSpec(
@@ -86,7 +103,7 @@ class HorizontalBarChart extends StatelessWidget {
             ],
           ),
         ),
-        Divider(),
+        const Divider(),
       ],
     );
   }
