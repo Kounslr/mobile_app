@@ -99,7 +99,6 @@ class StudentVueClient {
       _class.roomNumber = current.getAttribute('Room') ?? 'N/A';
 
       /// Gets teacher email
-
       final teacherEmail = current.getAttribute('StaffEMail') ?? 'N/A';
 
       /// Checks if teacher is in database (If [list] is empty then the teacher is not in the database)
@@ -123,8 +122,8 @@ class StudentVueClient {
         await _addClassToDatabase(current, teacher, studentID);
       } else {
         /// Gathers list of classes that the teacher teaches
-        var classChecklist = [...await SchoolRepository().getClassesByTeacherId(teacherChecklist.docs[0].data()['id'])];
-        var targetClass = classChecklist.where((element) => element.name == _class.name).toList();
+        final classChecklist = await SchoolRepository().getClassesByTeacherId(teacherChecklist.docs[0].data()['id']);
+        final targetClass = classChecklist.where((element) => element.name == _class.name).toList();
 
         /// Checks if the teacher has the class registered in the database
         if (targetClass.isEmpty) {
@@ -141,7 +140,7 @@ class StudentVueClient {
           await classesRef.update({
             'students': [
               ...classesDoc.data()!['students'],
-              student.id,
+              {'id': student.id},
             ],
           });
 

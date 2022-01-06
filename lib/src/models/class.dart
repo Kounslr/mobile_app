@@ -90,17 +90,12 @@ class Class {
       markingPeriod: map['markingPeriod'],
       roomNumber: map['roomNumber'],
       teacherId: map['teacherId'],
-      students: List<StudentID>.from(
-          map['students']?.map((x) => StudentID.fromMap(x))),
-      assignments: List<Assignment>.from(
-          map['assignments']?.map((x) => Assignment.fromMap(x))),
+      students: List<StudentID>.from(map['students']?.map((x) => StudentID.fromMap(x))),
+      assignments: List<Assignment>.from(map['assignments']?.map((x) => Assignment.fromMap(x))),
     );
   }
 
-  factory Class.fromDocumentSnapshot(
-    DocumentSnapshot doc,
-    List<Assignment> assignments,
-  ) {
+  factory Class.fromDocumentSnapshot(DocumentSnapshot doc, List<Assignment> assignments) {
     return Class(
       id: doc['id'],
       name: doc['name'],
@@ -109,8 +104,7 @@ class Class {
       roomNumber: doc['roomNumber'],
       teacherId: doc['teacherId'],
       assignments: assignments,
-      students: List<StudentID>.from(
-          doc['students']?.map((x) => StudentID.fromMap(x))),
+      students: List<StudentID>.from(doc['students']?.map((x) => StudentID.fromMap(x))),
     );
   }
 
@@ -186,8 +180,7 @@ class StudentInClass {
 
   String toJson() => json.encode(toMap());
 
-  factory StudentInClass.fromJson(String source) =>
-      StudentInClass.fromMap(json.decode(source));
+  factory StudentInClass.fromJson(String source) => StudentInClass.fromMap(json.decode(source));
 
   @override
   String toString() => 'StudentInClass(grades: $grades)';

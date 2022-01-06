@@ -106,10 +106,9 @@ class AuthenticationRepository {
     }
   }
 
-  Future<String> studentVueSignIn({required String email, required String password}) async {
+  Future<String> studentVueSignIn({required String username, required String password}) async {
     try {
       var student = Student();
-      String username = email.substring(0, email.indexOf('@'));
       String domain = 'portal.lcps.org';
       student = await StudentVueClient(username, password, domain).loadStudentData();
 
@@ -127,10 +126,7 @@ class AuthenticationRepository {
     }
   }
 
-  Future<String> signUp({
-    required String email,
-    required String password,
-  }) async {
+  Future<String> signUp({required String email, required String password}) async {
     try {
       var user = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
