@@ -250,7 +250,6 @@ class StudentRepository {
     try {
       List<Assignment>? ass;
       var classesRef = await ref.collection('classes').where('students', arrayContains: {'id': uid}).get();
-      var schoolRef = await ref.get();
       ass = [];
 
       for (var item in classesRef.docs) {
@@ -260,11 +259,13 @@ class StudentRepository {
           var item = Assignment.fromDocumentSnapshot(element);
 
           if (item.dueDate!.isAfter(DateTime.now()) &&
-              !item
-                  .students![
-                      item.students!.indexWhere((element) => element.id == FirebaseAuth.instance.currentUser!.uid)]
-                  .completed! &&
-              item.markingPeriod == schoolRef['currentDay']['markingPeriod']) {
+                  !item
+                      .students![
+                          item.students!.indexWhere((element) => element.id == FirebaseAuth.instance.currentUser!.uid)]
+                      .completed!
+              //     &&
+              // item.markingPeriod == schoolRef['currentDay']['markingPeriod']
+              ) {
             ass.add(item);
           }
         }
