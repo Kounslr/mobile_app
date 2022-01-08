@@ -49,9 +49,10 @@ class StudentVueClient {
   }
 
   Future<void> loadInfoToDatabase({Function(double)? callback, required String studentID}) async {
-    String? resData;
-    if (!mock) {
-      var requestData = '''<?xml version="1.0" encoding="utf-8"?>
+    try {
+      String? resData;
+      if (!mock) {
+        var requestData = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
           <ProcessWebServiceRequest xmlns="http://edupoint.com/webservices/">
@@ -66,101 +67,104 @@ class StudentVueClient {
       </soap:Body>
     </soap:Envelope>''';
 
-      var headers = <String, String>{'Content-Type': 'text/xml'};
+        var headers = <String, String>{'Content-Type': 'text/xml'};
 
-      var res =
-          await _dio.post(reqURL, data: requestData, options: Options(headers: headers), onSendProgress: (one, two) {
-        if (callback != null) {
-          callback((one / two) * 0.5);
-        }
-      }, onReceiveProgress: (one, two) {
-        if (callback != null) {
-          callback((one / two) * 0.5 + 0.5);
-        }
-      });
+        var res =
+            await _dio.post(reqURL, data: requestData, options: Options(headers: headers), onSendProgress: (one, two) {
+          if (callback != null) {
+            callback((one / two) * 0.5);
+          }
+        }, onReceiveProgress: (one, two) {
+          if (callback != null) {
+            callback((one / two) * 0.5 + 0.5);
+          }
+        });
 
-      resData = res.data as String;
-    }
+        resData = res.data as String;
+      }
 
-    final document = XmlDocument.parse(HtmlUnescape().convert(resData!));
+      final document = XmlDocument.parse(HtmlUnescape().convert(resData!));
 
-    var courses = document.findAllElements('Courses').first;
+      var courses = document.findAllElements('Courses').first;
 
-    for (int i = 0; i < courses.children.length; i++) {
-      XmlNode current = courses.children[i];
+      for (int i = 0; i < courses.children.length; i++) {
+        XmlNode current = courses.children[i];
 
-      if (current.getAttribute('Title') == null) continue;
-      Class _class = Class();
+        if (current.getAttribute('Title') == null) continue;
+        Class _class = Class();
 
-      _class.name = _formattedStringName(
-          current.getAttribute('Title')!.substring(0, current.getAttribute('Title')!.indexOf('(')));
+        _class.name = _formattedStringName(
+            current.getAttribute('Title')!.substring(0, current.getAttribute('Title')!.indexOf('(')));
 
-      _class.block = int.tryParse(current.getAttribute('Period') ?? '0') ?? -1;
-      _class.roomNumber = current.getAttribute('Room') ?? 'N/A';
+        _class.block = int.tryParse(current.getAttribute('Period') ?? '0') ?? -1;
+        _class.roomNumber = current.getAttribute('Room') ?? 'N/A';
 
-      /// Gets teacher email
-      final teacherEmail = current.getAttribute('StaffEMail') ?? 'N/A';
+        /// Gets teacher email
+        final teacherEmail = current.getAttribute('StaffEMail') ?? 'N/A';
 
-      /// Checks if teacher is in database (If [list] is empty then the teacher is not in the database)
-      final teacherChecklist = await FirebaseFirestore.instance
-          .collection('customers/lcps/schools/independence/staff')
-          .where('emailAddress', isEqualTo: teacherEmail)
-          .get();
+        /// Checks if teacher is in database (If [list] is empty then the teacher is not in the database)
+        final teacherChecklist = await FirebaseFirestore.instance
+            .collection('customers/lcps/schools/independence/staff')
+            .where('emailAddress', isEqualTo: teacherEmail)
+            .get();
 
-      final teacher = StaffMember(
-        id: const Uuid().v4(),
-        name: current.getAttribute('Staff') ?? 'N/A',
-        emailAddress: teacherEmail,
-        role: 'Teacher',
-        phoneNumber: '',
-        gender: '',
-      );
+        final teacher = StaffMember(
+          id: const Uuid().v4(),
+          name: current.getAttribute('Staff') ?? 'N/A',
+          emailAddress: teacherEmail,
+          role: 'Teacher',
+          phoneNumber: '',
+          gender: '',
+        );
 
-      if (teacherChecklist.docs.isEmpty) {
-        /// Creates new teacher as well as new class and adds student
-        await _addTeacherToDatabase(teacher);
-        await _addClassToDatabase(current, teacher, studentID);
-      } else {
-        /// Gathers list of classes that the teacher teaches
-        final classChecklist = await SchoolRepository().getClassesByTeacherId(teacherChecklist.docs[0].data()['id']);
-        final targetClass = classChecklist.where((element) => element.name == _class.name).toList();
-
-        /// Checks if the teacher has the class registered in the database
-        if (targetClass.isEmpty) {
-          /// Creates new class and adds student
-          _addClassToDatabase(current, teacher, studentID);
+        if (teacherChecklist.docs.isEmpty) {
+          /// Creates new teacher as well as new class and adds student
+          await _addTeacherToDatabase(teacher);
+          await _addClassToDatabase(current, teacher, studentID);
         } else {
-          /// Adds student to existing class
-          final classesRef = FirebaseFirestore.instance
-              .collection('customers/lcps/schools/independence/classes')
-              .doc(targetClass[0].id);
-          final classesDoc = await classesRef.get();
-          final student = await SchoolRepository().getStudent(studentID);
+          /// Gathers list of classes that the teacher teaches
+          final classChecklist = await SchoolRepository().getClassesByTeacherId(teacherChecklist.docs[0].data()['id']);
+          final targetClass = classChecklist.where((element) => element.name == _class.name).toList();
 
-          await classesRef.update({
-            'students': [
-              ...classesDoc.data()!['students'],
-              {'id': student.id},
-            ],
-          });
+          /// Checks if the teacher has the class registered in the database
+          if (targetClass.isEmpty) {
+            /// Creates new class and adds student
+            _addClassToDatabase(current, teacher, studentID);
+          } else {
+            /// Adds student to existing class
+            final classesRef = FirebaseFirestore.instance
+                .collection('customers/lcps/schools/independence/classes')
+                .doc(targetClass[0].id);
+            final classesDoc = await classesRef.get();
+            final student = await SchoolRepository().getStudent(studentID);
 
-          final assignmentsRef = await classesRef.collection('assignments').get();
-
-          for (var item in assignmentsRef.docs) {
-            await item.reference.update({
+            await classesRef.update({
               'students': [
-                ...item['students'],
-                student.toStudentInAssignment().toMap(),
+                ...classesDoc.data()!['students'],
+                {'id': student.id},
               ],
             });
-          }
 
-          await AuthenticationRepository(FirebaseAuth.instance)
-              .userRef
-              .doc('$studentID/classes/${classesDoc.data()!["id"]}')
-              .set(student.toStudentInClass().toMap());
+            final assignmentsRef = await classesRef.collection('assignments').get();
+
+            for (var item in assignmentsRef.docs) {
+              await item.reference.update({
+                'students': [
+                  ...item['students'],
+                  student.toStudentInAssignment().toMap(),
+                ],
+              });
+            }
+
+            await AuthenticationRepository(FirebaseAuth.instance)
+                .userRef
+                .doc('$studentID/classes/${classesDoc.data()!["id"]}')
+                .set(student.toStudentInClass().toMap());
+          }
         }
       }
+    } catch (e) {
+      rethrow;
     }
   }
 
