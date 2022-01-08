@@ -34,7 +34,7 @@ class NextClassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (![DateTime.saturday, DateTime.sunday].contains(DateTime.now().weekday)) {
+    if ([DateTime.saturday, DateTime.sunday].contains(DateTime.now().weekday)) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 17),
         child: Card(
