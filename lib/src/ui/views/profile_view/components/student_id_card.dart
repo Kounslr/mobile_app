@@ -38,9 +38,9 @@ class StudentIdCard extends StatelessWidget {
         children: [
           Card(
             margin: EdgeInsets.zero,
-            shape: const SquircleBorder(
-              radius: BorderRadius.vertical(
-                top: Radius.circular(37),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(10),
               ),
             ),
             child: Padding(
