@@ -78,12 +78,12 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
         iconColor: Theme.of(context).primaryColor,
         decoration: ShapeDecoration(
           color: CantonMethods.alternateCanvasColorType2(context),
-          shape: SmoothRectangleBorder(
-            borderRadius: SmoothBorderRadius.only(
-              topLeft: SmoothRadius(cornerSmoothing: 1, cornerRadius: widget.radius!.topLeft.x),
-              topRight: SmoothRadius(cornerSmoothing: 1, cornerRadius: widget.radius!.topRight.x),
-              bottomLeft: SmoothRadius(cornerSmoothing: 1, cornerRadius: widget.radius!.bottomLeft.x),
-              bottomRight: SmoothRadius(cornerSmoothing: 1, cornerRadius: widget.radius!.bottomRight.x),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(widget.radius!.topLeft.x),
+              topRight: Radius.circular(widget.radius!.topRight.x),
+              bottomLeft: Radius.circular(widget.radius!.bottomLeft.x),
+              bottomRight: Radius.circular(widget.radius!.bottomRight.x),
             ),
           ),
         ),
