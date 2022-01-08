@@ -37,68 +37,72 @@ class ClassCard extends StatefulWidget {
 class _ClassCardState extends State<ClassCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 12),
+    return Card(
       margin: const EdgeInsets.symmetric(horizontal: 17, vertical: 7),
-      decoration: ShapeDecoration(
-        color: CantonMethods.alternateCanvasColorType2(context),
-        shape: CantonSmoothBorder.defaultBorder(
-          side: BorderSide(
-            color: Theme.of(context).dividerColor,
-          ),
-        ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
       ),
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _className(widget.schoolClass.name!),
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Icon(
-                    Iconsax.location,
-                    color: Theme.of(context).colorScheme.secondaryVariant,
-                    size: 17,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _className(widget.schoolClass.name!),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Flexible(
+                  child: Text(
+                    _classTime(widget.block.time!),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.headline6,
                   ),
-                  const SizedBox(width: 7),
-                  Text(
+                ),
+                const SizedBox(width: 10),
+                Icon(
+                  Iconsax.location,
+                  color: Theme.of(context).colorScheme.secondaryVariant,
+                  size: 17,
+                ),
+                const SizedBox(width: 7),
+                Flexible(
+                  child: Text(
                     widget.schoolClass.roomNumber ?? 'LOCATION',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
                           color: Theme.of(context).colorScheme.secondaryVariant,
                         ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Icon(
-                    Iconsax.user,
-                    color: Theme.of(context).colorScheme.secondaryVariant,
-                    size: 17,
-                  ),
-                  const SizedBox(width: 7),
-                  Text(
+                ),
+                const SizedBox(width: 10),
+                Icon(
+                  Iconsax.user,
+                  color: Theme.of(context).colorScheme.secondaryVariant,
+                  size: 17,
+                ),
+                const SizedBox(width: 7),
+                Flexible(
+                  flex: 2,
+                  child: Text(
                     widget.teacher.name!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
                           color: Theme.of(context).colorScheme.secondaryVariant,
                         ),
                   ),
-                ],
-              ),
-            ],
-          ),
-          const Spacer(),
-          Text(
-            _classTime(widget.block.time!),
-            style: Theme.of(context).textTheme.headline6,
-          ),
-        ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -110,10 +114,6 @@ class _ClassCardState extends State<ClassCard> {
   String _className(String? string) {
     if (string == null) {
       return 'Class Name';
-    }
-
-    if (string.length > 21) {
-      return string.substring(0, 21) + '...';
     }
 
     return string;
