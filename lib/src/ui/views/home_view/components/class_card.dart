@@ -37,9 +37,9 @@ class ClassCard extends StatelessWidget {
         return 'Class Name';
       }
 
-      if (string.length > 21) {
-        return string.substring(0, 21) + '...';
-      }
+      // if (string.length > 21) {
+      //   return string.substring(0, 21) + '...';
+      // }
 
       return string;
     }
@@ -61,58 +61,62 @@ class ClassCard extends StatelessWidget {
 
     return Card(
       margin: EdgeInsets.zero,
-      color: Theme.of(context).colorScheme.secondary,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Container(
         padding: const EdgeInsets.all(12),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Text(
+              _className(schoolClass.name),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            const SizedBox(height: 10),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  _className(schoolClass.name),
-                  style: Theme.of(context).textTheme.headline4,
+                const Icon(Iconsax.clock, size: 17),
+                const SizedBox(width: 7),
+                Flexible(
+                  child: Text(
+                    _nextClassTime(block.time!.toLocal()),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyText1?.copyWith(fontWeight: FontWeight.w600),
+                  ),
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Icon(
-                      Iconsax.location,
-                      color: Theme.of(context).colorScheme.secondaryVariant,
-                      size: 17,
-                    ),
-                    const SizedBox(width: 7),
-                    Text(
-                      schoolClass.roomNumber ?? 'LOCATION',
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color: Theme.of(context).colorScheme.secondaryVariant,
-                          ),
-                    ),
-                  ],
+                const SizedBox(width: 10),
+                Icon(Iconsax.location, color: Theme.of(context).colorScheme.secondaryVariant, size: 17),
+                const SizedBox(width: 7),
+                Flexible(
+                  child: Text(
+                    schoolClass.roomNumber ?? 'LOCATION',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          color: Theme.of(context).colorScheme.secondaryVariant,
+                        ),
+                  ),
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Icon(
-                      Iconsax.user,
-                      color: Theme.of(context).colorScheme.secondaryVariant,
-                      size: 17,
-                    ),
-                    const SizedBox(width: 7),
-                    Text(
-                      _teacherName(teacher),
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            color: Theme.of(context).colorScheme.secondaryVariant,
-                          ),
-                    ),
-                  ],
+                const SizedBox(width: 10),
+                Icon(Iconsax.user, color: Theme.of(context).colorScheme.secondaryVariant, size: 17),
+                const SizedBox(width: 7),
+                Flexible(
+                  flex: 2,
+                  child: Text(
+                    _teacherName(teacher),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                          color: Theme.of(context).colorScheme.secondaryVariant,
+                        ),
+                  ),
                 ),
               ],
-            ),
-            const Spacer(),
-            Text(
-              _nextClassTime(block.time!.toLocal()),
-              style: Theme.of(context).textTheme.bodyText1?.copyWith(fontWeight: FontWeight.w600),
             ),
           ],
         ),
