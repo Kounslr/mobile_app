@@ -44,6 +44,7 @@ class _SignUpViewState extends State<SignUpView> {
     return CantonScaffold(
       resizeToAvoidBottomInset: true,
       padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 34),
+      backgroundColor: CantonMethods.alternateCanvasColorType2(context),
       body: _content(
         context,
         _emailController,
@@ -67,6 +68,12 @@ class _SignUpViewState extends State<SignUpView> {
           CantonPrimaryButton(
             buttonText: 'Sign Up',
             color: Theme.of(context).primaryColor,
+            containerWidth: 140,
+            containerHeight: 40,
+            padding: EdgeInsets.zero,
+            borderRadius: const SmoothBorderRadius.all(
+              SmoothRadius(cornerRadius: 12, cornerSmoothing: 1),
+            ),
             onPressed: () async {
               var res = await context.read(authenticationServiceProvider).signUp(
                     email: _emailController.text.trim(),
