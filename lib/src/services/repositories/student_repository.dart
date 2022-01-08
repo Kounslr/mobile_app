@@ -77,7 +77,7 @@ class StudentRepository {
           .get();
 
       if (classesRef.docs.isEmpty) {
-        schoolClass.id = 'done';
+        schoolClass.id = 'next';
         return schoolClass;
       }
 

@@ -34,7 +34,7 @@ class NextClassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if ([DateTime.saturday, DateTime.sunday].contains(DateTime.now().weekday)) {
+    if (![DateTime.saturday, DateTime.sunday].contains(DateTime.now().weekday)) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 17),
         child: Card(
@@ -73,6 +73,25 @@ class NextClassCard extends StatelessWidget {
                   'No more classes for today! 😃',
                   style: Theme.of(context).textTheme.headline4,
                 ),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else if (schoolClass.id == 'next') {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 17),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          margin: const EdgeInsets.only(top: 15),
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Your next class will be coming up soon! ✏️', style: Theme.of(context).textTheme.headline6),
               ],
             ),
           ),
