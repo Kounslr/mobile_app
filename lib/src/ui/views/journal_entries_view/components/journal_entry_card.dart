@@ -51,6 +51,7 @@ class JournalEntryCard extends ConsumerWidget {
         child: Card(
           color: Theme.of(context).colorScheme.secondary,
           margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
             child: Row(
@@ -63,10 +64,14 @@ class JournalEntryCard extends ConsumerWidget {
                       Text(
                         journalEntry.title!,
                         style: Theme.of(context).textTheme.headline6,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 7),
                       Text(
                         journalEntry.summary!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyText1,
                       ),
                     ],

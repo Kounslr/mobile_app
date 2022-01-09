@@ -33,8 +33,8 @@ class AssignmentCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 17),
       color: CantonMethods.alternateCanvasColorType2(context),
-      shape: SquircleBorder(
-        radius: radius ?? BorderRadius.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: radius ?? BorderRadius.circular(10),
       ),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
@@ -45,11 +45,15 @@ class AssignmentCard extends StatelessWidget {
               children: [
                 Text(
                   _assignmentName(assignment?.name),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.headline5,
                 ),
                 const SizedBox(height: 8.5),
                 Text(
                   schoolClass?.name ?? 'CLASS NAME',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
                 const SizedBox(height: 8.5),
@@ -57,6 +61,8 @@ class AssignmentCard extends StatelessWidget {
                   _assignmentDate(assignment?.dueDate) +
                       ' • ' +
                       _assignmentTime(DateFormat.jm().format(assignment!.dueDate!)),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodyText1?.copyWith(
                         color: Theme.of(context).colorScheme.secondaryVariant,
                       ),

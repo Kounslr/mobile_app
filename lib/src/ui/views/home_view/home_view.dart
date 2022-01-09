@@ -211,20 +211,21 @@ class _HomeViewState extends State<HomeView> {
       );
 
       for (var i = 0; i < ((assignments.length < 7) ? assignments.length : 7); i++) {
+        const defRadii = 10.0;
         BorderRadius radiiByIndex() {
           if (assignments.length == 1) {
-            return BorderRadius.circular(37);
+            return BorderRadius.circular(defRadii);
           } else if (assignments.length == 2) {
             if (i == 0) {
-              return const BorderRadius.vertical(top: Radius.circular(37));
+              return const BorderRadius.vertical(top: Radius.circular(defRadii));
             } else {
-              return const BorderRadius.vertical(bottom: Radius.circular(37));
+              return const BorderRadius.vertical(bottom: Radius.circular(defRadii));
             }
           } else {
             if (i == 0) {
-              return const BorderRadius.vertical(top: Radius.circular(37));
+              return const BorderRadius.vertical(top: Radius.circular(defRadii));
             } else if (i == assignments.length - 1) {
-              return const BorderRadius.vertical(bottom: Radius.circular(37));
+              return const BorderRadius.vertical(bottom: Radius.circular(defRadii));
             } else {
               return BorderRadius.zero;
             }

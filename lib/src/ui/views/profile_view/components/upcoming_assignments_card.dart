@@ -36,9 +36,9 @@ class UpcomingAssignmentsCard extends StatelessWidget {
       },
       child: Card(
         margin: EdgeInsets.zero,
-        shape: const SquircleBorder(
-          radius: BorderRadius.vertical(
-            bottom: Radius.circular(37),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(10),
           ),
         ),
         child: Container(

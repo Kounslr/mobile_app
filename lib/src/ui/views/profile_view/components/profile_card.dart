@@ -31,28 +31,36 @@ class ProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _contentText(student.name!) + ' (' + student.studentId! + ')',
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-                Text(
-                  student.email!,
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-                Text(
-                  school.name!,
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _contentText(student.name!) + ' (' + student.studentId! + ')',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                  Text(
+                    student.email!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  Text(
+                    school.name!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ],
+              ),
             ),
-            const Spacer(),
             Icon(
               Iconsax.user,
               size: 40,

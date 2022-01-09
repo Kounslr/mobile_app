@@ -88,20 +88,21 @@ class UpcomingAssignmentView extends StatelessWidget {
         itemBuilder: (context, index) {
           assignments.sort((a, b) => a.dueDate!.compareTo(b.dueDate!));
 
+          const defRadii = 10.0;
           BorderRadius radiiByIndex() {
             if (assignments.length == 1) {
-              return BorderRadius.circular(37);
+              return BorderRadius.circular(defRadii);
             } else if (assignments.length == 2) {
               if (index == 0) {
-                return const BorderRadius.vertical(top: Radius.circular(37));
+                return const BorderRadius.vertical(top: Radius.circular(defRadii));
               } else {
-                return const BorderRadius.vertical(bottom: Radius.circular(37));
+                return const BorderRadius.vertical(bottom: Radius.circular(defRadii));
               }
             } else {
               if (index == 0) {
-                return const BorderRadius.vertical(top: Radius.circular(37));
+                return const BorderRadius.vertical(top: Radius.circular(defRadii));
               } else if (index == assignments.length - 1) {
-                return const BorderRadius.vertical(bottom: Radius.circular(37));
+                return const BorderRadius.vertical(bottom: Radius.circular(defRadii));
               } else {
                 return BorderRadius.zero;
               }

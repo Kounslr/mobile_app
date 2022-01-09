@@ -77,7 +77,7 @@ class StudentRepository {
           .get();
 
       if (classesRef.docs.isEmpty) {
-        schoolClass.id = 'done';
+        schoolClass.id = 'next';
         return schoolClass;
       }
 
@@ -115,7 +115,9 @@ class StudentRepository {
         var timesAfterNow = [];
 
         for (var element in times) {
-          if (element.isAfter(now)) timesAfterNow.add(element);
+          if (element.isAfter(now)) {
+            timesAfterNow.add(element);
+          }
         }
 
         if (timesAfterNow.isEmpty) {
@@ -222,6 +224,51 @@ class StudentRepository {
       var classesRef = await ref
           .collection('classes')
           .where('students', arrayContains: {'id': FirebaseAuth.instance.currentUser?.uid}).get();
+
+      for (var item in classesRef.docs) {
+        List<Assignment> ass = [];
+
+        var assignmentsRef = await item.reference.collection('assignments').get();
+
+        for (var element in assignmentsRef.docs) {
+          ass.add(Assignment.fromDocumentSnapshot(element));
+        }
+
+        classes.add(Class.fromDocumentSnapshot(item, ass));
+      }
+
+      /// Fixes glitch where duplicate Classes are returned in list
+      Map<String, Class> mapFilter = {};
+      for (var item in classes) {
+        mapFilter[item.id!] = item;
+      }
+      classes = mapFilter.values.toList();
+
+      classes.sort((a, b) => a.block!.compareTo(b.block!));
+
+      yield classes;
+    } on FirebaseException catch (e) {
+      FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
+
+      rethrow;
+    }
+  }
+
+  Stream<List<Class>> get studentClassesForTheDay async* {
+    try {
+      List<Class> classes = [];
+      final nBlocks = await SchoolRepository().blocks;
+      final blocks = <int>[];
+
+      for (var item in nBlocks) {
+        blocks.add(item.period!);
+      }
+
+      var classesRef = await ref
+          .collection('classes')
+          .where('students', arrayContains: {'id': FirebaseAuth.instance.currentUser?.uid})
+          .where('block', whereIn: blocks)
+          .get();
 
       for (var item in classesRef.docs) {
         List<Assignment> ass = [];

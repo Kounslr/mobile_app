@@ -50,6 +50,8 @@ class StudentIDCard extends StatelessWidget {
                   // const SizedBox(width: 15),
                   Text(
                     school.name!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.headline5!.copyWith(color: CantonColors.white),
                   ),
                 ],
@@ -81,12 +83,16 @@ class StudentIDCard extends StatelessWidget {
       children: [
         Text(
           title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.headline6!.copyWith(
                 color: Theme.of(context).colorScheme.primaryVariant,
               ),
         ),
         Text(
           _contentText(description),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.headline5!.copyWith(
                 color: CantonColors.white,
               ),

@@ -22,7 +22,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/providers/school_blocks_future_provider.dart';
 import 'package:kounslr/src/providers/school_repository_provider.dart';
-import 'package:kounslr/src/providers/student_classes_stream_provider.dart';
+import 'package:kounslr/src/providers/student_classes_for_the_day_stream_provider.dart';
 import 'package:kounslr/src/ui/components/class_card.dart';
 import 'package:kounslr/src/ui/components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/schedule_view/components/schedule_view_header.dart';
@@ -51,7 +51,7 @@ class ScheduleView extends StatelessWidget {
   Widget _body(BuildContext context) {
     return Consumer(
       builder: (context, watch, child) {
-        final studentClassesRepo = watch(studentClassesStreamProvider);
+        final studentClassesRepo = watch(studentClassesForTheDayStreamProvider);
         final schoolBlocksRepo = watch(schoolBlocksFutureProvider);
         var futureIsDone = false;
 
@@ -79,10 +79,21 @@ class ScheduleView extends StatelessWidget {
               data: (blocks) {
                 return Expanded(
                   child: ListView.builder(
-                    itemCount: blocks.length,
+                    itemCount: classes.length,
                     itemBuilder: (context, index) {
+                      var nBlocks = [];
+                      if (classes.length < blocks.length) {
+                        for (var item in classes) {
+                          for (var elem in blocks) {
+                            if (item.block == elem.period) nBlocks.add(elem);
+                          }
+                        }
+                      } else {
+                        nBlocks = blocks;
+                      }
+
                       var getTeacherFuture = context.read(schoolRepositoryProvider).getTeacherByTeacherId(
-                            classes[blocks[index].period! - 1].teacherId!,
+                            classes[index].teacherId!,
                           );
                       final stopwatch = Stopwatch()..start();
                       return FutureBuilder<StaffMember>(
@@ -107,8 +118,8 @@ class ScheduleView extends StatelessWidget {
                           return Column(
                             children: [
                               ClassCard(
-                                schoolClass: classes[blocks[index].period! - 1],
-                                block: blocks[index],
+                                schoolClass: classes[index],
+                                block: nBlocks[index],
                                 teacher: teacherSnapshot.data!,
                               ),
                             ],

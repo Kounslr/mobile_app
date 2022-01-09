@@ -33,6 +33,7 @@ class ViewCard extends StatelessWidget {
         child: Card(
           color: Theme.of(context).colorScheme.secondary,
           margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Padding(
             padding: const EdgeInsets.all(15),
             child: Row(

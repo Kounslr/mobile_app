@@ -45,6 +45,7 @@ class _SignInViewState extends State<SignInView> {
     return CantonScaffold(
       resizeToAvoidBottomInset: true,
       padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 34),
+      backgroundColor: CantonMethods.alternateCanvasColorType2(context),
       body: _content(context, _emailController, _passwordController),
     );
   }

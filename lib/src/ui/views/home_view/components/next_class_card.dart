@@ -38,7 +38,9 @@ class NextClassCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 17),
         child: Card(
-          color: Theme.of(context).colorScheme.secondary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           margin: const EdgeInsets.only(top: 15),
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -58,7 +60,9 @@ class NextClassCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 17),
         child: Card(
-          color: Theme.of(context).colorScheme.secondary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           margin: const EdgeInsets.only(top: 12),
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -74,11 +78,32 @@ class NextClassCard extends StatelessWidget {
           ),
         ),
       );
+    } else if (schoolClass.id == 'next') {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 17),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          margin: const EdgeInsets.only(top: 15),
+          child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Your next class will be coming up soon! ✏️', style: Theme.of(context).textTheme.headline6),
+              ],
+            ),
+          ),
+        ),
+      );
     } else if (schoolClass.id == null) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 17),
         child: Card(
-          color: Theme.of(context).colorScheme.secondary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           margin: const EdgeInsets.only(top: 15),
           child: Padding(
             padding: const EdgeInsets.all(15),
