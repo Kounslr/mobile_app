@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'package:kounslr/src/models/assignment.dart';
@@ -27,12 +28,15 @@ import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/models/student.dart';
 
 class SchoolRepository {
-  var ref = FirebaseFirestore.instance.collection('customers/lcps/schools').doc('independence');
+  Future<DocumentReference<Map<String, dynamic>>> get ref async {
+    final stdnt = await FirebaseFirestore.instance.doc('students/${FirebaseAuth.instance.currentUser?.uid}').get();
+    return FirebaseFirestore.instance.doc('schools/${stdnt.data()!['school']}');
+  }
 
   Future<School> get school async {
     try {
-      var _school = await ref.get();
-      var school = School.fromDocumentSnapshot(_school);
+      var _school = await ref;
+      var school = School.fromDocumentSnapshot(await _school.get());
 
       return school;
     } on FirebaseException catch (e) {
@@ -44,8 +48,8 @@ class SchoolRepository {
 
   Future<Student> getStudent(String id) async {
     try {
-      var _student = await ref.collection('students').doc(id).get();
-      var student = Student.fromDocumentSnapshot(_student);
+      var _student = await ref;
+      var student = Student.fromDocumentSnapshot(await _student.collection('students').doc(id).get());
 
       return student;
     } on FirebaseException catch (e) {
@@ -57,9 +61,10 @@ class SchoolRepository {
 
   Future<List<Student>> get getAllStudents async {
     try {
-      var _students = await ref.collection('students').get();
+      final _students = await ref;
+      final _stdnts = await _students.collection('students').get();
       List<Student> students = [];
-      for (var item in _students.docs) {
+      for (var item in _stdnts.docs) {
         if (item.data()['studentId'] != null) {
           students.add(Student.fromDocumentSnapshot(item));
         }
@@ -90,8 +95,10 @@ class SchoolRepository {
   List<Assignment> _assignments = [];
   Future<Class> getClass({String? id}) async {
     try {
-      var _class = await ref.collection('classes').doc(id).get();
-      var assignmentsRef = await ref.collection('classes').doc(id).collection('assignments').get();
+      final _ref = await ref;
+
+      var _class = await _ref.collection('classes').doc(id).get();
+      var assignmentsRef = await _ref.collection('classes').doc(id).collection('assignments').get();
 
       for (var element in assignmentsRef.docs) {
         _assignments.add(Assignment.fromDocumentSnapshot(element));
@@ -115,8 +122,10 @@ class SchoolRepository {
 
   Future<List<Class>> getClassesByTeacherId(String teacherId) async {
     try {
+      final _ref = await ref;
       var _classes = <Class>[];
-      var _classesDocs = await ref.collection('classes').where('teacherId', isEqualTo: teacherId).get();
+
+      var _classesDocs = await _ref.collection('classes').where('teacherId', isEqualTo: teacherId).get();
 
       for (QueryDocumentSnapshot<Map<String, dynamic>> item in _classesDocs.docs) {
         final mClass = await getClass(id: item.data()['id']);
@@ -130,10 +139,11 @@ class SchoolRepository {
   }
 
   Future<StaffMember> getTeacherByClassId(String classId) async {
-    var _class = await ref.collection('classes').doc(classId).get();
+    final _ref = await ref;
+    var _class = await _ref.collection('classes').doc(classId).get();
 
     String teacherId = _class['teacherId'];
-    var teacherDocument = await ref.collection('staff').doc(teacherId).get();
+    var teacherDocument = await _ref.collection('staff').doc(teacherId).get();
 
     var _teacher = StaffMember.fromDocumentSnapshot(teacherDocument);
 
@@ -143,7 +153,9 @@ class SchoolRepository {
   Future<StaffMember> getTeacherByTeacherId(String teacherId) async {
     if (teacherId == '') return StaffMember();
 
-    var teacherDocument = await ref.collection('staff').doc(teacherId).get();
+    final _ref = await ref;
+
+    var teacherDocument = await _ref.collection('staff').doc(teacherId).get();
     var _teacher = StaffMember.fromDocumentSnapshot(teacherDocument);
 
     return _teacher;

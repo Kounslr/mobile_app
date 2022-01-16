@@ -34,15 +34,16 @@ import 'package:kounslr/src/models/student.dart';
 import 'package:kounslr/src/services/repositories/school_repository.dart';
 
 class StudentRepository {
-  var ref = FirebaseFirestore.instance.collection('customers/lcps/schools').doc('independence');
+  Future<DocumentReference<Map<String, dynamic>>> get ref async {
+    final stdnt = await FirebaseFirestore.instance.doc('students/${FirebaseAuth.instance.currentUser?.uid}').get();
+    return FirebaseFirestore.instance.doc('schools/${stdnt.data()!['school']}');
+  }
 
-  var uid = FirebaseAuth.instance.currentUser?.uid;
-
-  Stream<School> get school {
+  Stream<School> get school async* {
     try {
-      var school = ref.snapshots().map((event) => School.fromDocumentSnapshot(event));
+      var school = await ref;
 
-      return school;
+      yield* school.snapshots().map((event) => School.fromDocumentSnapshot(event));
     } on FirebaseException catch (e) {
       FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
 
@@ -50,15 +51,15 @@ class StudentRepository {
     }
   }
 
-  Stream<Student> get student {
+  Stream<Student> get student async* {
     try {
-      var student = ref
+      var student = await ref;
+
+      yield* student
           .collection('students')
           .doc(FirebaseAuth.instance.currentUser?.uid)
           .snapshots()
           .map((event) => Student.fromDocumentSnapshot(event));
-
-      return student;
     } on FirebaseException catch (e) {
       FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
 
@@ -70,7 +71,8 @@ class StudentRepository {
     try {
       var schoolClass = Class();
       List<Assignment> assignments = [];
-      var classesRef = await ref
+      final classesRefN = await ref;
+      final classesRef = await classesRefN
           .collection('classes')
           .where('students', arrayContains: {'id': FirebaseAuth.instance.currentUser?.uid})
           .where('block', isEqualTo: block)
@@ -221,7 +223,8 @@ class StudentRepository {
     try {
       List<Class> classes = [];
 
-      var classesRef = await ref
+      final classesRefN = await ref;
+      final classesRef = await classesRefN
           .collection('classes')
           .where('students', arrayContains: {'id': FirebaseAuth.instance.currentUser?.uid}).get();
 
@@ -264,7 +267,8 @@ class StudentRepository {
         blocks.add(item.period!);
       }
 
-      var classesRef = await ref
+      final classesRefN = await ref;
+      final classesRef = await classesRefN
           .collection('classes')
           .where('students', arrayContains: {'id': FirebaseAuth.instance.currentUser?.uid})
           .where('block', whereIn: blocks)
@@ -302,7 +306,9 @@ class StudentRepository {
   Stream<List<Assignment>> get upcomingAssignments async* {
     try {
       List<Assignment>? ass;
-      var classesRef = await ref
+
+      final classesRefN = await ref;
+      final classesRef = await classesRefN
           .collection('classes')
           .where('students', arrayContains: {'id': FirebaseAuth.instance.currentUser?.uid}).get();
       ass = [];
@@ -343,11 +349,12 @@ class StudentRepository {
     }
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> get journalEntries {
+  Stream<QuerySnapshot<Map<String, dynamic>>> get journalEntries async* {
     try {
-      var entries = ref.collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries').snapshots();
+      final refN = await ref;
+      final entries = refN.collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries').snapshots();
 
-      return entries;
+      yield* entries;
     } on FirebaseException catch (e) {
       FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
 
@@ -359,7 +366,8 @@ class StudentRepository {
     try {
       var tags = <Tag>[];
       // var newDocs = <DocumentSnapshot>[];
-      var entries = await ref.collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries').get();
+      final refN = await ref;
+      final entries = await refN.collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries').get();
       for (var item in entries.docs) {
         tags.addAll(JournalEntry.fromDocumentSnapshot(item).tags!);
       }
@@ -373,19 +381,22 @@ class StudentRepository {
   }
 
   Future<void> addJournalEntry(JournalEntry entry) async {
-    await ref
+    final refN = await ref;
+    await refN
         .collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries')
         .doc(entry.id)
         .set(entry.toDocumentSnapshot());
   }
 
   Future<void> deleteJournalEntry(JournalEntry entry) async {
-    await ref.collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries').doc(entry.id).delete();
+    final refN = await ref;
+    await refN.collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries').doc(entry.id).delete();
   }
 
   Future<void> updateJournalEntry(
       {required JournalEntry entry, String? title, String? summary, List<Tag>? tags}) async {
-    await ref
+    final refN = await ref;
+    await refN
         .collection('students/${FirebaseAuth.instance.currentUser?.uid}/journal_entries')
         .doc(entry.id)
         .update(entry

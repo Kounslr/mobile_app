@@ -28,18 +28,8 @@ class AuthenticationRepository {
   final FirebaseAuth _firebaseAuth;
   AuthenticationRepository(this._firebaseAuth);
 
-  final CollectionReference userRef =
-      FirebaseFirestore.instance.collection('customers/lcps/schools/independence/students');
-
-  final CollectionReference classesRef =
-      FirebaseFirestore.instance.collection('customers/lcps/schools/independence/classes');
-
-  Future<void> _createUserInDatabase(User user) async {
-    await userRef.doc(user.uid).set({'id': user.uid, 'email': user.email});
-  }
-
-  Future<void> _createStudentInDatabase(Student student) async {
-    await userRef.doc(student.id).update(student.toMap());
+  CollectionReference classesRef(String schoolName) {
+    return FirebaseFirestore.instance.collection('schools/$schoolName/classes');
   }
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
@@ -59,10 +49,7 @@ class AuthenticationRepository {
 
   Future<String> signInWithEmailAndPassword({required String email, required String password}) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
 
       return 'success';
     } catch (e) {
@@ -87,11 +74,10 @@ class AuthenticationRepository {
 
       final credential = await FirebaseAuth.instance.signInWithCredential(googleCredential);
 
-      var userDataRef = await userRef.doc(credential.user!.uid).get();
-
-      if (!userDataRef.exists || credential.additionalUserInfo!.isNewUser) {
-        await _createUserInDatabase(credential.user!);
-
+      if (credential.additionalUserInfo!.isNewUser) {
+        await FirebaseFirestore.instance
+            .doc('students/${FirebaseAuth.instance.currentUser?.uid}')
+            .set({'id': FirebaseAuth.instance.currentUser?.uid, 'hasData': false, 'school': ''});
         return 'new';
       }
 
@@ -116,9 +102,7 @@ class AuthenticationRepository {
 
       if (student.studentId == null) return 'failed';
 
-      await _createStudentInDatabase(student);
-
-      await StudentVueClient(username, password, domain).loadInfoToDatabase(studentID: student.id!);
+      await StudentVueClient(username, password, domain).loadInfoToDatabase(student: student);
 
       return 'success';
     } catch (e) {
@@ -128,12 +112,10 @@ class AuthenticationRepository {
 
   Future<String> signUp({required String email, required String password}) async {
     try {
-      var user = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      _createUserInDatabase(user.user!);
+      await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      await FirebaseFirestore.instance
+          .doc('students/${FirebaseAuth.instance.currentUser?.uid}')
+          .set({'id': FirebaseAuth.instance.currentUser?.uid, 'hasData': false, 'school': ''});
 
       return 'success';
     } catch (e) {

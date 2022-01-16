@@ -31,7 +31,8 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kounslr/src/config/constants.dart';
-import 'package:kounslr/src/services/authentication/authentication_wrapper.dart';
+import 'package:kounslr/src/ui/views/authentication_wrapper.dart';
+// import 'package:kounslr/src/services/repositories/studentvue_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

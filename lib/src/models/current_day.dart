@@ -115,10 +115,8 @@ class CurrentDay {
       date: map['date'].toDate(),
       startingTime: map['startingTime'].toDate(),
       endingTime: map['endingTime'].toDate(),
-      blocks: List<Block>.from(
-          map['blocks']?.map((x) => Block.fromMapFromDocumentSnapshot(x))),
-      events: List<Event>.from(
-          map['events']?.map((x) => Event.fromMapFromDocumentSnapshot(x))),
+      blocks: List<Block>.from(map['blocks']?.map((x) => Block.fromMapFromDocumentSnapshot(x))),
+      events: List<Event>.from(map['events']?.map((x) => Event.fromMapFromDocumentSnapshot(x))),
     );
   }
 
@@ -130,17 +128,14 @@ class CurrentDay {
       date: doc['date'].toDate(),
       startingTime: doc['startingTime'].toDate(),
       endingTime: doc['endingTime'].toDate(),
-      blocks: List<Block>.from(
-          doc['blocks']?.map((x) => Block.fromDocumentSnapshot(x))),
-      events: List<Event>.from(
-          doc['events']?.map((x) => Event.fromDocumentSnapshot(x))),
+      blocks: List<Block>.from(doc['blocks']?.map((x) => Block.fromDocumentSnapshot(x))),
+      events: List<Event>.from(doc['events']?.map((x) => Event.fromDocumentSnapshot(x))),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory CurrentDay.fromJson(String source) =>
-      CurrentDay.fromMap(json.decode(source));
+  factory CurrentDay.fromJson(String source) => CurrentDay.fromMap(json.decode(source));
 
   @override
   String toString() {

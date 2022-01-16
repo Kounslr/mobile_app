@@ -21,8 +21,10 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:intl/intl.dart';
+import 'package:kounslr/src/models/current_day.dart';
+import 'package:kounslr/src/models/event.dart';
+import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/staff_member.dart';
-import 'package:kounslr/src/services/authentication/authentication_repository.dart';
 import 'package:kounslr/src/services/repositories/school_repository.dart';
 import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
@@ -48,8 +50,9 @@ class StudentVueClient {
     return string?.replaceFirst('.', '').replaceAll('/', ' ') ?? 'Assignment';
   }
 
-  Future<void> loadInfoToDatabase({Function(double)? callback, required String studentID}) async {
+  Future<void> loadInfoToDatabase({Function(double)? callback, required Student student}) async {
     try {
+      final sch = await _addSchoolToDatabaseCheck();
       String? resData;
       if (!mock) {
         var requestData = '''<?xml version="1.0" encoding="utf-8"?>
@@ -87,6 +90,8 @@ class StudentVueClient {
 
       var courses = document.findAllElements('Courses').first;
 
+      await _createStudentInDatabase(student, sch['id']);
+
       for (int i = 0; i < courses.children.length; i++) {
         XmlNode current = courses.children[i];
 
@@ -104,7 +109,7 @@ class StudentVueClient {
 
         /// Checks if teacher is in database (If [list] is empty then the teacher is not in the database)
         final teacherChecklist = await FirebaseFirestore.instance
-            .collection('customers/lcps/schools/independence/staff')
+            .collection('schools/${sch['id']}/staff')
             .where('emailAddress', isEqualTo: teacherEmail)
             .get();
 
@@ -119,8 +124,8 @@ class StudentVueClient {
 
         if (teacherChecklist.docs.isEmpty) {
           /// Creates new teacher as well as new class and adds student
-          await _addTeacherToDatabase(teacher);
-          await _addClassToDatabase(current, teacher, studentID);
+          await _addTeacherToDatabase(teacher, sch['id']);
+          await _addClassToDatabase(current, teacher, student.id!, sch['id']);
         } else {
           /// Gathers list of classes that the teacher teaches
           final classChecklist = await SchoolRepository().getClassesByTeacherId(teacherChecklist.docs[0].data()['id']);
@@ -129,19 +134,18 @@ class StudentVueClient {
           /// Checks if the teacher has the class registered in the database
           if (targetClass.isEmpty) {
             /// Creates new class and adds student
-            _addClassToDatabase(current, teacher, studentID);
+            _addClassToDatabase(current, teacher, student.id!, sch['id']);
           } else {
             /// Adds student to existing class
-            final classesRef = FirebaseFirestore.instance
-                .collection('customers/lcps/schools/independence/classes')
-                .doc(targetClass[0].id);
+            final classesRef =
+                FirebaseFirestore.instance.collection('schools/${sch['id']}/classes').doc(targetClass[0].id);
             final classesDoc = await classesRef.get();
-            final student = await SchoolRepository().getStudent(studentID);
+            final stdnt = await SchoolRepository().getStudent(student.id!);
 
             await classesRef.update({
               'students': [
                 ...classesDoc.data()!['students'],
-                {'id': student.id},
+                {'id': stdnt.id},
               ],
             });
 
@@ -151,31 +155,35 @@ class StudentVueClient {
               await item.reference.update({
                 'students': [
                   ...item['students'],
-                  student.toStudentInAssignment().toMap(),
+                  stdnt.toStudentInAssignment().toMap(),
                 ],
               });
             }
 
-            await AuthenticationRepository(FirebaseAuth.instance)
-                .userRef
-                .doc('$studentID/classes/${classesDoc.data()!["id"]}')
-                .set(student.toStudentInClass().toMap());
+            await FirebaseFirestore.instance
+                .collection('schools/${sch['id']}/students')
+                .doc('${stdnt.id!}/classes/${classesDoc.data()!["id"]}')
+                .set(stdnt.toStudentInClass().toMap());
           }
         }
+
+        final signUpComplete = {'studentVueSignInComplete': true};
+
+        await FirebaseFirestore.instance
+            .collection('schools/${sch['id']}/students')
+            .doc(FirebaseAuth.instance.currentUser?.uid)
+            .update(signUpComplete);
       }
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> _addTeacherToDatabase(StaffMember staffMember) async {
-    FirebaseFirestore.instance
-        .collection('customers/lcps/schools/independence/staff')
-        .doc(staffMember.id)
-        .set(staffMember.toMap());
+  Future<void> _addTeacherToDatabase(StaffMember staffMember, String schoolId) async {
+    await FirebaseFirestore.instance.collection('schools/$schoolId/staff').doc(staffMember.id).set(staffMember.toMap());
   }
 
-  Future<void> _addClassToDatabase(XmlNode current, StaffMember teacher, String studentID) async {
+  Future<void> _addClassToDatabase(XmlNode current, StaffMember teacher, String studentID, String schId) async {
     /// Creates the class and gathers info
     var schoolClass = Class(
       id: const Uuid().v4(),
@@ -237,8 +245,8 @@ class StudentVueClient {
     final nClass = schoolClass.toMap();
     nClass.remove('assignments');
 
-    final ref = FirebaseFirestore.instance.collection('customers/lcps/schools/independence/classes');
-    final userRef = FirebaseFirestore.instance.collection('customers/lcps/schools/independence/students');
+    final ref = FirebaseFirestore.instance.collection('schools/$schId/classes');
+    final userRef = FirebaseFirestore.instance.collection('schools/$schId/students');
 
     await ref.doc(schoolClass.id).set(nClass);
     await userRef.doc(studentID).collection('classes').doc(schoolClass.id).set(StudentInClass(grades: []).toMap());
@@ -246,6 +254,110 @@ class StudentVueClient {
     for (Assignment item in schoolClass.assignments!) {
       await ref.doc(schoolClass.id).collection('assignments').doc(item.id).set(item.toDocumentSnapshot());
     }
+  }
+
+  Future<void> _createStudentInDatabase(Student student, String schoolId) async {
+    await FirebaseFirestore.instance.collection('schools/$schoolId/students').doc(student.id).set(student.toMap());
+    await FirebaseFirestore.instance.doc('students/${student.id}').update({'hasData': true, 'school': schoolId});
+  }
+
+  Future<Map<String, dynamic>> _addSchoolToDatabaseCheck({Function(double)? callback}) async {
+    String? resData;
+    if (!mock) {
+      var requestData = '''<?xml version="1.0" encoding="utf-8"?>
+    <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+      <soap:Body>
+          <ProcessWebServiceRequest xmlns="http://edupoint.com/webservices/">
+              <userID>$username</userID>
+              <password>$password</password>
+              <skipLoginLog>1</skipLoginLog>
+              <parent>${studentAccount ? '0' : '1'}</parent>
+              <webServiceHandleName>PXPWebServices</webServiceHandleName>
+              <methodName>StudentSchoolInfo</methodName>
+              <paramStr>&lt;Parms&gt;&lt;ChildIntID&gt;0&lt;/ChildIntID&gt;&lt;/Parms&gt;</paramStr>
+          </ProcessWebServiceRequest>
+      </soap:Body>
+    </soap:Envelope>''';
+
+      var headers = <String, String>{'Content-Type': 'text/xml'};
+
+      var res =
+          await _dio.post(reqURL, data: requestData, options: Options(headers: headers), onSendProgress: (one, two) {
+        if (callback != null) {
+          callback((one / two) * 0.5);
+        }
+      }, onReceiveProgress: (one, two) {
+        if (callback != null) {
+          callback((one / two) * 0.5 + 0.5);
+        }
+      });
+
+      resData = res.data as String;
+    }
+
+    final document = XmlDocument.parse(HtmlUnescape().convert(resData!));
+
+    var current = document.findAllElements('StudentSchoolInfoListing').first;
+
+    final ref = FirebaseFirestore.instance.collection('schools');
+
+    final id = const Uuid().v4();
+    final name = current.getAttribute('School');
+    final address = current.getAttribute('SchoolAddress');
+    final phoneNumber = current.getAttribute('Phone');
+    final faxNumber = current.getAttribute('Phone2');
+    final websiteUrl = current.getAttribute('URL');
+
+    var currentDay = CurrentDay();
+
+    var schoolMap = {
+      'id': id,
+      'name': name,
+      'address': address,
+      'phoneNumber': phoneNumber,
+      'faxNumber': faxNumber,
+      'websiteUrl': websiteUrl,
+    };
+
+    // bool schoolCheck = ;
+
+    // final schoolInDb = await ref.where('name', isEqualTo: name).where('phoneNumber', isEqualTo: phoneNumber).get();
+
+    if (true) {
+      if (domain == 'portal.lcps.org') {
+        final cId = const Uuid().v4();
+        final cEvents = <Event>[];
+
+        var cIndRef = await ref.doc('4952f62e-353f-4ea7-9ee6-d35f28d33d8f').get();
+
+        final cIndCurDay = CurrentDay.fromMapFromDocumentSnapshot(cIndRef['currentDay']);
+
+        currentDay = CurrentDay(
+          id: cId,
+          events: cEvents,
+          dayType: cIndCurDay.dayType,
+          markingPeriod: cIndCurDay.markingPeriod,
+          date: cIndCurDay.date,
+          startingTime: cIndCurDay.startingTime,
+          endingTime: cIndCurDay.endingTime,
+          blocks: cIndCurDay.blocks,
+        );
+      }
+
+      final school = School(
+        id: id,
+        name: name,
+        address: address,
+        phoneNumber: phoneNumber,
+        faxNumber: faxNumber,
+        websiteURL: websiteUrl,
+        currentDay: currentDay,
+      );
+
+      await ref.doc(id).set(school.toDocumentSnapshot());
+    }
+
+    return schoolMap;
   }
 
   Future<Student> loadStudentData({Function(double)? callback}) async {
@@ -288,6 +400,7 @@ class StudentVueClient {
         document.root.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild!;
 
     var student = Student(
+      id: const Uuid().v4(),
       studentId: el.getElement('PermID')?.innerText,
       name: el.getElement('FormattedName')?.innerText,
       gender: el.getElement('Gender')?.innerText,
@@ -299,6 +412,19 @@ class StudentVueClient {
       phone: el.getElement('Phone')?.innerText,
       photo: '',
     );
+
+    final schRef = FirebaseFirestore.instance
+        .collection('schools')
+        .where('name', isEqualTo: el.getElement('schoolName')?.innerText);
+
+    final sch = await schRef.get();
+
+    await FirebaseFirestore.instance
+        .collection('schools')
+        .doc(sch.docs[0].id)
+        .collection('students')
+        .doc(student.id!)
+        .set(student.toMap());
 
     return student;
   }
