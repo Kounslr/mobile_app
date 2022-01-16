@@ -94,9 +94,6 @@ class _HomeViewState extends State<HomeView> {
                         return nextBlockStream.when(
                           loading: () => Loading(),
                           error: (e, s) {
-                            print(e);
-                            print(s);
-
                             return const SomethingWentWrong();
                           },
                           data: (nextBlock) {
