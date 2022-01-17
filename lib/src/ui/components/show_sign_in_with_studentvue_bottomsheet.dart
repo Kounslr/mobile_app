@@ -4,10 +4,10 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kounslr/src/providers/authentication_providers/authentication_service_provider.dart';
 
+var studentVueSignInResult = '';
 Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
   var _usernameController = TextEditingController();
   var _passwordController = TextEditingController();
-  var result = '';
   return await showModalBottomSheet(
     context: context,
     elevation: 0,
@@ -81,8 +81,8 @@ Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          result != ''
-                              ? result != 'failed'
+                          studentVueSignInResult != ''
+                              ? studentVueSignInResult != 'failed'
                                   ? const CupertinoActivityIndicator()
                                   : CantonPrimaryButton(
                                       color: Theme.of(context).primaryColor,
@@ -92,19 +92,20 @@ Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
                                       padding: const EdgeInsets.all(10),
                                       onPressed: () async {
                                         setState(() {
-                                          result = 'Loading...';
+                                          studentVueSignInResult = 'Loading...';
                                         });
 
                                         var res = await watch(authenticationServiceProvider).studentVueSignIn(
                                           username: _usernameController.text,
                                           password: _passwordController.text,
+                                          setState: setState,
                                         );
 
                                         setState(() {
-                                          result = res;
+                                          studentVueSignInResult = res;
                                         });
 
-                                        if (result == 'success') {
+                                        if (studentVueSignInResult == 'success') {
                                           Phoenix.rebirth(context);
                                         }
                                       },
@@ -117,30 +118,34 @@ Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
                                   padding: const EdgeInsets.all(10),
                                   onPressed: () async {
                                     setState(() {
-                                      result = 'Loading...';
+                                      studentVueSignInResult = 'Loading...';
                                     });
 
                                     var res = await watch(authenticationServiceProvider).studentVueSignIn(
                                       username: _usernameController.text,
                                       password: _passwordController.text,
+                                      setState: setState,
                                     );
 
                                     setState(() {
-                                      result = res;
+                                      studentVueSignInResult = res;
                                     });
 
-                                    if (result == 'success') {
+                                    if (studentVueSignInResult == 'success' ||
+                                        studentVueSignInResult.contains('You\'re')) {
                                       Phoenix.rebirth(context);
                                     }
                                   },
                                 ),
                           const SizedBox(height: 20),
-                          result == 'failed'
-                              ? Text(
-                                  'Incorrect email or password',
-                                  style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                                        color: Theme.of(context).colorScheme.error,
-                                      ),
+                          studentVueSignInResult != 'success'
+                              ? Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 17),
+                                  child: Text(
+                                    studentVueSignInResult,
+                                    style: Theme.of(context).textTheme.bodyText1,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 )
                               : Container(),
                           SizedBox(height: MediaQuery.of(context).viewInsets.bottom * 3),

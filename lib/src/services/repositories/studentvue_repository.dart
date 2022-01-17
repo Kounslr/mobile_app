@@ -26,6 +26,7 @@ import 'package:kounslr/src/models/event.dart';
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/staff_member.dart';
 import 'package:kounslr/src/services/repositories/school_repository.dart';
+import 'package:kounslr/src/ui/components/show_sign_in_with_studentvue_bottomsheet.dart';
 import 'package:uuid/uuid.dart';
 import 'package:xml/xml.dart';
 
@@ -50,9 +51,15 @@ class StudentVueClient {
     return string?.replaceFirst('.', '').replaceAll('/', ' ') ?? 'Assignment';
   }
 
-  Future<void> loadInfoToDatabase({Function(double)? callback, required Student student}) async {
+  Future<String> loadInfoToDatabase(
+      {Function(double)? callback, required Student student, required void Function(void Function()) setState}) async {
     try {
-      final sch = await _addSchoolToDatabaseCheck();
+      final sch = await _addSchoolToDatabaseCheck(setState: setState);
+
+      if (sch['id'] == 'notSupported') {
+        return 'Kounslr doesn\'t support your school yet! 😔';
+      }
+
       String? resData;
       if (!mock) {
         var requestData = '''<?xml version="1.0" encoding="utf-8"?>
@@ -174,8 +181,9 @@ class StudentVueClient {
             .doc(FirebaseAuth.instance.currentUser?.uid)
             .update(signUpComplete);
       }
+      return 'success';
     } catch (e) {
-      rethrow;
+      return 'Server error. Please try again later.';
     }
   }
 
@@ -261,7 +269,8 @@ class StudentVueClient {
     await FirebaseFirestore.instance.doc('students/${student.id}').update({'hasData': true, 'school': schoolId});
   }
 
-  Future<Map<String, dynamic>> _addSchoolToDatabaseCheck({Function(double)? callback}) async {
+  Future<Map<String, dynamic>> _addSchoolToDatabaseCheck(
+      {Function(double)? callback, required void Function(void Function()) setState}) async {
     String? resData;
     if (!mock) {
       var requestData = '''<?xml version="1.0" encoding="utf-8"?>
@@ -319,11 +328,15 @@ class StudentVueClient {
       'websiteUrl': websiteUrl,
     };
 
-    // bool schoolCheck = ;
+    final schoolInDb = await ref.where('name', isEqualTo: name).where('phoneNumber', isEqualTo: phoneNumber).get();
 
-    // final schoolInDb = await ref.where('name', isEqualTo: name).where('phoneNumber', isEqualTo: phoneNumber).get();
-
-    if (true) {
+    // If empty, then it'll add a new school to the database.
+    if (schoolInDb.docs.isEmpty) {
+      setState(() {
+        studentVueSignInResult =
+            'You\'re the first person at $name to use Kounslr🎉 Please wait patiently as the sign in may take a while.';
+      });
+      // If school is in LCPS
       if (domain == 'portal.lcps.org') {
         final cId = const Uuid().v4();
         final cEvents = <Event>[];
@@ -342,19 +355,21 @@ class StudentVueClient {
           endingTime: cIndCurDay.endingTime,
           blocks: cIndCurDay.blocks,
         );
+
+        final school = School(
+          id: id,
+          name: name,
+          address: address,
+          phoneNumber: phoneNumber,
+          faxNumber: faxNumber,
+          websiteURL: websiteUrl,
+          currentDay: currentDay,
+        );
+
+        await ref.doc(id).set(school.toDocumentSnapshot());
+      } else {
+        return {'id': 'notSupported'};
       }
-
-      final school = School(
-        id: id,
-        name: name,
-        address: address,
-        phoneNumber: phoneNumber,
-        faxNumber: faxNumber,
-        websiteURL: websiteUrl,
-        currentDay: currentDay,
-      );
-
-      await ref.doc(id).set(school.toDocumentSnapshot());
     }
 
     return schoolMap;

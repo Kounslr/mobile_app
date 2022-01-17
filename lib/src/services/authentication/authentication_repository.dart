@@ -43,7 +43,7 @@ class AuthenticationRepository {
       if (e is FirebaseAuthException) {
         return AuthenticationExceptions.fromFirebaseAuthError(e).toString();
       }
-      return 'failed';
+      return 'Server error. Please try again later.';
     }
   }
 
@@ -56,7 +56,7 @@ class AuthenticationRepository {
       if (e is FirebaseAuthException) {
         return AuthenticationExceptions.fromFirebaseAuthError(e).toString();
       }
-      return 'failed';
+      return 'Server error. Please try again later.';
     }
   }
 
@@ -88,11 +88,12 @@ class AuthenticationRepository {
       } else if (e is RangeError) {
         return '';
       }
-      return 'failed';
+      return 'Server error. Please try again later.';
     }
   }
 
-  Future<String> studentVueSignIn({required String username, required String password}) async {
+  Future<String> studentVueSignIn(
+      {required String username, required String password, required void Function(void Function()) setState}) async {
     try {
       var student = Student();
       String domain = 'portal.lcps.org';
@@ -100,13 +101,12 @@ class AuthenticationRepository {
 
       student.id = FirebaseAuth.instance.currentUser?.uid;
 
-      if (student.studentId == null) return 'failed';
+      if (student.studentId == null) return 'Server error. Please try again later.';
 
-      await StudentVueClient(username, password, domain).loadInfoToDatabase(student: student);
-
-      return 'success';
+      return await StudentVueClient(username, password, domain)
+          .loadInfoToDatabase(student: student, setState: setState);
     } catch (e) {
-      return 'failed';
+      return 'Server error. Please try again later.';
     }
   }
 
@@ -119,7 +119,7 @@ class AuthenticationRepository {
 
       return 'success';
     } catch (e) {
-      return 'failed';
+      return 'Server error. Please try again later.';
     }
   }
 }
