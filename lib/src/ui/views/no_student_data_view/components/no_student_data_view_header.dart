@@ -1,4 +1,4 @@
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 class NoStudentDataViewHeader extends StatelessWidget {
   const NoStudentDataViewHeader({Key? key}) : super(key: key);
@@ -25,7 +25,7 @@ class NoStudentDataViewHeader extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        const CantonHeaderButton(backgroundColor: CantonColors.transparent),
+        const KounslrHeaderButton(backgroundColor: KounslrColors.transparent),
       ],
     );
   }
