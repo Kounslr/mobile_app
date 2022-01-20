@@ -32,6 +32,20 @@ class JournalEntryCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
+    String title() {
+      if (['', null].contains(journalEntry.title)) {
+        return 'Untitled Entry';
+      }
+      return journalEntry.title!;
+    }
+
+    String summary() {
+      if (['', null].contains(journalEntry.summary)) {
+        return 'No additional context.';
+      }
+      return journalEntry.summary!;
+    }
+
     return GestureDetector(
       onTap: () => CantonMethods.viewTransition(context, JournalEntryView(journalEntry, allEntries)),
       child: Slidable(
@@ -62,14 +76,14 @@ class JournalEntryCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        journalEntry.title!,
+                        title(),
                         style: Theme.of(context).textTheme.headline6,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 7),
                       Text(
-                        journalEntry.summary!,
+                        summary(),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyText1,
