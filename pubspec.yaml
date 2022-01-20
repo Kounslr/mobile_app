@@ -27,7 +27,7 @@ dependencies:
   # UI Library
   canton_design_system:
     git:
-      url: git://github.com/31Carlton7/canton_design_system.git
+      url: https://github.com/31Carlton7/canton_design_system.git
       ref: master
   charts_flutter:
     git:
