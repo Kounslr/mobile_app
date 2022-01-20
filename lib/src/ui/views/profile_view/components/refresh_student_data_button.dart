@@ -1,5 +1,9 @@
 import 'package:canton_design_system/canton_design_system.dart';
-import 'package:kounslr/src/ui/components/show_sign_in_with_studentvue_bottomsheet.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:kounslr/src/models/student.dart';
+import 'package:kounslr/src/services/repositories/studentvue_repository.dart';
 
 class RefreshStudentDataButton extends StatefulWidget {
   const RefreshStudentDataButton({Key? key}) : super(key: key);
@@ -12,8 +16,8 @@ class _RefreshStudentDataButtonState extends State<RefreshStudentDataButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
-        await showStudentVueSignInBottomSheet(context);
+      onTap: () {
+        Phoenix.rebirth(context);
       },
       child: Card(
         margin: EdgeInsets.zero,

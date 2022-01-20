@@ -12,6 +12,7 @@ Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
     context: context,
     elevation: 0,
     useRootNavigator: true,
+    enableDrag: false,
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setState) {
