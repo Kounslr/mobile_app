@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-class CantonTagTextInput extends StatefulWidget {
+class KounslrTagTextInput extends StatefulWidget {
   ///[tagsStyler] must not be [null]
   final TagsStyler? tagsStyler;
 
@@ -40,7 +40,7 @@ class CantonTagTextInput extends StatefulWidget {
 
   final TextEditingController? controller;
 
-  const CantonTagTextInput({
+  const KounslrTagTextInput({
     Key? key,
     this.tagsDistanceFromBorderEnd = 0.725,
     this.scrollableTagsPadding = const EdgeInsets.symmetric(horizontal: 4.0),
@@ -57,10 +57,10 @@ class CantonTagTextInput extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CantonTagTextInputState createState() => _CantonTagTextInputState();
+  _KounslrTagTextInputState createState() => _KounslrTagTextInputState();
 }
 
-class _CantonTagTextInputState extends State<CantonTagTextInput> {
+class _KounslrTagTextInputState extends State<KounslrTagTextInput> {
   List<String>? _tagsStringContents = [];
   TextEditingController _textEditingController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
