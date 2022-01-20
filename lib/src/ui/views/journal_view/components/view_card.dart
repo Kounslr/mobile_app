@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 class ViewCard extends StatelessWidget {
   const ViewCard({required this.view, required this.text, Key? key}) : super(key: key);
@@ -27,7 +27,7 @@ class ViewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => CantonMethods.viewTransition(context, view),
+      onTap: () => KounslrMethods.viewTransition(context, view),
       child: Container(
         padding: const EdgeInsets.only(top: 17, left: 17, right: 17),
         child: Card(
