@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:intl/intl.dart';
 
 import 'package:kounslr/src/models/assignment.dart';
@@ -32,7 +32,7 @@ class AssignmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 17),
-      color: CantonMethods.alternateCanvasColorType2(context),
+      color: KounslrMethods.alternateCanvasColorType2(context),
       shape: RoundedRectangleBorder(
         borderRadius: radius ?? BorderRadius.circular(10),
       ),
