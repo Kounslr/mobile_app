@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 import 'package:kounslr/src/ui/components/show_sign_in_with_studentvue_bottomsheet.dart';
 import 'package:kounslr/src/ui/components/sign_out_button.dart';
@@ -54,7 +54,7 @@ class _SignInWithStudentVueCardState extends State<SignInWithStudentVueCard> {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 20),
-        CantonPrimaryButton(
+        KounslrPrimaryButton(
           buttonText: 'Sign in',
           color: Theme.of(context).primaryColor,
           containerWidth: MediaQuery.of(context).size.width / 2 - 34,
