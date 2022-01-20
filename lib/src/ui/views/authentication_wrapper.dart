@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -81,7 +81,7 @@ class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
               return FutureBuilder<bool>(
                 future: _checkIfStudentIsSignedIntoStudentVue(),
                 builder: (context, snapshot) {
-                  if (snapshot.data == null) return CantonScaffold(body: Loading());
+                  if (snapshot.data == null) return KounslrScaffold(body: Loading());
 
                   if (snapshot.data!) {
                     return const CurrentView();
