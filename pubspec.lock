@@ -36,15 +36,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  canton_design_system:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: master
-      resolved-ref: "4261cef81d7c8f0a7bc51a097e5997945941d4ed"
-      url: "https://github.com/31Carlton7/canton_design_system.git"
-    source: git
-    version: "0.0.1"
   characters:
     dependency: transitive
     description:
@@ -475,6 +466,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.1"
+  kounslr_design_system:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: e7363b31fa9bc26a969b4741c66da256425c0e20
+      url: "git://github.com/Kounslr/kounslr_design_system.git"
+    source: git
+    version: "0.0.1"
   lints:
     dependency: transitive
     description:
