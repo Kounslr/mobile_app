@@ -51,8 +51,12 @@ class StudentVueClient {
     return string?.replaceFirst('.', '').replaceAll('/', ' ') ?? 'Assignment';
   }
 
-  Future<String> loadInfoToDatabase(
-      {Function(double)? callback, required Student student, required void Function(void Function()) setState}) async {
+  Future<String> loadInfoToDatabase({
+    Function(double)? callback,
+    required Student student,
+    required String password,
+    required void Function(void Function()) setState,
+  }) async {
     try {
       final sch = await _addSchoolToDatabaseCheck(setState: setState);
 
@@ -97,7 +101,7 @@ class StudentVueClient {
 
       var courses = document.findAllElements('Courses').first;
 
-      await _createStudentInDatabase(student, sch['id']);
+      await _createStudentInDatabase(student, sch['id'], student.studentId!, password);
 
       for (int i = 0; i < courses.children.length; i++) {
         XmlNode current = courses.children[i];
@@ -264,13 +268,20 @@ class StudentVueClient {
     }
   }
 
-  Future<void> _createStudentInDatabase(Student student, String schoolId) async {
+  Future<void> _createStudentInDatabase(Student student, String schoolId, String username, String password) async {
     await FirebaseFirestore.instance.collection('schools/$schoolId/students').doc(student.id).set(student.toMap());
-    await FirebaseFirestore.instance.doc('students/${student.id}').update({'hasData': true, 'school': schoolId});
+    await FirebaseFirestore.instance.doc('students/${student.id}').update({
+      'hasData': true,
+      'school': schoolId,
+      'studentVueUsername': username,
+      'studentVuePassword': password,
+    });
   }
 
-  Future<Map<String, dynamic>> _addSchoolToDatabaseCheck(
-      {Function(double)? callback, required void Function(void Function()) setState}) async {
+  Future<Map<String, dynamic>> _addSchoolToDatabaseCheck({
+    Function(double)? callback,
+    required void Function(void Function()) setState,
+  }) async {
     String? resData;
     if (!mock) {
       var requestData = '''<?xml version="1.0" encoding="utf-8"?>
@@ -332,12 +343,13 @@ class StudentVueClient {
 
     // If empty, then it'll add a new school to the database.
     if (schoolInDb.docs.isEmpty) {
-      setState(() {
-        studentVueSignInResult =
-            'You\'re the first person at $name to use Kounslr🎉 Please wait patiently as the sign in may take a while.';
-      });
       // If school is in LCPS
       if (domain == 'portal.lcps.org') {
+        setState(() {
+          studentVueSignInResult =
+              'You\'re the first person at $name to use Kounslr🎉 Please wait patiently as the sign in may take a while!';
+        });
+
         final cId = const Uuid().v4();
         final cEvents = <Event>[];
 

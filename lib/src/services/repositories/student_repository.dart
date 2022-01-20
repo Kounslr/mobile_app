@@ -372,6 +372,10 @@ class StudentRepository {
         tags.addAll(JournalEntry.fromDocumentSnapshot(item).tags!);
       }
 
+      if (tags.isEmpty) {
+        tags = [Tag(name: 'math'), Tag(name: 'english'), Tag(name: 'soccer'), Tag(name: 'nhs')];
+      }
+
       return tags.toSet().toList();
     } on FirebaseException catch (e) {
       FirebaseCrashlytics.instance.recordError(e, e.stackTrace);
@@ -410,7 +414,16 @@ class StudentRepository {
   }
 
   Future<void> completeJournalEntry({JournalEntry? entry, String? title, String? summary, List<Tag>? tags}) async {
-    if (!([null, ''].contains(title) || [null, ''].contains(summary)) || [[], null].contains(tags)) {
+    if (title!.isEmpty && summary!.isEmpty && tags!.isEmpty) {
+      DoNothingAction();
+    } else {
+      List<Tag> nTags() {
+        if (tags == null || tags.isEmpty) {
+          return [Tag(name: 'General')];
+        }
+        return tags;
+      }
+
       if (entry!.id == null) {
         await addJournalEntry(
           JournalEntry(
@@ -419,7 +432,7 @@ class StudentRepository {
             lastEditDate: DateTime.now(),
             title: title,
             summary: summary,
-            tags: tags,
+            tags: nTags(),
           ),
         );
       } else {
@@ -427,7 +440,7 @@ class StudentRepository {
           entry: entry,
           title: title,
           summary: summary,
-          tags: tags,
+          tags: nTags(),
         );
       }
     }

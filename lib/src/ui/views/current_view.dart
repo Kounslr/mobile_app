@@ -17,11 +17,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 import 'package:canton_design_system/canton_design_system.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kounslr/src/config/bottom_navigation_bar.dart';
+import 'package:kounslr/src/services/repositories/studentvue_repository.dart';
 import 'package:kounslr/src/ui/components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/home_view/home_view.dart';
 import 'package:kounslr/src/ui/views/journal_view/journal_view.dart';
@@ -45,6 +48,21 @@ class _CurrentViewState extends State<CurrentView> {
     const JournalView(),
     const ProfileView(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _studentVueLogin();
+  }
+
+  void _studentVueLogin() async {
+    final studentRef = await FirebaseFirestore.instance.doc('students/${FirebaseAuth.instance.currentUser?.uid}').get();
+    final username = studentRef.data()!['studentVueUsername'];
+    final password = studentRef.data()!['studentVuePassword'];
+    const domain = 'portal.lcps.org';
+
+    StudentVueClient(username, password, domain);
+  }
 
   void _onTabTapped(int index) {
     if (index == _currentIndex && _currentIndex == 0 && _homeNavigatorKey.currentState!.canPop()) {

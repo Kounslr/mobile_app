@@ -104,7 +104,7 @@ class AuthenticationRepository {
       if (student.studentId == null) return 'Server error. Please try again later.';
 
       return await StudentVueClient(username, password, domain)
-          .loadInfoToDatabase(student: student, setState: setState);
+          .loadInfoToDatabase(student: student, setState: setState, password: password);
     } catch (e) {
       return 'Server error. Please try again later.';
     }
