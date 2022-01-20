@@ -37,21 +37,20 @@ class AuthenticationWrapper extends StatefulWidget {
 
 class _AuthenticationWrapperState extends State<AuthenticationWrapper> {
   bool showSignIn = true;
-  final user = FirebaseFirestore.instance
-      .collection('customers')
-      .doc('lcps')
-      .collection('schools')
-      .doc('independence')
-      .collection('students');
 
   bool studentHasData = true;
 
   Future<bool> _checkIfStudentIsSignedIntoStudentVue() async {
-    var student = await user.doc(FirebaseAuth.instance.currentUser!.uid).get();
-    if (student.data() == null || student.data()!['studentId'] == null) {
-      return false;
+    if (FirebaseAuth.instance.currentUser != null) {
+      final user = FirebaseFirestore.instance.doc('students/${FirebaseAuth.instance.currentUser!.uid}');
+      var student = await user.get();
+
+      if (!student.exists || [null, false].contains(student.data()!['hasData'])) {
+        return false;
+      }
+      return true;
     }
-    return true;
+    return false;
   }
 
   void _toggleView() {

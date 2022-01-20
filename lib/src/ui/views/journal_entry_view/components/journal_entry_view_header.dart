@@ -32,33 +32,28 @@ class JournalEntryViewHeader extends StatelessWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const CantonBackButton(isClear: true),
+            CantonBackButton(
+              isClear: true,
+              onPressed: () async {
+                await completeEntry();
+                Navigator.of(context).pop();
+              },
+            ),
             Text(
               DateFormat.yMMMMd().format(DateTime.now()),
               style: Theme.of(context).textTheme.headline5,
             ),
-            GestureDetector(
-              onTap: () {
-                completeEntry();
+            CantonPrimaryButton(
+              padding: EdgeInsets.zero,
+              containerWidth: 70,
+              containerHeight: 30,
+              color: Theme.of(context).primaryColor,
+              buttonText: 'Save',
+              onPressed: () async {
+                await completeEntry();
                 Navigator.of(context).pop();
               },
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: ShapeDecoration(
-                  color: Theme.of(context).primaryColor,
-                  shape: SquircleBorder(
-                    radius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text(
-                  'Save',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6!
-                      .copyWith(fontWeight: FontWeight.w500, color: CantonColors.white),
-                ),
-              ),
-            ),
+            )
           ],
         );
       },

@@ -37,66 +37,68 @@ class TagTextField extends StatelessWidget {
       initTags.add(tag.name!);
     }
 
-    return Consumer(builder: (context, watch, child) {
-      final repo = watch(studentRepositoryProvider).getAllJournalEntryTags;
+    return Consumer(
+      builder: (context, watch, child) {
+        final repo = watch(studentRepositoryProvider).getAllJournalEntryTags;
 
-      return input.CantonTagTextInput(
-        initialTags: initTags,
-        maxCharactersPerTag: 13,
-        maxTags: 3,
-        key: key,
-        controller: controller,
-        suggestedTags: repo,
-        textFieldStyler: TagTextInputStyler(
-          cursorColor: Theme.of(context).primaryColor,
-          hintText: 'Tags',
-          textFieldFilled: true,
-          textFieldEnabledBorder: const SquircleInputBorder(
-            radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
-            side: BorderSide(
-              color: CantonColors.transparent,
-              width: 1.5,
+        return input.CantonTagTextInput(
+          initialTags: initTags,
+          maxCharactersPerTag: 13,
+          maxTags: 3,
+          key: key,
+          controller: controller,
+          suggestedTags: repo,
+          textFieldStyler: TagTextInputStyler(
+            cursorColor: Theme.of(context).primaryColor,
+            hintText: 'science, economics, basketball...',
+            textFieldFilled: true,
+            textFieldEnabledBorder: const SquircleInputBorder(
+              radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
+              side: BorderSide(
+                color: CantonColors.transparent,
+                width: 1.5,
+              ),
+            ),
+            textFieldBorder: const SquircleInputBorder(
+              radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
+              side: BorderSide(
+                color: CantonColors.transparent,
+                width: 1.5,
+              ),
+            ),
+            textFieldFocusedBorder: const SquircleInputBorder(
+              radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
+              side: BorderSide(
+                color: CantonColors.transparent,
+                width: 1.5,
+              ),
+            ),
+            textFieldDisabledBorder: const SquircleInputBorder(
+              radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
+              side: BorderSide(
+                color: CantonColors.transparent,
+                width: 1.5,
+              ),
             ),
           ),
-          textFieldBorder: const SquircleInputBorder(
-            radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
-            side: BorderSide(
-              color: CantonColors.transparent,
-              width: 1.5,
-            ),
+          tagsStyler: TagsStyler(
+            tagCancelIcon: const Icon(FeatherIcons.x, color: CantonColors.white),
+            tagDecoration: ShapeDecoration(
+                color: Theme.of(context).primaryColor, shape: SquircleBorder(radius: BorderRadius.circular(20))),
+            tagTextStyle: Theme.of(context).textTheme.bodyText1!.copyWith(color: CantonColors.white),
           ),
-          textFieldFocusedBorder: const SquircleInputBorder(
-            radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
-            side: BorderSide(
-              color: CantonColors.transparent,
-              width: 1.5,
-            ),
-          ),
-          textFieldDisabledBorder: const SquircleInputBorder(
-            radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
-            side: BorderSide(
-              color: CantonColors.transparent,
-              width: 1.5,
-            ),
-          ),
-        ),
-        tagsStyler: TagsStyler(
-          tagCancelIcon: const Icon(FeatherIcons.x, color: CantonColors.white),
-          tagDecoration: ShapeDecoration(
-              color: Theme.of(context).primaryColor, shape: SquircleBorder(radius: BorderRadius.circular(20))),
-          tagTextStyle: Theme.of(context).textTheme.bodyText1!.copyWith(color: CantonColors.white),
-        ),
-        onDelete: (name) {
-          tags.remove(Tag(name: name));
-        },
-        onTag: (name) {
-          if (onTag != null) {
-            onTag!(name);
-          }
+          onDelete: (name) {
+            tags.remove(Tag(name: name));
+          },
+          onTag: (name) {
+            if (onTag != null) {
+              onTag!(name);
+            }
 
-          tags.add(Tag(name: name));
-        },
-      );
-    });
+            tags.add(Tag(name: name));
+          },
+        );
+      },
+    );
   }
 }

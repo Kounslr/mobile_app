@@ -25,6 +25,7 @@ import 'package:kounslr/src/ui/components/sign_out_button.dart';
 import 'package:kounslr/src/ui/components/something_went_wrong.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/profile_card.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/profile_view_header.dart';
+import 'package:kounslr/src/ui/views/profile_view/components/refresh_student_data_button.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/schedule_card.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/student_id_card.dart';
 import 'package:kounslr/src/ui/views/profile_view/components/upcoming_assignments_card.dart';
@@ -71,6 +72,8 @@ class ProfileView extends ConsumerWidget {
                     StudentIdCard(school: school, student: student),
                     ScheduleCard(school: school, student: student),
                     UpcomingAssignmentsCard(school: school, student: student),
+                    const SizedBox(height: 30),
+                    const RefreshStudentDataButton(),
                     const SizedBox(height: 30),
                     const SignOutButton(),
                   ],
