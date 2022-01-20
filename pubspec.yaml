@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.0.4+10
+version: 1.1.0+11
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -25,9 +25,9 @@ dependencies:
     sdk: flutter
 
   # UI Library
-  canton_design_system:
+  kounslr_design_system:
     git:
-      url: https://github.com/31Carlton7/canton_design_system.git
+      url: git://github.com/Kounslr/kounslr_design_system.git
       ref: master
   charts_flutter:
     git:

@@ -16,12 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kounslr/src/config/bottom_navigation_bar.dart';
 import 'package:kounslr/src/services/repositories/studentvue_repository.dart';
@@ -83,15 +82,15 @@ class _CurrentViewState extends State<CurrentView> {
   @override
   Widget build(BuildContext context) {
     if (FirebaseAuth.instance.currentUser == null) {
-      return const CantonScaffold(
+      return const KounslrScaffold(
         body: SomethingWentWrong(),
       );
     }
 
-    return CantonScaffold(
+    return KounslrScaffold(
       padding: EdgeInsets.zero,
       safeArea: false,
-      backgroundColor: CantonMethods.alternateCanvasColor(context, index: _currentIndex, targetIndexes: [1]),
+      backgroundColor: KounslrMethods.alternateCanvasColor(context, index: _currentIndex, targetIndexes: [1]),
       bottomNavBar: BottomNavBar(_currentIndex, _onTabTapped),
       body: IndexedStack(
         index: _currentIndex,

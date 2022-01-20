@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 class TitleTextField extends StatelessWidget {
   const TitleTextField({required this.focus, required this.controller, Key? key}) : super(key: key);
@@ -36,7 +36,7 @@ class TitleTextField extends StatelessWidget {
       style: Theme.of(context).textTheme.headline3,
       decoration: InputDecoration(
         hintText: 'Title',
-        fillColor: CantonColors.transparent,
+        fillColor: KounslrColors.transparent,
         border: InputBorder.none,
         enabledBorder: InputBorder.none,
         errorBorder: InputBorder.none,

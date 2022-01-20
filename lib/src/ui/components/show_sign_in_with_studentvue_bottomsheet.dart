@@ -1,4 +1,4 @@
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,11 +20,11 @@ Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
             builder: (context, watch, child) {
               return GestureDetector(
                 onTap: () {
-                  CantonMethods.defocusTextfield(context);
+                  KounslrMethods.defocusTextfield(context);
                 },
                 child: Container(
                   decoration: ShapeDecoration(
-                    color: CantonMethods.alternateCanvasColor(context),
+                    color: KounslrMethods.alternateCanvasColor(context),
                     shape: SquircleBorder(
                       radius: BorderRadius.circular(50),
                     ),
@@ -61,7 +61,7 @@ Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
                           Container(
                             margin: const EdgeInsets.symmetric(horizontal: 17),
                             padding: EdgeInsets.zero,
-                            child: CantonTextInput(
+                            child: KounslrTextInput(
                               isTextFormField: true,
                               obscureText: false,
                               hintText: 'Username',
@@ -73,7 +73,7 @@ Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
                           Container(
                             margin: const EdgeInsets.symmetric(horizontal: 17),
                             padding: EdgeInsets.zero,
-                            child: CantonTextInput(
+                            child: KounslrTextInput(
                               isTextFormField: true,
                               obscureText: true,
                               hintText: 'Password',
@@ -85,7 +85,7 @@ Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
                           studentVueSignInResult != ''
                               ? studentVueSignInResult != 'failed'
                                   ? const CupertinoActivityIndicator()
-                                  : CantonPrimaryButton(
+                                  : KounslrPrimaryButton(
                                       color: Theme.of(context).primaryColor,
                                       buttonText: 'Sign in',
                                       containerWidth: MediaQuery.of(context).size.width / 4,
@@ -111,7 +111,7 @@ Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
                                         }
                                       },
                                     )
-                              : CantonPrimaryButton(
+                              : KounslrPrimaryButton(
                                   color: Theme.of(context).primaryColor,
                                   buttonText: 'Sign in',
                                   containerWidth: MediaQuery.of(context).size.width / 4,

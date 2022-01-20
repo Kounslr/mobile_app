@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -42,10 +42,10 @@ class _SignInViewState extends State<SignInView> {
 
   @override
   Widget build(BuildContext context) {
-    return CantonScaffold(
+    return KounslrScaffold(
       resizeToAvoidBottomInset: true,
       padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 34),
-      backgroundColor: CantonMethods.alternateCanvasColorType2(context),
+      backgroundColor: KounslrMethods.alternateCanvasColorType2(context),
       body: _content(context, _emailController, _passwordController),
     );
   }
@@ -112,7 +112,7 @@ class _SignInViewState extends State<SignInView> {
     TextEditingController _emailController,
     TextEditingController _passwordController,
   ) {
-    return CantonPrimaryButton(
+    return KounslrPrimaryButton(
       buttonText: 'Sign In',
       color: Theme.of(context).primaryColor,
       containerWidth: 140,
@@ -138,7 +138,7 @@ class _SignInViewState extends State<SignInView> {
   }
 
   Widget _signInWithGoogleButton(BuildContext context) {
-    return CantonPrimaryButton(
+    return KounslrPrimaryButton(
       buttonText: 'Google',
       alignment: MainAxisAlignment.center,
       color: Theme.of(context).colorScheme.onSecondary,

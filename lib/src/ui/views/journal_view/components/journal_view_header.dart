@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 import 'package:kounslr/src/models/journal_entry.dart';
 import 'package:kounslr/src/ui/views/journal_entry_view/journal_entry_view.dart';
@@ -32,7 +32,7 @@ class JournalViewHeader extends StatelessWidget {
       padding: const EdgeInsets.only(top: 17, left: 17, right: 17),
       child: ViewHeaderOne(
         title: 'Journal',
-        button: CantonHeaderButton(
+        button: KounslrHeaderButton(
             isClear: true,
             icon: Icon(
               Iconsax.message_edit,
@@ -40,7 +40,7 @@ class JournalViewHeader extends StatelessWidget {
               size: 27,
             ),
             onPressed: () {
-              CantonMethods.viewTransition(context, JournalEntryView(JournalEntry(), allEntries));
+              KounslrMethods.viewTransition(context, JournalEntryView(JournalEntry(), allEntries));
             }),
       ),
     );

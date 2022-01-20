@@ -1,4 +1,4 @@
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 class EmailTextInput extends StatelessWidget {
   const EmailTextInput(this.controller, {Key? key}) : super(key: key);
@@ -7,7 +7,7 @@ class EmailTextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CantonTextInput(
+    return KounslrTextInput(
       hintText: 'Email',
       isTextFormField: true,
       obscureText: false,

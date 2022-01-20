@@ -1,4 +1,4 @@
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kounslr/src/models/journal_entry.dart';

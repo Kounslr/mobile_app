@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 import 'package:kounslr/src/ui/views/journal_entries_view/components/journal_entries_list_view.dart';
 import 'package:kounslr/src/ui/views/journal_entries_view/components/journal_entries_view_header.dart';
@@ -33,7 +33,7 @@ class JournalEntriesView extends StatefulWidget {
 class _JournalEntriesViewState extends State<JournalEntriesView> {
   @override
   Widget build(BuildContext context) {
-    return CantonScaffold(
+    return KounslrScaffold(
       body: _content(context),
     );
   }

@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 import 'package:kounslr/src/ui/components/sign_in_with_studentvue_card.dart';
 import 'package:kounslr/src/ui/views/no_student_data_view/components/no_student_data_view_header.dart';
@@ -26,7 +26,7 @@ class NoStudentDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CantonScaffold(body: _content(context));
+    return KounslrScaffold(body: _content(context));
   }
 
   Widget _content(BuildContext context) {

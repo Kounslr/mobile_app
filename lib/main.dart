@@ -20,7 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -67,12 +67,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, watch, child) {
-        return CantonApp(
+        return KounslrApp(
           title: kAppTitle,
-          primaryLightColor: CantonColors.orange[500],
+          primaryLightColor: KounslrColors.orange[500],
           primaryDarkColor: CupertinoColors.systemOrange,
-          primaryLightVariantColor: CantonColors.orange[200]!,
-          primaryDarkVariantColor: CantonDarkColors.orange[200]!,
+          primaryLightVariantColor: KounslrColors.orange[200]!,
+          primaryDarkVariantColor: KounslrDarkColors.orange[200]!,
           navigatorObservers: [
             FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
           ],

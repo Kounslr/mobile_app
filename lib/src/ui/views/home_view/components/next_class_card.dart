@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 import 'package:kounslr/src/models/block.dart';
 import 'package:kounslr/src/models/class.dart';
@@ -131,7 +131,7 @@ class NextClassCard extends StatelessWidget {
                     animationDuration: Duration.zero,
                     elevation: MaterialStateProperty.all<double>(0),
                     overlayColor: MaterialStateProperty.all<Color>(
-                      CantonColors.transparent,
+                      KounslrColors.transparent,
                     ),
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                       EdgeInsets.zero,
@@ -145,17 +145,17 @@ class NextClassCard extends StatelessWidget {
                         ),
                   ),
                   onPressed: () {
-                    CantonMethods.viewTransition(context, const ScheduleView());
+                    KounslrMethods.viewTransition(context, const ScheduleView());
                   },
                 ),
-                CantonActionButton(
+                KounslrActionButton(
                   icon: Icon(
                     Iconsax.arrow_right_2,
                     size: 20,
                     color: Theme.of(context).primaryColor,
                   ),
                   onPressed: () {
-                    CantonMethods.viewTransition(context, const ScheduleView());
+                    KounslrMethods.viewTransition(context, const ScheduleView());
                   },
                 ),
               ],

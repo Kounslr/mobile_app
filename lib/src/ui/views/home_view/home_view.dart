@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -182,7 +182,7 @@ class _HomeViewState extends State<HomeView> {
                   animationDuration: Duration.zero,
                   elevation: MaterialStateProperty.all<double>(0),
                   overlayColor: MaterialStateProperty.all<Color>(
-                    CantonColors.transparent,
+                    KounslrColors.transparent,
                   ),
                   padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                     EdgeInsets.zero,
@@ -195,15 +195,15 @@ class _HomeViewState extends State<HomeView> {
                         color: Theme.of(context).primaryColor,
                       ),
                 ),
-                onPressed: () => CantonMethods.viewTransition(context, const UpcomingAssignmentView()),
+                onPressed: () => KounslrMethods.viewTransition(context, const UpcomingAssignmentView()),
               ),
-              CantonActionButton(
+              KounslrActionButton(
                 icon: Icon(
                   Iconsax.arrow_right_2,
                   size: 20,
                   color: Theme.of(context).primaryColor,
                 ),
-                onPressed: () => CantonMethods.viewTransition(context, const UpcomingAssignmentView()),
+                onPressed: () => KounslrMethods.viewTransition(context, const UpcomingAssignmentView()),
               ),
             ],
           ),

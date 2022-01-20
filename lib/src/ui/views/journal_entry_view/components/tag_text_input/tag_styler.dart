@@ -1,4 +1,4 @@
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 class TagsStyler {
   ///[tagPadding] allows you to apply padding inside tag
@@ -36,7 +36,7 @@ class TagsStyler {
     this.tagCancelIcon = const Icon(
       Icons.cancel,
       size: 18.0,
-      color: CantonColors.blue,
+      color: KounslrColors.blue,
     ),
   });
 }

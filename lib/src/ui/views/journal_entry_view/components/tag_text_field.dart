@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kounslr/src/providers/student_repository_provider.dart';
@@ -41,7 +41,7 @@ class TagTextField extends StatelessWidget {
       builder: (context, watch, child) {
         final repo = watch(studentRepositoryProvider).getAllJournalEntryTags;
 
-        return input.CantonTagTextInput(
+        return input.KounslrTagTextInput(
           initialTags: initTags,
           maxCharactersPerTag: 13,
           maxTags: 3,
@@ -55,37 +55,37 @@ class TagTextField extends StatelessWidget {
             textFieldEnabledBorder: const SquircleInputBorder(
               radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
               side: BorderSide(
-                color: CantonColors.transparent,
+                color: KounslrColors.transparent,
                 width: 1.5,
               ),
             ),
             textFieldBorder: const SquircleInputBorder(
               radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
               side: BorderSide(
-                color: CantonColors.transparent,
+                color: KounslrColors.transparent,
                 width: 1.5,
               ),
             ),
             textFieldFocusedBorder: const SquircleInputBorder(
               radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
               side: BorderSide(
-                color: CantonColors.transparent,
+                color: KounslrColors.transparent,
                 width: 1.5,
               ),
             ),
             textFieldDisabledBorder: const SquircleInputBorder(
               radius: SmoothBorderRadius.all(SmoothRadius(cornerSmoothing: 1, cornerRadius: 21)),
               side: BorderSide(
-                color: CantonColors.transparent,
+                color: KounslrColors.transparent,
                 width: 1.5,
               ),
             ),
           ),
           tagsStyler: TagsStyler(
-            tagCancelIcon: const Icon(FeatherIcons.x, color: CantonColors.white),
+            tagCancelIcon: const Icon(FeatherIcons.x, color: KounslrColors.white),
             tagDecoration: ShapeDecoration(
                 color: Theme.of(context).primaryColor, shape: SquircleBorder(radius: BorderRadius.circular(20))),
-            tagTextStyle: Theme.of(context).textTheme.bodyText1!.copyWith(color: CantonColors.white),
+            tagTextStyle: Theme.of(context).textTheme.bodyText1!.copyWith(color: KounslrColors.white),
           ),
           onDelete: (name) {
             tags.remove(Tag(name: name));

@@ -20,7 +20,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class JournalEntry {
@@ -103,8 +103,7 @@ class JournalEntry {
 
   String toJson() => json.encode(toMap());
 
-  factory JournalEntry.fromJson(String source) =>
-      JournalEntry.fromMap(json.decode(source));
+  factory JournalEntry.fromJson(String source) => JournalEntry.fromMap(json.decode(source));
 
   @override
   String toString() {

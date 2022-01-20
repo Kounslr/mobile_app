@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kounslr/src/providers/authentication_providers/authentication_service_provider.dart';
@@ -41,10 +41,10 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
-    return CantonScaffold(
+    return KounslrScaffold(
       resizeToAvoidBottomInset: true,
       padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 34),
-      backgroundColor: CantonMethods.alternateCanvasColorType2(context),
+      backgroundColor: KounslrMethods.alternateCanvasColorType2(context),
       body: _content(
         context,
         _emailController,
@@ -65,7 +65,7 @@ class _SignUpViewState extends State<SignUpView> {
           const SizedBox(height: 15),
           PasswordTextInput(_passwordController),
           const SizedBox(height: 15),
-          CantonPrimaryButton(
+          KounslrPrimaryButton(
             buttonText: 'Sign Up',
             color: Theme.of(context).primaryColor,
             containerWidth: 140,

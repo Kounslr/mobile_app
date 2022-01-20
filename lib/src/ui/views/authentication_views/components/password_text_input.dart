@@ -1,4 +1,4 @@
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 class PasswordTextInput extends StatelessWidget {
   const PasswordTextInput(this.controller, {Key? key}) : super(key: key);
@@ -7,7 +7,7 @@ class PasswordTextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CantonTextInput(
+    return KounslrTextInput(
       hintText: 'Password',
       isTextFormField: true,
       obscureText: true,

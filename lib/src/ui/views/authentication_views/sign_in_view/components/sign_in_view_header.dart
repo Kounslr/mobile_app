@@ -1,4 +1,4 @@
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 class SignInViewHeader extends StatelessWidget {
   const SignInViewHeader({Key? key}) : super(key: key);

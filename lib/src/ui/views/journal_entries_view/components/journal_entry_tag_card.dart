@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:kounslr/src/models/journal_entry.dart';
@@ -74,10 +74,10 @@ class _JournalEntryTagCardState extends State<JournalEntryTagCard> {
       secondaryActions: <Widget>[
         _changeTagNameAction(context),
       ],
-      child: CantonExpansionTile(
+      child: KounslrExpansionTile(
         iconColor: Theme.of(context).primaryColor,
         decoration: ShapeDecoration(
-          color: CantonMethods.alternateCanvasColorType2(context),
+          color: KounslrMethods.alternateCanvasColorType2(context),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(widget.radius!.topLeft.x),

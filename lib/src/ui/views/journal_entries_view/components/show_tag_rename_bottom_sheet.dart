@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kounslr/src/models/journal_entry.dart';
@@ -19,12 +19,12 @@ Future<void> showTagRenameBottomSheet(BuildContext context, List<JournalEntry> e
           return StatefulBuilder(builder: (context, setState) {
             return GestureDetector(
               onTap: () {
-                CantonMethods.defocusTextfield(context);
+                KounslrMethods.defocusTextfield(context);
               },
               child: Container(
                 padding: MediaQuery.of(context).viewInsets,
                 decoration: ShapeDecoration(
-                  color: CantonMethods.alternateCanvasColor(context),
+                  color: KounslrMethods.alternateCanvasColor(context),
                   shape: const SmoothRectangleBorder(
                     borderRadius: SmoothBorderRadius.vertical(
                       top: SmoothRadius(cornerRadius: 12, cornerSmoothing: 1),
@@ -58,7 +58,7 @@ Future<void> showTagRenameBottomSheet(BuildContext context, List<JournalEntry> e
                           children: [
                             Container(
                               margin: const EdgeInsets.symmetric(horizontal: 17),
-                              child: CantonTextInput(
+                              child: KounslrTextInput(
                                 formatters: [
                                   FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),
                                   LengthLimitingTextInputFormatter(10),
@@ -71,11 +71,11 @@ Future<void> showTagRenameBottomSheet(BuildContext context, List<JournalEntry> e
                               ),
                             ),
                             const SizedBox(height: 15),
-                            CantonPrimaryButton(
+                            KounslrPrimaryButton(
                               textColor: Theme.of(context).primaryColor,
                               buttonText: 'Save',
                               containerWidth: MediaQuery.of(context).size.width / 2 - 34,
-                              color: CantonColors.transparent,
+                              color: KounslrColors.transparent,
                               onPressed: () {
                                 watch(studentRepositoryProvider).renameJournalEntryTags(
                                   entries,

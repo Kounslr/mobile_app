@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import 'package:canton_design_system/canton_design_system.dart';
+import 'package:kounslr_design_system/kounslr_design_system.dart';
 
 import 'package:kounslr/src/models/school.dart';
 import 'package:kounslr/src/models/student.dart';
@@ -30,7 +30,7 @@ class StudentIDCardView extends StatelessWidget {
   const StudentIDCardView(this.student, this.school, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return CantonScaffold(backgroundColor: CantonMethods.alternateCanvasColor(context), body: _content(context));
+    return KounslrScaffold(backgroundColor: KounslrMethods.alternateCanvasColor(context), body: _content(context));
   }
 
   Widget _content(BuildContext context) {
@@ -54,7 +54,7 @@ class StudentIDCardView extends StatelessWidget {
         // QrImage(
         //   data: 'https://www.kounslr.com',
         //   version: QrVersions.auto,
-        //   backgroundColor: CantonColors.bgPrimary,
+        //   backgroundColor: KounslrColors.bgPrimary,
         //   size: 100,
         // ),
       ],
