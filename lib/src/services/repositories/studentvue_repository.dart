@@ -21,6 +21,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:intl/intl.dart';
+import 'package:kounslr/src/config/studentvue_exceptions.dart';
 import 'package:kounslr/src/models/current_day.dart';
 import 'package:kounslr/src/models/event.dart';
 import 'package:kounslr/src/models/school.dart';
@@ -61,7 +62,8 @@ class StudentVueClient {
       final sch = await _addSchoolToDatabaseCheck(setState: setState);
 
       if (sch['id'] == 'notSupported') {
-        return 'Kounslr doesn\'t support your school yet! 😔';
+        setState(() {});
+        return StudentVueExceptions.errorMessageThree().message;
       }
 
       String? resData;
@@ -187,7 +189,7 @@ class StudentVueClient {
       }
       return 'success';
     } catch (e) {
-      return 'Server error. Please try again later.';
+      return 'Error signing in. Please try again.';
     }
   }
 
@@ -380,17 +382,21 @@ class StudentVueClient {
 
         await ref.doc(id).set(school.toDocumentSnapshot());
       } else {
+        setState(() {});
         return {'id': 'notSupported'};
       }
+    } else {
+      schoolMap['id'] = schoolInDb.docs[0].data()['id'];
     }
 
     return schoolMap;
   }
 
   Future<Student> loadStudentData({Function(double)? callback}) async {
-    String? resData;
-    if (!mock) {
-      var requestData = '''<?xml version="1.0" encoding="utf-8"?>
+    try {
+      String? resData;
+      if (!mock) {
+        var requestData = '''<?xml version="1.0" encoding="utf-8"?>
     <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
         <soap:Body>
             <ProcessWebServiceRequest xmlns="http://edupoint.com/webservices/">
@@ -405,54 +411,57 @@ class StudentVueClient {
         </soap:Body>
     </soap:Envelope>''';
 
-      var headers = <String, String>{'Content-Type': 'text/xml'};
+        var headers = <String, String>{'Content-Type': 'text/xml'};
 
-      var res =
-          await _dio.post(reqURL, data: requestData, options: Options(headers: headers), onSendProgress: (one, two) {
-        if (callback != null) {
-          callback((one / two) * 0.5);
-        }
-      }, onReceiveProgress: (one, two) {
-        if (callback != null) {
-          callback((one / two) * 0.5 + 0.5);
-        }
-      });
-      resData = res.data;
+        var res =
+            await _dio.post(reqURL, data: requestData, options: Options(headers: headers), onSendProgress: (one, two) {
+          if (callback != null) {
+            callback((one / two) * 0.5);
+          }
+        }, onReceiveProgress: (one, two) {
+          if (callback != null) {
+            callback((one / two) * 0.5 + 0.5);
+          }
+        });
+        resData = res.data;
+      }
+
+      final document = XmlDocument.parse(HtmlUnescape().convert(resData!));
+
+      // the StudentInfo element is inside four other elements
+      final el =
+          document.root.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild!;
+
+      var student = Student(
+        id: const Uuid().v4(),
+        studentId: el.getElement('PermID')?.innerText,
+        name: el.getElement('FormattedName')?.innerText,
+        gender: el.getElement('Gender')?.innerText,
+        grade: el.getElement('Grade')?.innerText,
+        address: el.getElement('Address')?.innerText,
+        nickname: el.getElement('NickName')?.innerText,
+        birthdate: el.getElement('BirthDate')?.innerText,
+        email: el.getElement('EMail')?.innerText,
+        phone: el.getElement('Phone')?.innerText,
+        photo: '',
+      );
+
+      final schRef = FirebaseFirestore.instance
+          .collection('schools')
+          .where('name', isEqualTo: el.getElement('schoolName')?.innerText);
+
+      final sch = await schRef.get();
+
+      await FirebaseFirestore.instance
+          .collection('schools')
+          .doc(sch.docs[0].id)
+          .collection('students')
+          .doc(student.id!)
+          .set(student.toMap());
+
+      return student;
+    } catch (e) {
+      rethrow;
     }
-
-    final document = XmlDocument.parse(HtmlUnescape().convert(resData!));
-
-    // the StudentInfo element is inside four other dumb elements
-    final el =
-        document.root.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild!;
-
-    var student = Student(
-      id: const Uuid().v4(),
-      studentId: el.getElement('PermID')?.innerText,
-      name: el.getElement('FormattedName')?.innerText,
-      gender: el.getElement('Gender')?.innerText,
-      grade: el.getElement('Grade')?.innerText,
-      address: el.getElement('Address')?.innerText,
-      nickname: el.getElement('NickName')?.innerText,
-      birthdate: el.getElement('BirthDate')?.innerText,
-      email: el.getElement('EMail')?.innerText,
-      phone: el.getElement('Phone')?.innerText,
-      photo: '',
-    );
-
-    final schRef = FirebaseFirestore.instance
-        .collection('schools')
-        .where('name', isEqualTo: el.getElement('schoolName')?.innerText);
-
-    final sch = await schRef.get();
-
-    await FirebaseFirestore.instance
-        .collection('schools')
-        .doc(sch.docs[0].id)
-        .collection('students')
-        .doc(student.id!)
-        .set(student.toMap());
-
-    return student;
   }
 }
