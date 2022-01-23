@@ -43,7 +43,7 @@ class AuthenticationRepository {
       if (e is FirebaseAuthException) {
         return AuthenticationExceptions.fromFirebaseAuthError(e).toString();
       }
-      return 'Server error. Please try again later.';
+      return 'Error signing out. Please try again.';
     }
   }
 
@@ -56,7 +56,7 @@ class AuthenticationRepository {
       if (e is FirebaseAuthException) {
         return AuthenticationExceptions.fromFirebaseAuthError(e).toString();
       }
-      return 'Server error. Please try again later.';
+      return 'Error signing in. Please try again.';
     }
   }
 
@@ -88,7 +88,7 @@ class AuthenticationRepository {
       } else if (e is RangeError) {
         return '';
       }
-      return 'Server error. Please try again later.';
+      return 'Error signing in. Please try again.';
     }
   }
 
@@ -101,12 +101,12 @@ class AuthenticationRepository {
 
       student.id = FirebaseAuth.instance.currentUser?.uid;
 
-      if (student.studentId == null) return 'Server error. Please try again later.';
+      if (student.studentId == null) return 'Error signing in. Please try again.';
 
       return await StudentVueClient(username, password, domain)
           .loadInfoToDatabase(student: student, setState: setState, password: password);
     } catch (e) {
-      return 'Server error. Please try again later.';
+      return 'Error signing in. Please try again.';
     }
   }
 
@@ -119,7 +119,7 @@ class AuthenticationRepository {
 
       return 'success';
     } catch (e) {
-      return 'Server error. Please try again later.';
+      return 'Error signing up. Please try again.';
     }
   }
 }

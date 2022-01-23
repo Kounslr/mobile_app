@@ -8,6 +8,7 @@ var studentVueSignInResult = '';
 Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
   var _usernameController = TextEditingController();
   var _passwordController = TextEditingController();
+
   return await showModalBottomSheet(
     context: context,
     elevation: 0,
@@ -18,6 +19,78 @@ Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
         builder: (context, setState) {
           return Consumer(
             builder: (context, watch, child) {
+              var hasError = false;
+
+              Widget signInButton() {
+                if (studentVueSignInResult != '') {
+                  if (hasError || studentVueSignInResult.contains('Error')) {
+                    return KounslrPrimaryButton(
+                      color: Theme.of(context).primaryColor,
+                      buttonText: 'Sign in',
+                      containerWidth: MediaQuery.of(context).size.width / 4,
+                      containerHeight: 47,
+                      padding: const EdgeInsets.all(10),
+                      onPressed: () async {
+                        setState(() {
+                          studentVueSignInResult = 'Loading...';
+                        });
+
+                        var res = await watch(authenticationServiceProvider).studentVueSignIn(
+                          username: _usernameController.text,
+                          password: _passwordController.text,
+                          setState: setState,
+                        );
+
+                        setState(() {
+                          studentVueSignInResult = res;
+                        });
+
+                        if (studentVueSignInResult == 'success') {
+                          Phoenix.rebirth(context);
+                        } else {
+                          setState(() {
+                            hasError = true;
+                          });
+                        }
+                      },
+                    );
+                  } else {
+                    return const CupertinoActivityIndicator();
+                  }
+                } else {
+                  return KounslrPrimaryButton(
+                    color: Theme.of(context).primaryColor,
+                    buttonText: 'Sign in',
+                    containerWidth: MediaQuery.of(context).size.width / 4,
+                    containerHeight: 47,
+                    padding: const EdgeInsets.all(10),
+                    onPressed: () async {
+                      setState(() {
+                        studentVueSignInResult = 'Loading...';
+                      });
+
+                      var res = await watch(authenticationServiceProvider).studentVueSignIn(
+                        username: _usernameController.text,
+                        password: _passwordController.text,
+                        setState: setState,
+                      );
+
+                      setState(() {
+                        studentVueSignInResult = res;
+                      });
+
+                      if (studentVueSignInResult == 'success') {
+                        Phoenix.rebirth(context);
+                      } else {
+                        setState(() {
+                          hasError = true;
+                        });
+                      }
+                    },
+                  );
+                }
+              }
+
               return GestureDetector(
                 onTap: () {
                   KounslrMethods.defocusTextfield(context);
@@ -82,64 +155,9 @@ Future<void> showStudentVueSignInBottomSheet(BuildContext context) async {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          studentVueSignInResult != ''
-                              ? studentVueSignInResult != 'failed'
-                                  ? const CupertinoActivityIndicator()
-                                  : KounslrPrimaryButton(
-                                      color: Theme.of(context).primaryColor,
-                                      buttonText: 'Sign in',
-                                      containerWidth: MediaQuery.of(context).size.width / 4,
-                                      containerHeight: 47,
-                                      padding: const EdgeInsets.all(10),
-                                      onPressed: () async {
-                                        setState(() {
-                                          studentVueSignInResult = 'Loading...';
-                                        });
-
-                                        var res = await watch(authenticationServiceProvider).studentVueSignIn(
-                                          username: _usernameController.text,
-                                          password: _passwordController.text,
-                                          setState: setState,
-                                        );
-
-                                        setState(() {
-                                          studentVueSignInResult = res;
-                                        });
-
-                                        if (studentVueSignInResult == 'success') {
-                                          Phoenix.rebirth(context);
-                                        }
-                                      },
-                                    )
-                              : KounslrPrimaryButton(
-                                  color: Theme.of(context).primaryColor,
-                                  buttonText: 'Sign in',
-                                  containerWidth: MediaQuery.of(context).size.width / 4,
-                                  containerHeight: 47,
-                                  padding: const EdgeInsets.all(10),
-                                  onPressed: () async {
-                                    setState(() {
-                                      studentVueSignInResult = 'Loading...';
-                                    });
-
-                                    var res = await watch(authenticationServiceProvider).studentVueSignIn(
-                                      username: _usernameController.text,
-                                      password: _passwordController.text,
-                                      setState: setState,
-                                    );
-
-                                    setState(() {
-                                      studentVueSignInResult = res;
-                                    });
-
-                                    if (studentVueSignInResult == 'success' ||
-                                        studentVueSignInResult.contains('You\'re')) {
-                                      Phoenix.rebirth(context);
-                                    }
-                                  },
-                                ),
+                          signInButton(),
                           const SizedBox(height: 20),
-                          studentVueSignInResult != 'success'
+                          (studentVueSignInResult != '' || hasError)
                               ? Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 17),
                                   child: Text(
