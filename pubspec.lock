@@ -471,7 +471,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: e7363b31fa9bc26a969b4741c66da256425c0e20
+      resolved-ref: c792acc3e221b5370ff7b7d3d596b6b0eb8ad5fc
       url: "git://github.com/Kounslr/kounslr_design_system.git"
     source: git
     version: "0.0.1"
