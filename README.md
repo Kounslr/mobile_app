@@ -14,10 +14,6 @@ There's quite a few, so here's the list
 
 If you have any questions, you can reach us here:
 
-#### Carlton
-- Email: carltonaikins7@gmail.com
-- Instagram: [@31Carlton7](https://www.instagram.com/31carlton7)
-
 #### Ari
 - Email: arihandixit@gmail.com
 - Instagram: [@aridixit](https://www.instagram.com/aridixit)
